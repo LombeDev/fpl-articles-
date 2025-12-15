@@ -62,12 +62,14 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative; /* Needed for absolute positioning of mobile menu */
 }
 
 .logo {
     font-size: 1.8rem;
 }
 
+/* --- Navigation Desktop Styles (Default) --- */
 nav ul {
     list-style: none;
     display: flex;
@@ -85,6 +87,39 @@ nav ul li a {
 
 nav ul li a:hover {
     color: var(--primary-color);
+}
+
+/* --- New Hamburger Menu Styles (Desktop Hidden) --- */
+.menu-toggle {
+    display: none; /* Hidden by default on desktop */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 100; 
+    align-self: center;
+}
+
+.bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: var(--primary-color);
+    margin: 5px auto;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Styles for when the menu is active (JavaScript adds the 'menu-open' class) */
+.header-container.menu-open .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.header-container.menu-open .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.header-container.menu-open .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
 }
 
 /* --- Main Layout Grid --- */
@@ -596,20 +631,51 @@ footer {
         order: -1; 
     }
 
+    /* ** IMPORTANT: Updated Header for Hamburger ** */
     .header-container {
-        flex-direction: column;
-        text-align: center;
+        flex-direction: row; /* Keep logo and hamburger side-by-side */
+        justify-content: space-between;
     }
 
+    .menu-toggle {
+        display: block; /* Show hamburger button on mobile/tablet */
+    }
+
+    nav {
+        /* Mobile menu positioning */
+        position: absolute;
+        top: 60px; /* Position below the header bar (adjust if necessary) */
+        left: 0;
+        width: 100%;
+        max-height: 0; /* Hidden by default */
+        overflow: hidden;
+        background-color: var(--background-dark);
+        box-shadow: var(--card-shadow);
+        transition: max-height 0.3s ease-in-out;
+        z-index: 99;
+    }
+    
     nav ul {
-        margin-top: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-direction: column; /* Stack links vertically */
+        padding: 10px 0;
+        margin-top: 0; /* Override old margin */
     }
 
     nav ul li {
-        margin: 5px 10px;
+        margin: 0;
+        text-align: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--background-light);
     }
+    nav ul li:last-child {
+        border-bottom: none;
+    }
+
+    /* State when the menu is OPEN */
+    .header-container.menu-open nav {
+        max-height: 300px; /* Sufficient height to show all links */
+    }
+    /* ** END IMPORTANT UPDATE ** */
 
     .price-change-container {
         flex-direction: column;
@@ -667,14 +733,5 @@ footer {
     /* Adjustments for the smallest content */
     .data-section h2, .card-section h2 {
         font-size: 1.4rem;
-    }
-    
-    nav ul {
-        flex-direction: column;
-        margin-top: 10px;
-    }
-    nav ul li {
-        margin: 3px 0;
-        font-size: 0.9rem;
     }
 }
