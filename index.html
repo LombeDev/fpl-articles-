@@ -12,7 +12,13 @@
     <header>
         <div class="container header-container">
             <h1 class="logo">FPL <span class="highlight">HUB</span></h1>
-            <nav>
+
+            <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <nav id="main-nav">
                 <ul>
                     <li><a href="#"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                     <li><a href="#"><i class="fa-solid fa-table-list"></i> Fixtures</a></li>
@@ -155,7 +161,9 @@
                 </div>
             </section>
 
-        </div> <aside id="sidebar">
+        </div> 
+        
+        <aside id="sidebar">
 
             <div class="sidebar-widget deadline-widget">
                 <h3>Gameweek <span id="current-gw">--</span> Deadline:</h3>
@@ -178,12 +186,35 @@
             
         </aside>
 
-    </div> <footer>
+    </div> 
+    
+    <footer>
         <div class="container">
             <p>&copy; 2025 FPL Hub. All rights reserved. Not affiliated with the official Premier League.</p>
         </div>
     </footer>
 
-    <script src="scripts/main.js"></script>
-</body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuToggle = document.querySelector('.menu-toggle');
+            const headerContainer = document.querySelector('.header-container');
+
+            if (menuToggle && headerContainer) {
+                menuToggle.addEventListener('click', function() {
+                    // Toggle the 'menu-open' class on the header container
+                    headerContainer.classList.toggle('menu-open');
+                    
+                    // Accessibility update
+                    const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
+                    menuToggle.setAttribute('aria-expanded', !isExpanded);
+                });
+            }
+        });
+
+        // Placeholder function (replace with your actual logic)
+        function viewLeague() {
+            alert('Viewing Full League Table...');
+        }
+    </script>
+    </body>
 </html>
