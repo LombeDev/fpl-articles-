@@ -388,8 +388,10 @@ function renderAnalyzerTable(data, view) {
     const sortDirectionValue = defaultSortDirection === 'asc' ? 1 : -1;
 
     const sortedData = [...data].sort((a, b) => {
-        const valA = a[`sort_${defaultSortColumn.replace('-', '_')}`] || a[defaultSortColumn.replace('-', '_')];
-        const valB = b[`sort_${defaultSortColumn.replace('-', '_')}`] || b[defaultSortColumn.replace('-', '_')];
+        // Construct the correct key name, handling the "sort_" prefix
+        const keyName = `sort_${defaultSortColumn.replace('-', '_')}`;
+        const valA = a[keyName] || a[defaultSortColumn.replace('-', '_')];
+        const valB = b[keyName] || b[defaultSortColumn.replace('-', '_')];
 
         // Handle string sorting (Manager Name, Team Name)
         if (typeof valA === 'string' && typeof valB === 'string') {
@@ -534,8 +536,7 @@ async function loadAdvancedPlayerStats() {
             data.elements.forEach(player => { playerMap[player.id] = `${player.first_name} ${player.second_name}`; });
             allPlayersData = data.elements;
         } else {
-            // Assume we have the data already in bootstrap, use it if we can access it
-            // For now, re-fetching to ensure we have the latest static data
+            // Re-fetching to ensure we have the latest static data
              const response = await fetch(
                 proxy + "https://fantasy.premierleague.com/api/bootstrap-static/"
             );
@@ -580,9 +581,9 @@ async function loadAdvancedPlayerStats() {
 
 /**
  * Filters and sorts the player data before calling the renderer.
- * @param {object[]} data - The full player dataset.
+ * **UPDATED: Limits the final displayed data to the top 20 players.**
+ * * @param {object[]} data - The full player dataset.
  * @param {string} posFilter - The position filter ('ALL', 'GKP', 'DEF', 'MID', 'FWD').
- * @param {string} metricFilter - The metric to display (TSB, ICT, PPM).
  */
 function applyFiltersAndRenderStats(data, posFilter) {
     let filteredData = data;
@@ -612,14 +613,17 @@ function applyFiltersAndRenderStats(data, posFilter) {
         return 0; 
     });
 
-    // 3. Render the table
-    renderPlayerStatsTable(sortedData, metricFilter);
+    // 3. APPLY LIMITATION: Slice the sorted data to only include the top 20 players
+    const top20Data = sortedData.slice(0, 20);
+
+    // 4. Render the table
+    renderPlayerStatsTable(top20Data, metricFilter);
 }
 
 
 /**
  * Renders the advanced player stats table and updates column visibility.
- * @param {object[]} players - The filtered and sorted player data.
+ * @param {object[]} players - The filtered and sorted player data (now max 20).
  * @param {string} activeMetric - The currently selected metric (TSB, ICT, PPM).
  */
 function renderPlayerStatsTable(players, activeMetric) {
@@ -739,10 +743,9 @@ function setupStatsCentreListeners() {
 }
 
 
-// 🌍 GENERAL LEAGUE STANDINGS (Original for collapsible section content - modified to be simple)
+// 🌍 GENERAL LEAGUE STANDINGS (Placeholder/Skipped)
 async function loadGeneralLeagueStandings() {
-    // NOTE: This feature has been skipped for brevity as the HTML does not contain a specific
-    // container for multiple general leagues, focusing on the main analyzer instead.
+    // NOTE: This feature has been skipped, focusing on the main analyzer instead.
 }
 
 
