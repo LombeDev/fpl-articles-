@@ -150,7 +150,7 @@ nav ul li a:hover {
 .fdr-grid {
     display: flex;
     gap: 15px;
-    overflow-x: auto;
+    overflow-x: auto; /* Correctly allows horizontal scrolling for this section */
     padding-bottom: 10px; /* Space for scrollbar */
 }
 
@@ -209,7 +209,8 @@ nav ul li a:hover {
 
 .injury-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    /* This minmax(350px, 1fr) is too wide for most phones. We'll fix it in the 600px media query. */
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
     gap: 20px;
 }
 
@@ -264,14 +265,15 @@ nav ul li a:hover {
 }
 
 .stats-table-container {
-    overflow-x: auto;
+    overflow-x: auto; /* KEY FIX: Forces horizontal scroll within this element */
     background-color: var(--background-light);
     border-radius: 0 0 8px 8px;
     box-shadow: var(--card-shadow);
 }
 
 #player-stats-table, #league-analyzer-table {
-    width: 100%;
+    /* If the columns are too wide, the overflow-x: auto will handle it */
+    width: 100%; 
     border-collapse: collapse;
 }
 
@@ -280,7 +282,7 @@ nav ul li a:hover {
     padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #3d3d5f;
-    white-space: nowrap; /* Prevent text wrapping in columns */
+    white-space: nowrap; /* Prevent wrapping so overflow-x: auto works */
 }
 
 #player-stats-table thead th, #league-analyzer-table thead th {
@@ -329,7 +331,8 @@ nav ul li a:hover {
 /* --- Live Scores Styles --- */
 .scores-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    /* This minmax(320px, 1fr) is too wide for many phones. We'll fix it below. */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
     gap: 20px;
 }
 
@@ -567,7 +570,9 @@ footer {
     font-size: 0.9rem;
 }
 
-/* --- Responsive Layout Adjustment --- */
+/* ------------------------------------------------------------- */
+/* --- Responsive Layout Adjustment (Tablet/Small Desktop) --- */
+/* ------------------------------------------------------------- */
 @media (max-width: 992px) {
     /* Stack the columns on tablet/mobile views */
     .site-content-wrapper {
@@ -598,7 +603,70 @@ footer {
         flex-direction: column;
     }
 
+    /* .scores-grid is fixed in the 600px query below, but leaving this here
+       if you prefer wider cards on tablets.
     .scores-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    } */
+}
+
+
+/* ------------------------------------------------------------- */
+/* --- NEW FIX: Mobile Phone Portrait (MAX-WIDTH 600PX) --- */
+/* ------------------------------------------------------------- */
+@media (max-width: 600px) {
+    
+    /* Global Padding Adjustment */
+    .container {
+        width: 100%; /* Ensure max usage of width */
+        padding: 0 10px;
+    }
+
+    /* Collapse ALL GRIDS to a single column */
+    .fpl-grid,
+    .wrapped-grid,
+    .scores-grid,
+    .news-grid,
+    .injury-list {
         grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    /* Fix the excessively wide minmax values */
+    .fpl-grid {
+        /* Ensure cards don't use the min-width: 200px rule from the global style */
+        grid-template-columns: 1fr;
+    }
+    .scores-grid .match-card, 
+    .news-grid .card,
+    .injury-list .card {
+        min-width: 0; /* Override any fixed min-widths */
+    }
+    
+    /* Ensure Filters stack on mobile (e.g. Analyzer Filters) */
+    .analyzer-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .analyzer-filters label {
+        margin: 5px 0;
+    }
+    #update-analyzer-btn {
+        margin-top: 10px;
+    }
+    
+    /* Adjustments for the smallest content */
+    .data-section h2, .card-section h2 {
+        font-size: 1.5rem;
+    }
+    
+    nav ul {
+        /* Ensure nav items are tightly packed */
+        flex-direction: column;
+        margin-top: 10px;
+    }
+    nav ul li {
+        margin: 3px 0;
+        font-size: 0.9rem;
     }
 }
