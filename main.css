@@ -919,3 +919,55 @@ footer {
 #league-analyzer-table th.active-sort-column {
     background-color: var(--active-sort-bg); /* Darker shade to indicate sorting */
 }
+
+
+
+/* --- News Feed Styles --- */
+
+#news-rss-container {
+    padding: 20px;
+}
+
+#news-rss-container h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.news-list {
+    list-style: none;
+    padding: 0;
+}
+
+.news-list li {
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-color-light);
+    padding-bottom: 10px;
+}
+
+.news-list li a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: color 0.2s;
+}
+
+.news-list li a:hover {
+    color: var(--primary-color);
+}
+
+.news-title {
+    font-weight: 500;
+    flex-grow: 1;
+    margin-right: 10px;
+    line-height: 1.4;
+}
+
+.news-date {
+    font-size: 0.8rem;
+    color: var(--text-color-light);
+    flex-shrink: 0;
+}
