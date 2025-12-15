@@ -971,3 +971,217 @@ footer {
     color: var(--text-color-light);
     flex-shrink: 0;
 }
+
+
+
+/* ----------------------------------------------------------------- */
+/* --- NEW: Missing Variable Definitions and Core Utilities --- */
+/* ----------------------------------------------------------------- */
+
+:root {
+    /* Define missing variables using existing theme colors */
+    --border-color: #3d3d5f; /* Dark Blue-Gray */
+    --border-color-light: #50507a;
+    --text-color: var(--text-light); 
+    --text-color-header: var(--secondary-color);
+    --input-bg: var(--background-dark);
+    --card-bg: var(--background-light);
+    --header-bg: var(--background-dark);
+    --hover-bg: rgba(0, 255, 115, 0.05); /* Slight primary-color tint */
+    --active-sort-bg: #353555; /* Darker background for active sort */
+
+    /* Custom GW Wrapped Colors */
+    --stat-average: #03f6f4; /* Secondary color */
+    --stat-high-score: #ffc400; /* Yellow */
+    --stat-top-player: #ff4d4d; /* Red/Orange */
+    --stat-captain: var(--primary-color);
+}
+
+/* --- Utility Classes for Data Status --- */
+
+.loading-message {
+    color: var(--secondary-color);
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+}
+
+.no-data {
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+}
+
+.error-message {
+    color: var(--fdr-difficulty-5); /* Red/Error Color */
+    font-weight: bold;
+    padding: 20px;
+    text-align: center;
+}
+
+/* --- Rank/Price Change Icons --- */
+
+/* Basic styling for all change icons */
+.change-up, .change-down, .change-no-change {
+    font-weight: bold;
+    margin-left: 5px;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+/* Rank UP (Primary Color) */
+.change-up { 
+    color: var(--primary-color); 
+}
+
+/* Rank DOWN (Error Color) */
+.change-down { 
+    color: var(--fdr-difficulty-5); 
+}
+
+/* Price Up (Darker Green) and Price Down (Darker Red) for contrast */
+.price-up {
+    color: #00cc66; /* Slightly darker primary green */
+}
+
+.price-down {
+    color: #cc3d3d; /* Slightly darker red */
+}
+
+.change-no-change {
+    color: var(--text-muted);
+}
+
+/* ----------------------------------------------------------------- */
+/* --- NEW: Gameweek Wrapped Styles (Updating existing rules) --- */
+/* ----------------------------------------------------------------- */
+
+/* Use the new class structure from the JS file */
+.gw-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background-color: var(--background-light);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+    /* Base for individual color borders */
+    border-top: 5px solid transparent; 
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.stat-detail {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.2;
+}
+
+/* Specific Stat Card Colors */
+.stat-average { border-top-color: var(--stat-average); }
+.stat-average .stat-value { color: var(--stat-average); }
+
+.stat-high-score { border-top-color: var(--stat-high-score); }
+.stat-high-score .stat-value { color: var(--stat-high-score); }
+
+.stat-top-player { border-top-color: var(--stat-top-player); }
+.stat-top-player .stat-value { color: var(--stat-top-player); }
+
+.stat-captain { border-top-color: var(--stat-captain); }
+.stat-captain .stat-value { color: var(--stat-captain); }
+
+.note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 20px;
+    display: block;
+    text-align: right;
+}
+
+/* ----------------------------------------------------------------- */
+/* --- NEW: FPL News Feed Styles --- */
+/* ----------------------------------------------------------------- */
+
+#news-rss-container {
+    /* Use the standard card styling, adjusting padding */
+    padding: 0;
+    margin-top: 30px; 
+}
+
+#news-rss-container h2 {
+    /* Standard section header */
+    padding: 20px 20px 10px 20px;
+}
+
+.news-list {
+    list-style: none;
+    padding: 0 20px 20px 20px; /* Padding for the list content */
+}
+
+.news-list li {
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--border-color-light);
+    padding: 12px 0;
+    transition: background-color 0.2s;
+}
+
+.news-list li:last-child {
+    border-bottom: none;
+}
+
+.news-list li a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-light);
+}
+
+.news-list li a:hover {
+    color: var(--primary-color);
+}
+
+.news-title {
+    font-weight: 500;
+    flex-grow: 1;
+    margin-right: 15px;
+    line-height: 1.4;
+    font-size: 1rem;
+}
+
+.news-date {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+/* --- Mobile Fix for News Feed --- */
+@media (max-width: 600px) {
+    .news-list li a {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .news-title {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+    .news-date {
+        align-self: flex-end;
+    }
+}
