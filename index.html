@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Hub - FPL & Football News</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1 class="logo">FantasyHub</h1>
+            <nav>
+                <ul>
+                    <li><a href="#news">News & Articles</a></li>
+                    <li><a href="#fpl">FPL Data</a></li>
+                    <li><a href="#scores">Scores</a></li>
+                    <li><a href="#injury">Injuries</a></li>
+                    <li><a href="#league">My League</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="gameweek-hero">
+        <div class="container">
+            <div class="deadline-timer">
+                <h2>Gameweek <span id="current-gw">--</span> Deadline:</h2>
+                <div id="countdown-timer">--h --m --s</div>
+            </div>
+            <div class="captain-poll">
+                <h3>Most Captained Player:</h3>
+                <span id="most-captained">Erling Haaland (Man City)</span>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        
+        <section id="news" class="card-section">
+            <h2>📰 Latest News & Analysis</h2>
+            <div class="news-grid">
+                </div>
+        </section>
+
+        <section id="fpl" class="data-section">
+            <h2>📈 FPL Transfer & Score Data</h2>
+            <div class="data-flex">
+                <div class="transfer-card card">
+                    <h3>Most Transferred In (GW --)</h3>
+                    <ul id="transferred-in-list">
+                        </ul>
+                </div>
+                <div class="transfer-card card">
+                    <h3>Most Transferred Out (GW --)</h3>
+                    <ul id="transferred-out-list">
+                        </ul>
+                </div>
+                <div class="scores-card card">
+                    <h3>Gameweek Scores</h3>
+                    <div id="gw-scores-summary">
+                        <p>FPL General League Standings: Loading...</p>
+                        <button onclick="viewLeague()">View Full League</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="injury" class="card-section">
+            <h2>🏥 Injury Watch</h2>
+            <div class="injury-list">
+                </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 FantasyHub. A professional prototype by Gemini.</p>
+        </div>
+    </footer>
+
+    <script src="scripts/main.js"></script>
+</body>
+</html>
