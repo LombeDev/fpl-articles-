@@ -1,22 +1,24 @@
 /* --- Global Styles and Variables (Dark Theme) --- */
 
 :root {
-    --primary-color: #00ff73; /* Bright FPL Green */
-    --secondary-color: #03f6f4; /* Cyan Accent */
-    --background-dark: #1a1a2e; /* Deep dark blue/purple for main body */
-    --background-light: #2c2c44; /* Lighter shade for cards/widgets */
+    --primary-color: #00ff73; 
+    --secondary-color: #03f6f4; 
+    --background-dark: #1a1a2e; 
+    --background-light: #2c2c44; 
     --text-light: #f0f0f0;
     --text-muted: #b4b4c8;
     --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    --fdr-difficulty-1: #00ff73; /* Easiest */
-    --fdr-difficulty-3: #ffc400; /* Medium */
-    --fdr-difficulty-5: #ff4d4d; /* Hardest */
+    --fdr-difficulty-1: #00ff73;
+    --fdr-difficulty-3: #ffc400;
+    --fdr-difficulty-5: #ff4d4d;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    /* FIX: Ensure all elements are constrained by their content box on mobile */
+    min-width: 0; 
 }
 
 body {
@@ -24,6 +26,8 @@ body {
     background-color: var(--background-dark);
     color: var(--text-light);
     line-height: 1.6;
+    /* FIX: The ultimate guardrail to prevent horizontal scroll from breaking out */
+    overflow-x: hidden; 
 }
 
 .container {
@@ -86,7 +90,6 @@ nav ul li a:hover {
 /* --- Main Layout Grid --- */
 .site-content-wrapper {
     display: grid;
-    /* Define 2 columns: main content (1fr) and sidebar (300px) */
     grid-template-columns: 1fr 300px; 
     gap: 30px;
     margin-top: 30px;
@@ -150,8 +153,8 @@ nav ul li a:hover {
 .fdr-grid {
     display: flex;
     gap: 15px;
-    overflow-x: auto; /* Correctly allows horizontal scrolling for this section */
-    padding-bottom: 10px; /* Space for scrollbar */
+    overflow-x: auto; /* KEY: Scrollable section */
+    padding-bottom: 10px; 
 }
 
 .fdr-team-card {
@@ -209,8 +212,7 @@ nav ul li a:hover {
 
 .injury-list {
     display: grid;
-    /* This minmax(350px, 1fr) is too wide for most phones. We'll fix it in the 600px media query. */
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 20px;
 }
 
@@ -247,12 +249,18 @@ nav ul li a:hover {
     padding: 15px;
     border-radius: 8px 8px 0 0;
     margin-bottom: 2px;
+    /* FIX: Allow filters to wrap on narrow screens */
+    display: flex;
+    flex-wrap: wrap; 
+    align-items: center;
 }
 
 .stats-filters label {
     margin-right: 20px;
     font-weight: bold;
     color: var(--text-light);
+    /* FIX: Add bottom margin for vertical spacing when wrapping */
+    margin-bottom: 10px; 
 }
 
 .stats-filters select {
@@ -272,8 +280,7 @@ nav ul li a:hover {
 }
 
 #player-stats-table, #league-analyzer-table {
-    /* If the columns are too wide, the overflow-x: auto will handle it */
-    width: 100%; 
+    width: 100%;
     border-collapse: collapse;
 }
 
@@ -331,8 +338,7 @@ nav ul li a:hover {
 /* --- Live Scores Styles --- */
 .scores-grid {
     display: grid;
-    /* This minmax(320px, 1fr) is too wide for many phones. We'll fix it below. */
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 20px;
 }
 
@@ -435,7 +441,9 @@ nav ul li a:hover {
     padding: 15px;
     border-radius: 8px 8px 0 0;
     margin-bottom: 2px;
+    /* FIX: Allow filters to wrap */
     display: flex;
+    flex-wrap: wrap; 
     justify-content: space-between;
     align-items: center;
 }
@@ -444,6 +452,8 @@ nav ul li a:hover {
     margin-right: 20px;
     font-weight: bold;
     color: var(--text-light);
+    /* FIX: Ensure label wraps with space */
+    margin-bottom: 10px; 
 }
 
 .analyzer-filters select {
@@ -464,6 +474,8 @@ nav ul li a:hover {
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.2s;
+    /* FIX: Ensure button moves to the next line if needed */
+    margin-bottom: 10px; 
 }
 
 #update-analyzer-btn:hover {
@@ -471,7 +483,7 @@ nav ul li a:hover {
 }
 
 #league-analyzer-table tbody tr.my-team-row {
-    background-color: rgba(0, 255, 135, 0.1); /* Light green tint */
+    background-color: rgba(0, 255, 135, 0.1); 
     border-left: 5px solid var(--primary-color);
     font-weight: bold;
 }
@@ -581,7 +593,7 @@ footer {
     
     #sidebar {
         grid-column: 1 / 2;
-        order: -1; /* Place sidebar content (deadline/transfers) at the top */
+        order: -1; 
     }
 
     .header-container {
@@ -603,11 +615,11 @@ footer {
         flex-direction: column;
     }
 
-    /* .scores-grid is fixed in the 600px query below, but leaving this here
-       if you prefer wider cards on tablets.
-    .scores-grid {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    } */
+    /* Reduce horizontal padding on container */
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
 
 
@@ -618,8 +630,8 @@ footer {
     
     /* Global Padding Adjustment */
     .container {
-        width: 100%; /* Ensure max usage of width */
-        padding: 0 10px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     /* Collapse ALL GRIDS to a single column */
@@ -631,19 +643,8 @@ footer {
         grid-template-columns: 1fr;
         gap: 15px;
     }
-
-    /* Fix the excessively wide minmax values */
-    .fpl-grid {
-        /* Ensure cards don't use the min-width: 200px rule from the global style */
-        grid-template-columns: 1fr;
-    }
-    .scores-grid .match-card, 
-    .news-grid .card,
-    .injury-list .card {
-        min-width: 0; /* Override any fixed min-widths */
-    }
     
-    /* Ensure Filters stack on mobile (e.g. Analyzer Filters) */
+    /* Ensure Filters stack vertically */
     .analyzer-filters {
         flex-direction: column;
         align-items: stretch;
@@ -652,16 +653,23 @@ footer {
         margin: 5px 0;
     }
     #update-analyzer-btn {
-        margin-top: 10px;
+        margin-top: 5px;
+        margin-bottom: 0;
+    }
+
+    /* Reduce Table Cell Padding for compactness */
+    #player-stats-table th, #player-stats-table td,
+    #league-analyzer-table th, #league-analyzer-table td {
+        padding: 8px 10px;
+        font-size: 0.85rem;
     }
     
     /* Adjustments for the smallest content */
     .data-section h2, .card-section h2 {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
     
     nav ul {
-        /* Ensure nav items are tightly packed */
         flex-direction: column;
         margin-top: 10px;
     }
