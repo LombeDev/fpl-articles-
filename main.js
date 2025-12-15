@@ -1074,27 +1074,3 @@ function viewLeague() {
         analyzerSection.scrollIntoView({ behavior: 'smooth' });
     }
 }
-
-
- <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const menuToggle = document.querySelector('.menu-toggle');
-            const headerContainer = document.querySelector('.header-container');
-
-            if (menuToggle && headerContainer) {
-                menuToggle.addEventListener('click', function() {
-                    // Toggle the 'menu-open' class on the header container
-                    headerContainer.classList.toggle('menu-open');
-                    
-                    // Accessibility update
-                    const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
-                    menuToggle.setAttribute('aria-expanded', !isExpanded);
-                });
-            }
-        });
-
-        // Placeholder function (replace with your actual logic)
-        function viewLeague() {
-            alert('Viewing Full League Table...');
-        }
-    </script>
