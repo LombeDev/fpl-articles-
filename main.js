@@ -25,6 +25,9 @@ let currentSortColumnPlayer = 'TSB'; // Default sort: Total Score (which is Tota
 let currentSortDirectionPlayer = 'desc';
 const posMap = { 1: 'GKP', 2: 'DEF', 3: 'MID', 4: 'FWD' };
 
+// --- News Feed Global ---
+const FPL_NEWS_RSS_URL = 'https://www.premierleague.com/rss/news/headline_features.xml';
+
 
 /* -----------------------------------------
     NEW: LOADER MANAGEMENT
@@ -59,7 +62,8 @@ async function startDataLoadingAndTrackCompletion() {
             loadGeneralLeagueStandings(),
             loadMiniLeagueAnalyzer(),
             loadAdvancedPlayerStats(), 
-            loadGameweekWrapped(),     // <-- NEW: Gameweek Wrapped is now loaded
+            loadGameweekWrapped(),     
+            loadFPLNewsFeed(),         // Load the FPL RSS News Feed
         ]);
 
         // 3. Ensure a minimum display time for the loader (e.g., 500ms) before hiding.
@@ -745,7 +749,7 @@ function setupStatsCentreListeners() {
 
 
 // -----------------------------------------
-// NEW: Gameweek Wrapped / Review
+// Gameweek Wrapped / Review
 // -----------------------------------------
 
 /**
@@ -785,8 +789,6 @@ async function loadGameweekWrapped() {
         const highestScorePoints = statusResponse.game.top_element_info.points;
 
         // Find the most captained player using the current gameweek's selections from live data
-        // NOTE: This approach is an approximation. FPL live data is player-centric.
-        // We iterate through all players in the GW to find the one with the highest 'captained_by' count
         let mostCaptainedPlayer = null;
         let maxCaptainedCount = -1;
 
@@ -835,410 +837,34 @@ async function loadGameweekWrapped() {
 }
 
 
-// 🌍 GENERAL LEAGUE STANDINGS (Placeholder/Skipped)
-async function loadGeneralLeagueStandings() {
-    // NOTE: This feature has been skipped, focusing on the main analyzer instead.
-}
+// -----------------------------------------
+// FPL News Feed Implementation
+// -----------------------------------------
 
-
-// 🚑 INJURY & SUSPENSION LIST
 /**
- * Loads and displays player status updates (Injured, Doubtful, Suspended)
+ * Loads and displays the latest news from an external FPL RSS feed.
  */
-async function loadPlayerStatusUpdates(data) {
-    const container = document.getElementById("injury-list"); 
-    if (!container || !data) return;
-
-    container.innerHTML = ''; // Clear loading content
-
-    try {
-        // Filter players who are NOT fully available ('a') AND have a news message
-        const unavailablePlayers = data.elements
-            .filter(player =>
-                player.status !== 'a' && player.news.trim().length > 0
-            ).sort((a, b) => {
-                // Sort by status: Injured (i) first, then Doubtful (d)
-                return b.status.localeCompare(a.status);
-            });
-
-        if (unavailablePlayers.length === 0) {
-            container.innerHTML = '<div class="player-news-item"><p class="no-data">🥳 All relevant players are currently available.</p></div>';
-            return;
-        }
-
-        const newsHtml = unavailablePlayers.map(player => {
-            const teamShortName = teamMap[player.team] || 'N/A';
-            const fullName = `${player.first_name} ${player.second_name}`;
-            
-            let statusLabel = '';
-            let statusClass = 'status-default';
-
-            switch (player.status) {
-                case 'd':
-                    statusLabel = 'Doubtful';
-                    statusClass = 'status-doubtful';
-                    break;
-                case 'i':
-                    statusLabel = 'Injured';
-                    statusClass = 'status-injured';
-                    break;
-                case 's':
-                    statusLabel = 'Suspended';
-                    statusClass = 'status-injured';
-                    break;
-                case 'u':
-                    statusLabel = 'Unavailable';
-                    statusClass = 'status-unavailable';
-                    break;
-                default:
-                    statusLabel = 'Uncertain';
-                    break;
-            }
-
-            return `
-                <div class="player-news-item">
-                    <div class="player-info">
-                        <strong>${fullName} (${teamShortName})</strong>
-                        <span class="status-badge ${statusClass}">${statusLabel}</span>
-                    </div>
-                    <p class="news-detail">${player.news}</p>
-                </div>
-            `;
-        }).join('');
-
-        container.innerHTML = newsHtml;
-
-    } catch (error) {
-        console.error("Failed to load player status updates:", error);
-        container.innerHTML = '<p class="error-message">❌ Could not load player status updates. Check FPL API/Proxy.</p>';
-    }
-}
-
-
-// 📅 CURRENT GAMEWEEK FIXTURES
-async function loadCurrentGameweekFixtures() {
-    const container = document.getElementById("live-scores").querySelector('.scores-grid'); 
+async function loadFPLNewsFeed() {
+    const container = document.getElementById("news-rss-content");
     if (!container) return;
-
-    if (!currentGameweekId) {
-        container.innerHTML = "<p>Current Gameweek information is not yet available.</p>";
-        return;
-    }
+    
+    container.innerHTML = '<p class="loading-message">Loading Latest FPL News via RSS...</p>';
 
     try {
-        const data = await fetch(
-            proxy + "https://fantasy.premierleague.com/api/fixtures/"
-        ).then((r) => r.json());
-
-        const currentGWFixtures = data.filter(f => f.event === currentGameweekId);
-
-        if (currentGWFixtures.length === 0) {
-            container.innerHTML = `<p>No fixtures found for Gameweek ${currentGameweekId}.</p>`;
-            return;
-        }
-
-        container.innerHTML = ''; // Clear loading content
-
-        const list = document.createElement('ul');
-        list.classList.add('fixtures-list-items');
-
-        currentGWFixtures.forEach(fixture => {
-            const homeTeamAbbr = teamMap[fixture.team_h] || `T${fixture.team_h}`;
-            const awayTeamAbbr = teamMap[fixture.team_a] || `T${fixture.team_a}`;
-
-            let scoreDisplay = `<span class="vs-label">vs</span>`;
-            let statusClass = 'match-pending';
-            let statusText = 'Upcoming';
-
-            if (fixture.finished) {
-                scoreDisplay = `<span class="score-home">${fixture.team_h_score}</span> : <span class="score-away">${fixture.team_a_score}</span>`;
-                statusClass = 'match-finished';
-                statusText = 'Finished';
-            } else if (fixture.started) {
-                scoreDisplay = `<span class="score-home">${fixture.team_h_score}</span> : <span class="score-away">${fixture.team_a_score}</span>`;
-                statusClass = 'match-live';
-                statusText = 'Live';
-            } else {
-                const kickoffTime = new Date(fixture.kickoff_time);
-                scoreDisplay = `<span class="vs-label-time">${kickoffTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
-            }
-
-            const listItem = document.createElement('li');
-            listItem.classList.add(statusClass);
-
-            listItem.innerHTML = `
-                <div class="fixture-summary">
-                    <span class="fixture-team home-team">
-                        <span class="team-label home-label">${homeTeamAbbr}</span> 
-                    </span> 
-                    ${scoreDisplay}
-                    <span class="fixture-team away-team">
-                        <span class="team-label away-label">${awayTeamAbbr}</span> 
-                    </span>
-                    <span class="match-status-tag">${statusText}</span>
-                </div>
-            `;
-
-            let actionHtml = '';
-            let hasDetails = false;
-
-            if (fixture.started) {
-                const stats = fixture.stats || [];
-
-                const extractStats = (identifier) => {
-                    const stat = stats.find(s => s.identifier === identifier);
-                    return stat ? (stat.a || []).concat(stat.h || []) : [];
-                };
-
-                const goalsData = extractStats('goals_scored');
-                const assistsData = extractStats('assists');
-                const redCardsData = extractStats('red_cards');
-
-                const allActions = [];
-
-                const processActions = (actionArray, type) => {
-                    actionArray.forEach(action => {
-                        const playerName = playerMap[action.element] || `Player ${action.element}`;
-                        for (let i = 0; i < action.value; i++) {
-                            allActions.push({ type: type, name: playerName });
-                        }
-                    });
-                };
-
-                processActions(goalsData, 'goal');
-                processActions(assistsData, 'assist');
-                processActions(redCardsData, 'red_card');
-
-                if (allActions.length > 0) {
-                    hasDetails = true;
-                    const groupedActions = allActions.reduce((acc, action) => {
-                        if (!acc[action.type]) acc[action.type] = new Set();
-                        acc[action.type].add(action.name);
-                        return acc;
-                    }, {});
-
-                    actionHtml += '<div class="fixture-details">';
-
-                    if (groupedActions.goal) {
-                        actionHtml += `<p><span class="action-label action-goal">⚽ Goals:</span> ${Array.from(groupedActions.goal).join(', ')}</p>`;
-                    }
-                    if (groupedActions.assist) {
-                        actionHtml += `<p><span class="action-label action-assist">👟 Assists:</span> ${Array.from(groupedActions.assist).join(', ')}</p>`;
-                    }
-                    if (groupedActions.red_card) {
-                        actionHtml += `<p><span class="action-label action-red-card">🟥 Red Cards:</span> ${Array.from(groupedActions.red_card).join(', ')}</p>`;
-                    }
-
-                    actionHtml += '</div>';
-                }
-            }
-
-            if (hasDetails) {
-                listItem.innerHTML += actionHtml;
-                listItem.classList.add('has-details');
-            }
-
-            list.appendChild(listItem);
-        });
-
-        container.appendChild(list);
-
-    } catch (err) {
-        console.error("Error loading fixtures:", err);
-        container.textContent = "Failed to load fixtures data. Check FPL API/Proxy.";
-    }
-}
-
-
-// 💰 FPL PRICE CHANGES 
-async function loadPriceChanges(data) {
-    const risingContainer = document.getElementById("rising-table").querySelector('tbody');
-    const fallingContainer = document.getElementById("falling-table").querySelector('tbody');
-
-    if (!risingContainer || !fallingContainer || !data) return;
-
-    const priceChangedPlayers = data.elements
-        .filter(p => p.cost_change_event !== 0);
-
-    const risers = priceChangedPlayers
-        .filter(p => p.cost_change_event > 0)
-        .sort((a, b) => b.cost_change_event - a.cost_change_event)
-        .slice(0, 10);
-
-    const fallers = priceChangedPlayers
-        .filter(p => p.cost_change_event < 0)
-        .sort((a, b) => a.cost_change_event - b.cost_change_event)
-        .slice(0, 10);
+        // Use the global proxy to fetch the RSS feed XML
+        const response = await fetch(
+            proxy + FPL_NEWS_RSS_URL
+        );
         
-    risingContainer.innerHTML = '';
-    fallingContainer.innerHTML = '';
-
-    const createTableRow = (player) => {
-        const row = document.createElement('tr');
-        const teamAbbreviation = teamMap[player.team] || 'N/A';
-        const playerPrice = (player.now_cost / 10).toFixed(1);
-        const change = player.cost_change_event / 10;
-        const sign = change > 0 ? '+' : '';
-
-        row.innerHTML = `
-            <td>${player.first_name} ${player.second_name}</td>
-            <td>${teamAbbreviation}</td>
-            <td>£${playerPrice}m (${sign}${change.toFixed(1)})</td>
-        `;
-        return row;
-    };
-
-    risers.forEach(p => risingContainer.appendChild(createTableRow(p)));
-    fallers.forEach(p => fallingContainer.appendChild(createTableRow(p)));
-}
-
-// ➡️ MOST TRANSFERRED IN (Using sidebar container)
-async function loadMostTransferred(data) {
-    const container = document.getElementById("sidebar-transfers-list");
-    if (!container || !data) return;
-
-    const topTransferred = data.elements
-        .sort((a, b) => b.transfers_in_event - a.transfers_in_event)
-        .slice(0, 3); // Showing top 3 in sidebar
-
-    container.innerHTML = "<li><strong>IN:</strong></li>";
-
-    topTransferred.forEach((p) => {
-        const listItem = document.createElement("li");
-        const transfers = p.transfers_in_event.toLocaleString();
-        const teamAbbreviation = teamMap[p.team] || 'N/A';
-        listItem.textContent = `${p.second_name} (${teamAbbreviation}) - ${transfers}`;
-        listItem.classList.add("transfer-in");
-        container.appendChild(listItem);
-    });
-}
-
-// ⬅️ MOST TRANSFERRED OUT 
-async function loadMostTransferredOut(data) {
-    const container = document.getElementById("sidebar-transfers-list");
-    if (!container || !data) return;
-
-    const topTransferredOut = data.elements
-        .sort((a, b) => b.transfers_out_event - a.transfers_out_event)
-        .slice(0, 3); // Showing top 3 in sidebar
+        // The response is XML, so we get it as text
+        const xmlText = await response.text();
         
-    const titleItem = document.createElement("li");
-    titleItem.innerHTML = "<li><strong>OUT:</strong></li>";
-    container.appendChild(titleItem);
-
-
-    topTransferredOut.forEach((p) => {
-        const listItem = document.createElement("li");
-        const transfers = p.transfers_out_event.toLocaleString();
-        const teamAbbreviation = teamMap[p.team] || 'N/A';
+        // Use DOMParser to convert XML text into a document object
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
         
-        listItem.textContent = `${p.second_name} (${teamAbbreviation}) - ${transfers}`;
-        listItem.classList.add("transfer-out");
-
-        container.appendChild(listItem);
-    });
-}
-
-
-// ©️ MOST CAPTAINED PLAYER 
-async function loadMostCaptained(data) {
-    const container = document.getElementById("most-captained");
-    if (!container || !data) return;
-
-    const currentEvent = data.events.find(e => e.is_next || e.is_current);
-
-    if (!currentEvent || !currentEvent.most_captained) {
-        container.textContent = "Data not yet available.";
-        return;
-    }
-
-    const mostCaptainedId = currentEvent.most_captained;
-    const captain = data.elements.find(p => p.id === mostCaptainedId);
-
-    if (!captain) {
-        container.textContent = "Could not find captain.";
-        return;
-    }
-
-    const captaincyPercentage = captain.selected_by_percent; 
-    const teamAbbreviation = teamMap[captain.team] || 'N/A';
-
-    container.innerHTML = `
-        <span class="player-name">${captain.second_name} (${teamAbbreviation})</span>
-        <span class="captaincy-detail">| ${captaincyPercentage}%</span>
-    `;
-}
-
-
-// 🥇 CURRENT EPL TABLE (STANDINGS) - Simplified FPL Data Only
-/**
- * Loads and displays a simplified EPL Table using only FPL Bootstrap data.
- * @param {object} data - The full data object from FPL bootstrap-static.
- */
-async function loadSimpleEPLTable(data) {
-    const container = document.getElementById("fpl").querySelector('.fpl-grid'); 
-    if (!container || !data || !data.teams) return;
-
-    const sortedTeams = data.teams.sort((a, b) => a.position - b.position);
-
-    // Create a new div specifically for the table within the grid
-    const tableWrapper = document.createElement('div');
-    tableWrapper.classList.add('epl-table-wrapper', 'card', 'lazy');
-    tableWrapper.innerHTML = "<h3>Current Premier League Standings 🏆 (FPL Data)</h3>";
-
-
-    const table = document.createElement('table');
-    table.classList.add('simple-epl-table');
-    table.innerHTML = `
-        <thead>
-            <tr>
-                <th>#</th>
-                <th class="team-name-header">Team</th>
-                <th>Pl</th>
-                <th>W</th>
-                <th>L</th>
-                <th>Pts</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    `;
-    const tbody = table.querySelector('tbody');
-
-    sortedTeams.forEach((team) => {
-        const row = tbody.insertRow();
+        // Find all <item> elements in the RSS feed
+        const items = xmlDoc.querySelectorAll('item');
         
-        // Determine coloring based on position (rank) - uses FPL's fields
-        let rowClass = '';
-        if (team.position <= 4) {
-            rowClass = "champions-league";
-        } else if (team.position === 5) {
-            rowClass = "europa-league";
-        } else if (team.position >= 18) {
-            rowClass = "relegation-zone";
-        }
-
-        if(rowClass) row.classList.add(rowClass);
-
-        row.innerHTML = `
-            <td>${team.position}</td>
-            <td class="team-name">${team.name}</td>
-            <td>${team.played}</td>
-            <td>${team.win}</td>
-            <td>${team.loss}</td>
-            <td>${team.points}</td>
-        `;
-    });
-    
-    tableWrapper.appendChild(table);
-    container.appendChild(tableWrapper);
-}
-
-// Placeholder function used in HTML sidebar
-function viewLeague() {
-    // For now, trigger scroll to the league analyzer section
-    const analyzerSection = document.getElementById('mini-league-analyzer');
-    if (analyzerSection) {
-        analyzerSection.scrollIntoView({ behavior: 'smooth' });
-    }
-}
+        if (items.length === 0) {
+            container.innerHTML = '<p
