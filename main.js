@@ -58,7 +58,8 @@ async function startDataLoadingAndTrackCompletion() {
         await Promise.all([
             loadGeneralLeagueStandings(),
             loadMiniLeagueAnalyzer(),
-            loadAdvancedPlayerStats(), // Load the Player Stats Centre
+            loadAdvancedPlayerStats(), 
+            loadGameweekWrapped(),     // <-- NEW: Gameweek Wrapped is now loaded
         ]);
 
         // 3. Ensure a minimum display time for the loader (e.g., 500ms) before hiding.
@@ -512,7 +513,7 @@ function setupAnalyzerListeners() {
 
 
 // -----------------------------------------
-// Advanced Player Stats Centre
+// Advanced Player Stats Centre (Top 20 Only)
 // -----------------------------------------
 
 
@@ -581,7 +582,7 @@ async function loadAdvancedPlayerStats() {
 
 /**
  * Filters and sorts the player data before calling the renderer.
- * **UPDATED: Limits the final displayed data to the top 20 players.**
+ * **Limits the final displayed data to the top 20 players.**
  * * @param {object[]} data - The full player dataset.
  * @param {string} posFilter - The position filter ('ALL', 'GKP', 'DEF', 'MID', 'FWD').
  */
@@ -740,6 +741,97 @@ function setupStatsCentreListeners() {
             applyFiltersAndRenderStats(allPlayersData, selectedPos);
         });
     });
+}
+
+
+// -----------------------------------------
+// NEW: Gameweek Wrapped / Review
+// -----------------------------------------
+
+/**
+ * Loads and displays the summary data for the completed Gameweek (currentGameweekId - 1).
+ */
+async function loadGameweekWrapped() {
+    const container = document.getElementById("gw-wrapped-content");
+    if (!container) return;
+    
+    // Determine the completed Gameweek ID
+    const completedGwId = currentGameweekId - 1; 
+
+    if (completedGwId <= 0) {
+        container.innerHTML = '<p class="no-data">Gameweek 1 has not finished yet! No review available.</p>';
+        return;
+    }
+
+    container.innerHTML = `<p class="loading-message">Loading Review for Gameweek ${completedGwId}...</p>`;
+
+    try {
+        // 1. Fetch the Gameweek History/Status (This endpoint has overall GW stats)
+        const statusResponse = await fetch(
+            proxy + `https://fantasy.premierleague.com/api/event/${completedGwId}/status/`
+        ).then(r => r.json());
+
+        // 2. Fetch the Player Picks/Data for this GW
+        const picksResponse = await fetch(
+            proxy + `https://fantasy.premierleague.com/api/event/${completedGwId}/live/`
+        ).then(r => r.json());
+        
+        // 3. Extract Key Stats from Status/Picks
+        const eventStatus = statusResponse.status;
+        const highestScoringEntry = eventStatus.find(s => s.type === 'hsc')?.entry;
+        const highestScore = eventStatus.find(s => s.type === 'hsc')?.points;
+        const averageScore = statusResponse.game.average_entry_score;
+        const highestScorePlayerId = statusResponse.game.top_element;
+        const highestScorePoints = statusResponse.game.top_element_info.points;
+
+        // Find the most captained player using the current gameweek's selections from live data
+        // NOTE: This approach is an approximation. FPL live data is player-centric.
+        // We iterate through all players in the GW to find the one with the highest 'captained_by' count
+        let mostCaptainedPlayer = null;
+        let maxCaptainedCount = -1;
+
+        picksResponse.elements.forEach(player => {
+            if (player.stats.captained_by > maxCaptainedCount) {
+                maxCaptainedCount = player.stats.captained_by;
+                mostCaptainedPlayer = player.id;
+            }
+        });
+        
+        // Use maps to get names
+        const topPlayerName = playerMap[highestScorePlayerId] || 'N/A';
+        const topCaptainedName = playerMap[mostCaptainedPlayer] || 'N/A';
+        
+        // 4. Construct the HTML
+        container.innerHTML = `
+            <h3>Gameweek ${completedGwId} Summary</h3>
+            <div class="gw-stats-grid">
+                <div class="stat-card stat-average">
+                    <p class="stat-label">Average Score</p>
+                    <p class="stat-value">${averageScore}</p>
+                </div>
+                <div class="stat-card stat-high-score">
+                    <p class="stat-label">Highest Score</p>
+                    <p class="stat-value">${highestScore || 'N/A'}</p>
+                    <p class="stat-detail">${highestScoringEntry ? `(Manager ID: ${highestScoringEntry})` : ''}</p>
+                </div>
+                <div class="stat-card stat-top-player">
+                    <p class="stat-label">Top Player</p>
+                    <p class="stat-value">${highestScorePoints} pts</p>
+                    <p class="stat-detail">${topPlayerName}</p>
+                </div>
+                <div class="stat-card stat-captain">
+                    <p class="stat-label">Most Captained Player</p>
+                    <p class="stat-value">${maxCaptainedCount.toLocaleString()}</p>
+                    <p class="stat-detail">${topCaptainedName}</p>
+                </div>
+            </div>
+            <p class="note">* Data is based on FPL global stats for the completed Gameweek.</p>
+        `;
+
+    } catch (err) {
+        console.error("Error loading Gameweek Wrapped:", err);
+        container.innerHTML = '<p class="error-message">❌ Failed to load Gameweek Review data.</p>';
+    }
 }
 
 
