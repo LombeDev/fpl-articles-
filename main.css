@@ -735,3 +735,89 @@ footer {
         font-size: 1.4rem;
     }
 }
+
+
+
+/* --- Mini-League Analyzer Styles --- */
+
+#mini-league-analyzer h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.analyzer-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-small);
+}
+
+.analyzer-filters label,
+.analyzer-filters select,
+.analyzer-filters button {
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+
+#update-analyzer-btn {
+    background-color: var(--highlight-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#update-analyzer-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+/* --- Table Styling --- */
+
+#league-analyzer-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+#league-analyzer-table thead th {
+    background-color: var(--header-bg);
+    color: var(--text-color-header);
+    padding: 10px 8px;
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    white-space: nowrap;
+}
+
+#league-analyzer-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.1s;
+}
+
+#league-analyzer-table tbody tr:hover {
+    background-color: var(--hover-bg);
+}
+
+#league-analyzer-table tbody td {
+    padding: 10px 8px;
+    vertical-align: middle;
+}
+
+/* Highlighted Ranks */
+#league-analyzer-table .top-rank { background-color: rgba(255, 215, 0, 0.15); font-weight: bold; }
+#league-analyzer-table .second-rank { background-color: rgba(192, 192, 192, 0.15); }
+#league-analyzer-table .third-rank { background-color: rgba(205, 127, 50, 0.15); }
+
+/* Active Sort Column */
+#league-analyzer-table th.active-sort-column {
+    background-color: var(--active-sort-bg); /* Darker shade to indicate sorting */
+}
