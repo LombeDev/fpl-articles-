@@ -13,11 +13,17 @@ let currentGameweekId = null;
 let nextDeadlineDate = null; 
 let countdownInterval = null; 
 
-// Mini-League Analyzer Globals
+// --- Mini-League Analyzer Globals ---
 const LEAGUE_ID = "101712"; // The target league ID
 let leagueData = [];        // Global store for the detailed league data
 let defaultSortColumn = 'total-points';
 let defaultSortDirection = 'desc';
+
+// --- Advanced Player Stats Globals ---
+let allPlayersData = []; // Global store for the full, raw player dataset
+let currentSortColumnPlayer = 'TSB'; // Default sort: Total Score (which is Total Points)
+let currentSortDirectionPlayer = 'desc';
+const posMap = { 1: 'GKP', 2: 'DEF', 3: 'MID', 4: 'FWD' };
 
 
 /* -----------------------------------------
@@ -41,7 +47,7 @@ function hideLoadingOverlay() {
 }
 
 /**
- * NEW: Manages all critical data fetching and hides the loader when complete.
+ * Manages all critical data fetching and hides the loader when complete.
  */
 async function startDataLoadingAndTrackCompletion() {
     try {
@@ -52,6 +58,7 @@ async function startDataLoadingAndTrackCompletion() {
         await Promise.all([
             loadGeneralLeagueStandings(),
             loadMiniLeagueAnalyzer(),
+            loadAdvancedPlayerStats(), // Load the Player Stats Centre
         ]);
 
         // 3. Ensure a minimum display time for the loader (e.g., 500ms) before hiding.
@@ -65,16 +72,6 @@ async function startDataLoadingAndTrackCompletion() {
         hideLoadingOverlay();
     }
 }
-
-
-/* -----------------------------------------
-    LIGHT / DARK / MULTI-COLOR MODE TOGGLE + SAVE
-    (NOTE: Theme Toggle logic from original script, but needs HTML elements with IDs: 
-    themeToggle and classes: dark-mode if reactivated.)
------------------------------------------ */
-// const themeToggle = document.getElementById("themeToggle");
-// const body = document.body;
-// // ... (Rest of original theme logic here) ...
 
 
 /* -----------------------------------------
@@ -96,12 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // NOTE: Kebab and outside click logic removed as it was not in the provided HTML.
+    // Call the data loader manager
+    startDataLoadingAndTrackCompletion();
 });
 
 
 /* -----------------------------------------
-    LAZY LOADING FADE-IN
+    LAZY LOADING FADE-IN (If you add this CSS)
 ----------------------------------------- */
 const lazyElements = document.querySelectorAll(".lazy");
 
@@ -116,16 +114,10 @@ const observer = new IntersectionObserver((entries) => {
 
 lazyElements.forEach((el) => observer.observe(el));
 
+
 /* -----------------------------------------
-    FPL API FETCHING
+    FPL API FETCHING - CORE HELPERS
 ----------------------------------------- */
-
-// On page load 
-window.addEventListener("DOMContentLoaded", () => {
-    // We now call the loading manager instead of individual functions.
-    startDataLoadingAndTrackCompletion();
-});
-
 
 /**
  * Helper function to create the HTML for rank/price change icons.
@@ -253,7 +245,7 @@ async function loadFPLBootstrapData() {
 
     } catch (err) {
         console.error("Error fetching FPL Bootstrap data:", err);
-        const sections = ["price-changes-list", "most-transferred-list", "most-transferred-out-list", "most-captained-list", "fixtures-list", "status-list", "countdown-timer"];
+        const sections = ["countdown-timer"]; // Basic critical element
         sections.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.textContent = "Failed to load data. Check FPL API/Proxy.";
@@ -392,15 +384,12 @@ function renderAnalyzerTable(data, view) {
 
     tableBody.innerHTML = ''; // Clear previous data
 
-    // 1. Determine sort column for view defaults
-    let sortKey = defaultSortColumn;
-    
-    // 2. Sort the data using current global settings
+    // 1. Sort the data using current global settings
     const sortDirectionValue = defaultSortDirection === 'asc' ? 1 : -1;
 
     const sortedData = [...data].sort((a, b) => {
-        const valA = a[defaultSortColumn];
-        const valB = b[defaultSortColumn];
+        const valA = a[`sort_${defaultSortColumn.replace('-', '_')}`] || a[defaultSortColumn.replace('-', '_')];
+        const valB = b[`sort_${defaultSortColumn.replace('-', '_')}`] || b[defaultSortColumn.replace('-', '_')];
 
         // Handle string sorting (Manager Name, Team Name)
         if (typeof valA === 'string' && typeof valB === 'string') {
@@ -413,7 +402,7 @@ function renderAnalyzerTable(data, view) {
         return 0;
     });
 
-    // 3. Update table headers based on view/sort
+    // 2. Update table headers based on view/sort
     headerRow.querySelectorAll('th').forEach(th => {
         th.classList.remove('active-sort-column');
         const icon = th.querySelector('i');
@@ -424,7 +413,7 @@ function renderAnalyzerTable(data, view) {
     });
 
     // Highlight the active sort column and update its icon
-    const activeCol = document.querySelector(`th[data-sort="${defaultSortColumn.replace('sort_', '').replace('_points', '-points')}"]`);
+    const activeCol = document.querySelector(`th[data-sort="${defaultSortColumn}"]`);
     if(activeCol) {
         activeCol.classList.add('active-sort-column');
         const activeIcon = activeCol.querySelector('i');
@@ -434,7 +423,7 @@ function renderAnalyzerTable(data, view) {
         }
     }
     
-    // 4. Render Rows
+    // 3. Render Rows
     sortedData.forEach((manager, index) => {
         const rankChangeHtml = getChangeIconHtml(manager.rank_change, false); 
         
@@ -473,18 +462,17 @@ function setupAnalyzerListeners() {
     if (filterSelect.dataset.listenerSetup) return;
     filterSelect.dataset.listenerSetup = true;
 
-    // 1. Filter Dropdown Change: When the view changes, we change the default sort key, 
-    //    then render the table using the new settings.
+    // 1. Filter Dropdown Change
     filterSelect.addEventListener('change', (e) => {
         const view = e.target.value;
         if (view === 'transfers') {
-            defaultSortColumn = 'sort_transfers';
+            defaultSortColumn = 'transfers';
             defaultSortDirection = 'desc';
         } else if (view === 'value') {
-            defaultSortColumn = 'sort_value';
+            defaultSortColumn = 'tv';
             defaultSortDirection = 'desc';
         } else if (view === 'current') {
-            defaultSortColumn = 'sort_total_points';
+            defaultSortColumn = 'total-points';
             defaultSortDirection = 'desc';
         }
         renderAnalyzerTable(leagueData, view);
@@ -498,27 +486,19 @@ function setupAnalyzerListeners() {
     // 3. Table Header Sorting
     table.querySelectorAll('th[data-sort]').forEach(header => {
         header.addEventListener('click', () => {
-            const sortColumn = header.dataset.sort;
-            const sortKeyMap = {
-                'rank': 'sort_total_points',
-                'manager': 'player_name',
-                'team-name': 'entry_name',
-                'gw-points': 'sort_gw_points',
-                'total-points': 'sort_total_points',
-                'transfers': 'sort_transfers',
-                'tv': 'sort_value',
-                'orank': 'sort_orank'
-            };
+            const sortColumn = header.dataset.sort; 
             
-            const newSortKey = sortKeyMap[sortColumn];
-
             // Toggle sort direction
-            if (defaultSortColumn === newSortKey) {
+            if (defaultSortColumn === sortColumn) {
                 defaultSortDirection = defaultSortDirection === 'asc' ? 'desc' : 'asc';
             } else {
-                defaultSortColumn = newSortKey;
+                defaultSortColumn = sortColumn;
                 // Default descending for points/rank/transfers/value, ascending for name
-                defaultSortDirection = (defaultSortColumn.includes('points') || defaultSortColumn.includes('rank') || defaultSortColumn.includes('transfers') || defaultSortColumn.includes('value')) ? 'desc' : 'asc';
+                if (sortColumn === 'manager' || sortColumn === 'team-name') {
+                    defaultSortDirection = 'asc';
+                } else {
+                    defaultSortDirection = 'desc';
+                }
             }
 
             // Re-render the table with new sort
@@ -529,118 +509,249 @@ function setupAnalyzerListeners() {
 }
 
 
-// 🌍 GENERAL LEAGUE STANDINGS (Collapsible Section Content)
+// -----------------------------------------
+// Advanced Player Stats Centre
+// -----------------------------------------
+
+
 /**
- * Loads and displays standings for a list of general leagues.
- * The content for these leagues will be collapsible/expandable.
+ * Fetches all player data and prepares the initial stats table view.
  */
-async function loadGeneralLeagueStandings() {
-    const container = document.getElementById("general-leagues-list");
-    // NOTE: This container is not present in your HTML but keeping the logic
-    if (!container) return;
-
-    // --- 1. Define the leagues to load (IDs provided by the user) ---
-    const leaguesToLoad = [
-        { id: "101712", name: "Kopala FPL", type: "Classic" }, 
-        { id: "147133", name: "Bayporteers", type: "Classic" }, 
-        { id: "258", name: "Zambia", type: "Classic" }, 
-        { id: "315", name: "Overall", type: "Classic" }, 
-        { id: "276", name: "Gameweek 1", type: "Classic" }, 
-        { id: "333", name: "Second Chance", type: "H2H" }, 
-    ];
-
-    container.innerHTML = ""; // Clear the initial loading content
-
-    const loadPromises = leaguesToLoad.map(async (leagueConfig) => {
-        // Create a dedicated sub-container for this league
-        const leagueItem = document.createElement('div');
-        leagueItem.classList.add('general-league-item');
-
-        // Create the header for this specific league list
-        const leagueHeader = document.createElement('div');
-        leagueHeader.classList.add('general-league-header');
-        leagueHeader.innerHTML = `
-            <h4>${leagueConfig.name} League Standings</h4>
-            <span class="league-type">(${leagueConfig.type})</span>
-            <span class="loader-small"></span>
-        `;
-        
-        // This is where the actual standings will go
-        const standingsContent = document.createElement('div');
-        standingsContent.classList.add('league-standings-content');
-        
-        leagueItem.appendChild(leagueHeader);
-        leagueItem.appendChild(standingsContent);
-        container.appendChild(leagueItem);
-
-        // Add click listener to toggle the individual league standing content
-        leagueHeader.addEventListener('click', () => {
-            // Simple toggle for individual leagues
-            standingsContent.classList.toggle('visible');
-            leagueHeader.classList.toggle('active');
-        });
-
-
-        try {
-            // Determine API endpoint based on league type (Classic or H2H)
-            const apiEndpoint = leagueConfig.type === "H2H" 
-                ? `https://fantasy.premierleague.com/api/leagues-h2h/${leagueConfig.id}/standings/`
-                : `https://fantasy.premierleague.com/api/leagues-classic/${leagueConfig.id}/standings/`;
-
-            const data = await fetch(
-                proxy + apiEndpoint
-            ).then((r) => r.json());
-
-            // Check if the league has results
-            const results = data.standings?.results;
-            const loader = leagueHeader.querySelector('.loader-small');
-            if (loader) loader.remove(); // Remove loader on success
-
-            if (!results || results.length === 0) {
-                standingsContent.innerHTML = `<p class="error-message">No teams found in this league.</p>`;
-                return; // Exit this map iteration
-            }
-
-            // --- 2. Render Standings Table ---
-            const list = document.createElement('ul');
-            list.classList.add('standings-list-general'); // Use a specific class for styling
-
-            results.forEach((team) => {
-                // Get the HTML for rank change indicator using the helper function
-                const rankChangeHtml = getChangeIconHtml(team.rank_change, false); 
-
-                const listItem = document.createElement("li");
-                listItem.innerHTML = `
-                    <span class="rank-number">${team.rank}.</span> 
-                    <span class="manager-name">${team.player_name} (${team.entry_name})</span> 
-                    ${rankChangeHtml} <span><strong>${team.total}</strong> pts</span>
-                `;
-
-                if (team.rank === 1) listItem.classList.add("top-rank-general"); 
-                
-                list.appendChild(listItem);
-            });
-
-            standingsContent.appendChild(list);
-
-        } catch (err) {
-            console.error(`Error loading standings for ${leagueConfig.name}:`, err);
-            const loader = leagueHeader.querySelector('.loader-small');
-            if (loader) loader.remove();
-            standingsContent.innerHTML = `<p class="error-message">❌ Failed to load standings for ${leagueConfig.name}.</p>`;
-        }
-    });
+async function loadAdvancedPlayerStats() {
+    const tableBody = document.querySelector("#player-stats-table tbody");
+    if (!tableBody) return;
     
-    // Wait for all league loads to finish before returning the overall promise
-    await Promise.all(loadPromises);
+    tableBody.innerHTML = '<tr><td colspan="7" class="loading-message">Loading player stats...</td></tr>';
+
+    try {
+        // Fetch bootstrap data if not already done (for robustness)
+        if (Object.keys(playerMap).length === 0) {
+             const response = await fetch(
+                proxy + "https://fantasy.premierleague.com/api/bootstrap-static/"
+            );
+            const data = await response.json();
+            data.teams.forEach(team => { teamMap[team.id] = team.short_name; });
+            data.elements.forEach(player => { playerMap[player.id] = `${player.first_name} ${player.second_name}`; });
+            allPlayersData = data.elements;
+        } else {
+            // Assume we have the data already in bootstrap, use it if we can access it
+            // For now, re-fetching to ensure we have the latest static data
+             const response = await fetch(
+                proxy + "https://fantasy.premierleague.com/api/bootstrap-static/"
+            );
+            const data = await response.json();
+            allPlayersData = data.elements;
+        }
+        
+        // Enhance player data with readable keys for the table
+        const enhancedPlayers = allPlayersData.map(p => ({
+            id: p.id,
+            name: `${p.first_name} ${p.second_name}`,
+            team: teamMap[p.team] || 'N/A',
+            pos: posMap[p.element_type] || 'N/A',
+            price: (p.now_cost / 10).toFixed(1),
+            // Metrics (using FPL API keys)
+            TSB: p.total_points,      // Total Score/Points
+            ICT: p.ict_index_rank,    // ICT Index Rank (lower is better rank) - FPL returns rank here
+            PPM: (p.points_per_game / (p.now_cost / 10)).toFixed(2), // Simple Points Per Million approximation
+            // Raw values for sorting
+            sort_name: `${p.first_name} ${p.second_name}`,
+            sort_team: teamMap[p.team] || 'N/A',
+            sort_pos: p.element_type,
+            sort_price: p.now_cost,
+            sort_TSB: p.total_points,
+            sort_ICT: parseFloat(p.ict_index), // Use the actual index value
+            sort_PPM: parseFloat(p.points_per_game) / (p.now_cost / 10),
+        }));
+
+        allPlayersData = enhancedPlayers; // Store the processed data globally
+        
+        // Initial render (All positions, sorted by TSB/Total Points descending)
+        applyFiltersAndRenderStats(allPlayersData, 'ALL');
+        setupStatsCentreListeners();
+
+
+    } catch (err) {
+        console.error("Error loading Advanced Player Stats:", err);
+        tableBody.innerHTML = '<tr><td colspan="7" class="error-message">❌ Failed to load player stats data.</td></tr>';
+    }
 }
 
 
 /**
+ * Filters and sorts the player data before calling the renderer.
+ * @param {object[]} data - The full player dataset.
+ * @param {string} posFilter - The position filter ('ALL', 'GKP', 'DEF', 'MID', 'FWD').
+ * @param {string} metricFilter - The metric to display (TSB, ICT, PPM).
+ */
+function applyFiltersAndRenderStats(data, posFilter) {
+    let filteredData = data;
+    const metricFilter = document.getElementById("metric-filter")?.value || 'TSB';
+
+    // 1. Filter by Position
+    if (posFilter !== 'ALL') {
+        filteredData = data.filter(p => p.pos === posFilter);
+    }
+    
+    // 2. Sort the data
+    const sortKey = `sort_${currentSortColumnPlayer}`;
+    const sortDirection = currentSortDirectionPlayer === 'asc' ? 1 : -1;
+
+    const sortedData = [...filteredData].sort((a, b) => {
+        const valA = a[sortKey];
+        const valB = b[sortKey];
+
+        // Handle string sorting (Player Name, Team)
+        if (typeof valA === 'string' && typeof valB === 'string') {
+            return sortDirection * valA.localeCompare(valB);
+        }
+
+        // Handle numeric sorting
+        if (valA < valB) return sortDirection * -1;
+        if (valA > valB) return sortDirection * 1;
+        return 0; 
+    });
+
+    // 3. Render the table
+    renderPlayerStatsTable(sortedData, metricFilter);
+}
+
+
+/**
+ * Renders the advanced player stats table and updates column visibility.
+ * @param {object[]} players - The filtered and sorted player data.
+ * @param {string} activeMetric - The currently selected metric (TSB, ICT, PPM).
+ */
+function renderPlayerStatsTable(players, activeMetric) {
+    const tableBody = document.querySelector("#player-stats-table tbody");
+    const tableHeaders = document.querySelectorAll("#player-stats-table th[data-sort]");
+    if (!tableBody) return;
+    
+    tableBody.innerHTML = ''; // Clear previous data
+
+    if (players.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="7" class="no-data-message">No players match the current filters.</td></tr>';
+        return;
+    }
+
+    // 1. Update Header Visuals (Active Sort)
+    tableHeaders.forEach(th => {
+        const dataSort = th.dataset.sort;
+        const isCurrentSort = dataSort === currentSortColumnPlayer;
+        
+        // Reset classes
+        th.classList.remove('active-sort-column', 'sort-asc', 'sort-desc');
+        
+        const icon = th.querySelector('i');
+        if (icon) {
+             icon.classList.add('fa-sort');
+             icon.classList.remove('fa-arrow-up', 'fa-arrow-down');
+        }
+
+        // Set active sort class
+        if (isCurrentSort) {
+            th.classList.add('active-sort-column');
+            th.classList.add(`sort-${currentSortDirectionPlayer}`);
+
+            if (icon) {
+                icon.classList.remove('fa-sort');
+                icon.classList.add(currentSortDirectionPlayer === 'asc' ? 'fa-arrow-up' : 'fa-arrow-down');
+            }
+        }
+    });
+
+    // 2. Render Rows
+    players.forEach((player) => {
+        const row = tableBody.insertRow();
+        
+        // Highlight top performers for the current metric
+        if (activeMetric === 'TSB' && player.sort_TSB >= 100) row.classList.add('top-performer');
+        
+        row.innerHTML = `
+            <td>${player.name}</td>
+            <td>${player.team}</td>
+            <td><span class="pos-badge pos-${player.pos}">${player.pos}</span></td>
+            <td>£${player.price}m</td>
+            <td data-metric="TSB">${player.TSB}</td>
+            <td data-metric="ICT">${player.ICT}</td>
+            <td data-metric="PPM">${player.PPM}</td>
+        `;
+    });
+}
+
+
+/**
+ * Sets up event listeners for the player stats filters and table header sorting.
+ */
+function setupStatsCentreListeners() {
+    const posFilter = document.getElementById("pos-filter");
+    const metricFilter = document.getElementById("metric-filter");
+    const table = document.getElementById("player-stats-table");
+
+    if (!posFilter || !metricFilter || !table) return;
+
+    // Avoid setting up multiple listeners
+    if (posFilter.dataset.listenerSetup) return;
+    posFilter.dataset.listenerSetup = true;
+
+    // 1. Filter Change (Position or Metric)
+    const filterChangeHandler = () => {
+        const selectedPos = posFilter.value;
+        const selectedMetric = metricFilter.value;
+        
+        // When metric changes, we should update the default sort column to match it
+        currentSortColumnPlayer = selectedMetric;
+        currentSortDirectionPlayer = 'desc'; // Default to descending for all metrics
+
+        applyFiltersAndRenderStats(allPlayersData, selectedPos);
+    };
+
+    posFilter.addEventListener('change', filterChangeHandler);
+    metricFilter.addEventListener('change', filterChangeHandler);
+
+
+    // 2. Table Header Sorting
+    table.querySelectorAll('th[data-sort]').forEach(header => {
+        header.addEventListener('click', () => {
+            const sortColumn = header.dataset.sort; 
+            
+            // Map the header name to the data key
+            const newSortKey = sortColumn; 
+
+            // Toggle sort direction
+            if (currentSortColumnPlayer === newSortKey) {
+                currentSortDirectionPlayer = currentSortDirectionPlayer === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSortColumnPlayer = newSortKey;
+                // Default descending for most stats, ascending for Price/Rank
+                if (sortColumn === 'price' || sortColumn === 'ICT' || sortColumn === 'name' || sortColumn === 'team' || sortColumn === 'pos') {
+                    currentSortDirectionPlayer = 'asc';
+                } else {
+                    currentSortDirectionPlayer = 'desc';
+                }
+            }
+
+            // Re-render the table with new sort and current filters
+            const selectedPos = posFilter.value;
+            applyFiltersAndRenderStats(allPlayersData, selectedPos);
+        });
+    });
+}
+
+
+// 🌍 GENERAL LEAGUE STANDINGS (Original for collapsible section content - modified to be simple)
+async function loadGeneralLeagueStandings() {
+    // NOTE: This feature has been skipped for brevity as the HTML does not contain a specific
+    // container for multiple general leagues, focusing on the main analyzer instead.
+}
+
+
+// 🚑 INJURY & SUSPENSION LIST
+/**
  * Loads and displays player status updates (Injured, Doubtful, Suspended)
  */
 async function loadPlayerStatusUpdates(data) {
-    const container = document.getElementById("injury-list"); // Updated ID to match your HTML
+    const container = document.getElementById("injury-list"); 
     if (!container || !data) return;
 
     container.innerHTML = ''; // Clear loading content
@@ -711,7 +822,7 @@ async function loadPlayerStatusUpdates(data) {
 
 // 📅 CURRENT GAMEWEEK FIXTURES
 async function loadCurrentGameweekFixtures() {
-    const container = document.getElementById("live-scores").querySelector('.scores-grid'); // Changed ID to match your HTML
+    const container = document.getElementById("live-scores").querySelector('.scores-grid'); 
     if (!container) return;
 
     if (!currentGameweekId) {
@@ -844,40 +955,6 @@ async function loadCurrentGameweekFixtures() {
 }
 
 
-// MINI-LEAGUE STANDINGS (Original for 'standings-list' - Not in new HTML, keeping for completeness)
-async function loadStandings() {
-    const container = document.getElementById("standings-list");
-    if (!container) return;
-    try {
-        const leagueID = "101712";
-        const data = await fetch(
-            proxy + `https://fantasy.premierleague.com/api/leagues-classic/${leagueID}/standings/`
-        ).then((r) => r.json());
-
-        container.innerHTML = "";
-        data.standings.results.forEach((team, index) => {
-            // Using setTimeout for staggered reveal, but note this doesn't block the loader
-            setTimeout(() => {
-                // Use the helper function for dynamic rank change arrows
-                const rankChangeHtml = getChangeIconHtml(team.rank_change, false);
-
-                const div = document.createElement("div");
-                div.classList.add("standing-row");
-                div.innerHTML = `<span class="rank-number">${team.rank}.</span> <span class="manager-name">${team.player_name} (${team.entry_name})</span> ${rankChangeHtml} <span>${team.total} pts</span>`;
-
-                if (team.rank === 1) div.classList.add("top-rank");
-                else if (team.rank === 2) div.classList.add("second-rank");
-                else if (team.rank === 3) div.classList.add("third-rank");
-
-                container.appendChild(div);
-            }, index * 30);
-        });
-    } catch (err) {
-        console.error("Error loading standings:", err);
-        container.textContent = "Failed to load standings. Check league ID or proxy.";
-    }
-}
-
 // 💰 FPL PRICE CHANGES 
 async function loadPriceChanges(data) {
     const risingContainer = document.getElementById("rising-table").querySelector('tbody');
@@ -988,7 +1065,6 @@ async function loadMostCaptained(data) {
         return;
     }
 
-    const playerPrice = (captain.now_cost / 10).toFixed(1);
     const captaincyPercentage = captain.selected_by_percent; 
     const teamAbbreviation = teamMap[captain.team] || 'N/A';
 
@@ -1002,15 +1078,12 @@ async function loadMostCaptained(data) {
 // 🥇 CURRENT EPL TABLE (STANDINGS) - Simplified FPL Data Only
 /**
  * Loads and displays a simplified EPL Table using only FPL Bootstrap data.
- * NOTE: This is implemented against the generic 'fpl-grid' for placement.
  * @param {object} data - The full data object from FPL bootstrap-static.
  */
 async function loadSimpleEPLTable(data) {
-    // NOTE: HTML does not have 'epl-table-list', using a section inside the FPL grid
     const container = document.getElementById("fpl").querySelector('.fpl-grid'); 
     if (!container || !data || !data.teams) return;
 
-    // FPL team data already contains standings information (position, points, etc.)
     const sortedTeams = data.teams.sort((a, b) => a.position - b.position);
 
     // Create a new div specifically for the table within the grid
@@ -1066,7 +1139,7 @@ async function loadSimpleEPLTable(data) {
     container.appendChild(tableWrapper);
 }
 
-// Placeholder function (replace with your actual logic) - used in HTML
+// Placeholder function used in HTML sidebar
 function viewLeague() {
     // For now, trigger scroll to the league analyzer section
     const analyzerSection = document.getElementById('mini-league-analyzer');
