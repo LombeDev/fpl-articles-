@@ -11,7 +11,7 @@
 
     <header>
         <div class="container header-container">
-            <h1 class="logo">FPL <span class="highlight">HUB</span></h1>
+            <h1 class="logo">KOPALA <span class="highlight">FPL</span></h1>
 
             <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav">
                 <span class="bar"></span>
@@ -190,32 +190,10 @@
     
     <footer>
         <div class="container">
-            <p>&copy; 2025 FPL Hub. All rights reserved. Not affiliated with the official Premier League.</p>
+            <p>&copy; 2026 KOPALA FPL. All rights reserved. Not affiliated with the official Premier League.</p>
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const menuToggle = document.querySelector('.menu-toggle');
-            const headerContainer = document.querySelector('.header-container');
-
-            if (menuToggle && headerContainer) {
-                menuToggle.addEventListener('click', function() {
-                    // Toggle the 'menu-open' class on the header container
-                    headerContainer.classList.toggle('menu-open');
-                    
-                    // Accessibility update
-                    const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
-                    menuToggle.setAttribute('aria-expanded', !isExpanded);
-                });
-            }
-        });
-
-        // Placeholder function (replace with your actual logic)
-        function viewLeague() {
-            alert('Viewing Full League Table...');
-        }
-    </script>
     <script src="main.js"></script>
     </body>
 </html>
