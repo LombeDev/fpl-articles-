@@ -812,6 +812,104 @@ footer {
     vertical-align: middle;
 }
 
+
+/* --- Advanced Player Stats Centre Styles --- */
+
+#stats-centre h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.stats-filters {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-small);
+}
+
+.stats-filters label {
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.stats-filters select {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    appearance: none; /* Remove default arrow */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23999" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px top 50%;
+    background-size: 10px;
+    padding-right: 30px; /* Make space for the custom arrow */
+}
+
+/* --- Stats Table Styling --- */
+
+#player-stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+#player-stats-table thead th {
+    background-color: var(--header-bg);
+    color: var(--text-color-header);
+    padding: 10px 8px;
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    white-space: nowrap;
+}
+
+#player-stats-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.1s;
+}
+
+#player-stats-table tbody tr:hover {
+    background-color: var(--hover-bg);
+}
+
+#player-stats-table tbody td {
+    padding: 10px 8px;
+    vertical-align: middle;
+}
+
+/* Active Sort Column */
+#player-stats-table th.active-sort-column {
+    background-color: var(--active-sort-bg); /* Darker shade to indicate sorting */
+}
+
+
+/* Position Badges */
+.pos-badge {
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: white;
+}
+.pos-GKP { background-color: #4CAF50; } /* Green */
+.pos-DEF { background-color: #2196F3; } /* Blue */
+.pos-MID { background-color: #FFC107; color: black; } /* Yellow/Amber */
+.pos-FWD { background-color: #F44336; } /* Red */
+
+/* Top Performer Highlight */
+.top-performer {
+    background-color: rgba(255, 215, 0, 0.1);
+    font-weight: 600;
+}
+
 /* Highlighted Ranks */
 #league-analyzer-table .top-rank { background-color: rgba(255, 215, 0, 0.15); font-weight: bold; }
 #league-analyzer-table .second-rank { background-color: rgba(192, 192, 192, 0.15); }
