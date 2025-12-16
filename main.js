@@ -1314,25 +1314,28 @@ async function loadFDRTicker() {
 }
 
 
-function displayEssentialPlayers(players) {
-    const essentialContainer = document.getElementById("essential-list");
+function loadEssentials(players) {
+    const container = document.getElementById('essential-list-container');
     
-    // Filter for >30% ownership and sort descending
+    // 1. Filter and Sort
     const essentials = players
         .filter(p => parseFloat(p.selected_by_percent) > 30)
         .sort((a, b) => b.selected_by_percent - a.selected_by_percent);
 
-    let html = `<ul class="shield-list">`;
-    
-    essentials.forEach(p => {
-        html += `
-            <li class="shield-item">
-                <span class="player-name">${p.web_name}</span>
-                <span class="ownership-badge">${p.selected_by_percent}%</span>
-                <div class="risk-bar" style="width: ${p.selected_by_percent}%"></div>
-            </li>`;
-    });
-
-    html += `</ul>`;
-    essentialContainer.innerHTML = html;
+    // 2. Build the UI
+    container.innerHTML = essentials.map(player => `
+        <div class="shield-card">
+            <div class="shield-header">
+                <span class="shield-name">${player.web_name}</span>
+                <span class="shield-percent">${player.selected_by_percent}%</span>
+            </div>
+            <div class="shield-bar-bg">
+                <div class="shield-bar-fill" style="width: ${player.selected_by_percent}%"></div>
+            </div>
+            <div class="shield-meta">
+                <span>£${(player.now_cost / 10).toFixed(1)}m</span>
+                <span>Points: ${player.total_points}</span>
+            </div>
+        </div>
+    `).join('');
 }
