@@ -1314,20 +1314,25 @@ async function loadFDRTicker() {
 }
 
 
-async function loadScoutPicks(players) {
-    // 1. Get Top Captain (Highest Total Points + Good Fixture)
-    const safePicks = [...players].sort((a, b) => b.total_points - a.total_points);
-    const cap = safePicks[0];
+function displayEssentialPlayers(players) {
+    const essentialContainer = document.getElementById("essential-list");
+    
+    // Filter for >30% ownership and sort descending
+    const essentials = players
+        .filter(p => parseFloat(p.selected_by_percent) > 30)
+        .sort((a, b) => b.selected_by_percent - a.selected_by_percent);
 
-    // 2. Get Differential (TSB < 10% and high ICT Index)
-    const differentials = players.filter(p => parseFloat(p.selected_by_percent) < 10);
-    const diff = differentials.sort((a, b) => b.ict_index - a.ict_index)[0];
+    let html = `<ul class="shield-list">`;
+    
+    essentials.forEach(p => {
+        html += `
+            <li class="shield-item">
+                <span class="player-name">${p.web_name}</span>
+                <span class="ownership-badge">${p.selected_by_percent}%</span>
+                <div class="risk-bar" style="width: ${p.selected_by_percent}%"></div>
+            </li>`;
+    });
 
-    // Update UI
-    document.getElementById('cap-name').innerText = `${cap.web_name} (£${(cap.now_cost / 10).toFixed(1)}m)`;
-    document.getElementById('cap-reason').innerText = `Form: ${cap.form} | Selected by ${cap.selected_by_percent}%`;
-
-    document.getElementById('diff-name').innerText = `${diff.web_name} (£${(diff.now_cost / 10).toFixed(1)}m)`;
-    document.getElementById('diff-reason').innerText = `ICT Index: ${diff.ict_index} | Only ${diff.selected_by_percent}% ownership!`;
+    html += `</ul>`;
+    essentialContainer.innerHTML = html;
 }
-
