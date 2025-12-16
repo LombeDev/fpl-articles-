@@ -1,0 +1,2 @@
+# Proxy FPL API requests to bypass CORS
+/api/* https://fantasy.premierleague.com/api/:splat  200
