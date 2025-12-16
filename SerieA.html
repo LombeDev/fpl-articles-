@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serie A FPL Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0f0f12;
+            --card-bg: #1e1e26;
+            --accent-blue: #007bff;
+            --accent-green: #00ff88;
+            --text-main: #ffffff;
+            --text-dim: #a0a0b0;
+            --border: #333344;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Dashboard Layout */
+        .sidebar {
+            width: 250px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        /* Components */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        h2 { font-size: 1.2rem; margin-top: 0; color: var(--accent-blue); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        th { text-align: left; color: var(--text-dim); font-weight: 500; padding: 10px; border-bottom: 1px solid var(--border); }
+        td { padding: 12px 10px; border-bottom: 1px solid var(--border); }
+
+        .crest { width: 24px; height: 24px; vertical-align: middle; margin-right: 8px; object-fit: contain; }
+        .pts { font-weight: bold; color: var(--accent-green); }
+        .fixture-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .date-badge { font-size: 0.75rem; color: var(--text-dim); background: #2a2a35; padding: 2px 8px; border-radius: 4px; }
+
+        /* Loading Spinner */
+        #loader { position: fixed; top: 20px; right: 20px; color: var(--accent-green); font-size: 0.8rem; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h1 style="font-size: 1.5rem; color: var(--accent-blue);">🇮🇹 Serie A Pro</h1>
+        <p style="font-size: 0.8rem; color: var(--text-dim);">FPL Mini Dashboard v2025</p>
+        <hr style="border: 0; border-top: 1px solid var(--border); width: 100%;">
+        <div id="status-bar" style="font-size: 0.8rem;">Status: <span style="color:var(--accent-green)">Live</span></div>
+    </div>
+
+    <div class="main-content">
+        <div id="loader">Updating data...</div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h2>League Table</h2>
+                <table id="standings-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Club</th>
+                            <th>W/D/L</th>
+                            <th>GD</th>
+                            <th>PTS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standings-body"></tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h2>Top Scorers</h2>
+                <table id="scorers-table">
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>G</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scorers-body"></tbody>
+                </table>
+            </div>
+
+            <div class="card" style="grid-column: span 2;">
+                <h2>Upcoming Fixtures</h2>
+                <div id="fixtures-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = 'YOUR_API_KEY'; // <--- PUT YOUR KEY HERE
+        const BASE_URL = 'https://api.football-data.org/v4/competitions/SA/';
+        const headers = { 'X-Auth-Token': API_KEY };
+
+        async function init() {
+            document.getElementById('loader').style.display = 'block';
+            
+            try {
+                // 1. Fetch Standings
+                const sRes = await fetch(`${BASE_URL}standings`, { headers });
+                const sData = await sRes.json();
+                renderStandings(sData.standings[0].table);
+
+                // 2. Fetch Scorers
+                const scRes = await fetch(`${BASE_URL}scorers`, { headers });
+                const scData = await scRes.json();
+                renderScorers(scData.scorers);
+
+                // 3. Fetch Fixtures
+                const today = new Date().toISOString().split('T')[0];
+                const nextWeek = new Date();
+                nextWeek.setDate(nextWeek.getDate() + 10); // Look 10 days ahead
+                const endDate = nextWeek.toISOString().split('T')[0];
+                
+                const fRes = await fetch(`${BASE_URL}matches?dateFrom=${today}&dateTo=${endDate}`, { headers });
+                const fData = await fRes.json();
+                renderFixtures(fData.matches);
+
+            } catch (err) {
+                console.error("API Error:", err);
+                alert("Could not load data. Check console for details.");
+            } finally {
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
+
+        function renderStandings(data) {
+            const body = document.getElementById('standings-body');
+            body.innerHTML = data.map(team => `
+                <tr>
+                    <td>${team.position}</td>
+                    <td><img src="${team.team.crest}" class="crest"> ${team.team.shortName}</td>
+                    <td>${team.won}/${team.draw}/${team.lost}</td>
+                    <td>${team.goalDifference}</td>
+                    <td class="pts">${team.points}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderScorers(data) {
+            const body = document.getElementById('scorers-body');
+            body.innerHTML = data.slice(0, 10).map(s => `
+                <tr>
+                    <td><strong>${s.player.name}</strong><br><small style="color:var(--text-dim)">${s.team.name}</small></td>
+                    <td class="pts">${s.goals}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderFixtures(matches) {
+            const list = document.getElementById('fixtures-list');
+            if (matches.length === 0) {
+                list.innerHTML = '<p style="color:var(--text-dim)">No matches found for the upcoming week.</p>';
+                return;
+            }
+
+            list.innerHTML = matches.map(m => {
+                const date = new Date(m.utcDate).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                return `
+                    <div class="fixture-row">
+                        <div style="width: 150px;"><span class="date-badge">${date}</span></div>
+                        <div style="flex: 1; text-align: right;"><img src="${m.homeTeam.crest}" class="crest"> ${m.homeTeam.shortName}</div>
+                        <div style="padding: 0 15px; color: var(--text-dim);">vs</div>
+                        <div style="flex: 1; text-align: left;">${m.awayTeam.shortName} <img src="${m.awayTeam.crest}" class="crest"></div>
+                        <div style="width: 100px; text-align: right; color: var(--accent-blue);">Matchday ${m.matchday}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Run on load
+        init();
+    </script>
+</body>
+</html>
