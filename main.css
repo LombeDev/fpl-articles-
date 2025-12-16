@@ -432,3 +432,52 @@ tbody td {
         justify-content: center;
     }
 }
+
+
+
+
+.scout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.scout-card {
+    position: relative;
+    padding: 30px 20px 20px;
+    overflow: hidden;
+    background: linear-gradient(145deg, var(--background-light), #353555);
+}
+
+.scout-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 5px 15px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: var(--background-dark);
+}
+
+.captain { border-left: 5px solid var(--secondary-color); }
+.captain .scout-badge { background: var(--secondary-color); }
+
+.differential { border-left: 5px solid var(--primary-color); }
+.differential .scout-badge { background: var(--primary-color); }
+
+.scout-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    color: var(--text-light);
+}
+
+.scout-card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+@media (max-width: 600px) {
+    .scout-grid { grid-template-columns: 1fr; }
+}
