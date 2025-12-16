@@ -308,6 +308,7 @@ async function loadMiniLeagueAnalyzer() {
                 // Details data
                 gw_points: details?.current_gw_points ?? 0,
                 transfers: details?.transfers_made ?? 0,
+                value: (details?.team_value / 10).toFixed(1) ?? 'N/A', // Team value is in pence/10
                 overall_rank: details?.overall_rank ?? 'N/A',
                 entry_id: standing.entry,
                 player_id: playerId,
