@@ -1314,44 +1314,48 @@ async function loadFDRTicker() {
 }
 
 
-function loadEssentials(players) {
-    const container = document.getElementById('essential-list-container');
+function loadInjuryList(players, teams) {
+    const container = document.querySelector(".injury-list");
     
-    // Check if players array exists
-    if (!players || players.length === 0) {
-        console.error("No player data found for Essentials section.");
+    // Quick team lookup map
+    const teamMap = {};
+    teams.forEach(t => teamMap[t.id] = t.name);
+
+    // 1. Filter specifically for Doubtful (d), Injured (i), and Suspended (s)
+    const flaggedPlayers = players.filter(p => ['d', 'i', 's'].includes(p.status));
+
+    if (flaggedPlayers.length === 0) {
+        container.innerHTML = "<p>No active injuries or suspensions found.</p>";
         return;
     }
 
-    // 1. Filter and Sort (Converting string to number safely)
-    const essentials = players
-        .filter(p => {
-            const ownership = parseFloat(p.selected_by_percent);
-            return ownership > 30; // Find players with > 30% ownership
-        })
-        .sort((a, b) => parseFloat(b.selected_by_percent) - parseFloat(a.selected_by_percent));
+    // 2. Generate HTML with Status-Specific Labels
+    container.innerHTML = flaggedPlayers.map(p => {
+        let statusLabel = "";
+        let statusClass = "";
 
-    console.log("Found Essentials:", essentials); // Debug: Check your F12 console!
+        // Apply your specific mapping
+        if (p.status === 'd') {
+            statusLabel = "DOUBTFUL";
+            statusClass = "injury-doubtful"; // Yellow/Orange
+        } else if (p.status === 'i') {
+            statusLabel = "INJURED";
+            statusClass = "injury-out";      // Red
+        } else if (p.status === 's') {
+            statusLabel = "SUSPENDED";
+            statusClass = "injury-suspended"; // Black/Grey
+        }
 
-    // 2. Build the UI
-    if (essentials.length === 0) {
-        container.innerHTML = "<p>No players currently meet the 'Essential' criteria (>30%).</p>";
-        return;
-    }
-
-    container.innerHTML = essentials.map(player => `
-        <div class="shield-card">
-            <div class="shield-header">
-                <span class="shield-name">${player.web_name}</span>
-                <span class="shield-percent">${player.selected_by_percent}%</span>
+        return `
+            <div class="injury-card ${statusClass}">
+                <div class="injury-header">
+                    <span class="status-badge">${statusLabel}</span>
+                    <span class="team-tag">${teamMap[p.team]}</span>
+                </div>
+                <h4 class="player-name">${p.web_name}</h4>
+                <p class="injury-news">${p.news}</p>
+                ${p.status === 'd' ? `<div class="chance-tag">${p.chance_of_playing_next_round}% chance of playing</div>` : ''}
             </div>
-            <div class="shield-bar-bg">
-                <div class="shield-bar-fill" style="width: ${player.selected_by_percent}%"></div>
-            </div>
-            <div class="shield-meta">
-                <span>£${(player.now_cost / 10).toFixed(1)}m</span>
-                <span>Points: ${player.total_points}</span>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
