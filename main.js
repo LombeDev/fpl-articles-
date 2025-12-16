@@ -1242,3 +1242,73 @@ function viewLeague() {
         analyzerSection.scrollIntoView({ behavior: 'smooth' });
     }
 }
+
+
+// -----------------------------------------
+// REFINED: FDR Heatmap Ticker
+// -----------------------------------------
+
+async function loadFDRTicker() {
+    const container = document.getElementById("fdr-ticker-container");
+    if (!container) return;
+
+    container.innerHTML = '<p class="loading-message">Generating Fixture Heatmap...</p>';
+
+    try {
+        const [fixtures, bootstrap] = await Promise.all([
+            fetch(proxy + "https://fantasy.premierleague.com/api/fixtures/").then(r => r.json()),
+            fetch(proxy + "https://fantasy.premierleague.com/api/bootstrap-static/").then(r => r.json())
+        ]);
+
+        const teams = bootstrap.teams;
+        const currentGW = bootstrap.events.find(e => e.is_current)?.id || 1;
+        const next5GWs = [currentGW, currentGW + 1, currentGW + 2, currentGW + 3, currentGW + 4];
+
+        let tableHtml = `
+            <table class="fdr-heatmap">
+                <thead>
+                    <tr>
+                        <th class="fdr-team-col">Team</th>
+                        ${next5GWs.map(gw => `<th>GW${gw}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        // Sort teams alphabetically
+        teams.sort((a, b) => a.name.localeCompare(b.name)).forEach(team => {
+            tableHtml += `<tr><td class="fdr-team-name">${team.short_name}</td>`;
+
+            next5GWs.forEach(gw => {
+                const fixture = fixtures.find(f => f.event === gw && (f.team_h === team.id || f.team_a === team.id));
+                
+                if (fixture) {
+                    const isHome = fixture.team_h === team.id;
+                    const opponentId = isHome ? fixture.team_a : fixture.team_h;
+                    const opponent = teamMap[opponentId] || "???";
+                    const difficulty = isHome ? fixture.team_h_difficulty : fixture.team_a_difficulty;
+                    
+                    // Logic: Uppercase for Home, Lowercase for Away
+                    const displayOpponent = isHome ? opponent.toUpperCase() : opponent.toLowerCase();
+
+                    tableHtml += `
+                        <td class="fdr-cell fdr-bg-${difficulty}">
+                            ${displayOpponent}
+                        </td>
+                    `;
+                } else {
+                    tableHtml += `<td class="fdr-cell fdr-bg-blank">---</td>`;
+                }
+            });
+
+            tableHtml += `</tr>`;
+        });
+
+        tableHtml += `</tbody></table>`;
+        container.innerHTML = tableHtml;
+
+    } catch (err) {
+        console.error("FDR Heatmap Error:", err);
+        container.innerHTML = '<p class="error-message">❌ Failed to load FDR Heatmap.</p>';
+    }
+}
