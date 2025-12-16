@@ -1314,4 +1314,20 @@ async function loadFDRTicker() {
 }
 
 
+async function loadScoutPicks(players) {
+    // 1. Get Top Captain (Highest Total Points + Good Fixture)
+    const safePicks = [...players].sort((a, b) => b.total_points - a.total_points);
+    const cap = safePicks[0];
+
+    // 2. Get Differential (TSB < 10% and high ICT Index)
+    const differentials = players.filter(p => parseFloat(p.selected_by_percent) < 10);
+    const diff = differentials.sort((a, b) => b.ict_index - a.ict_index)[0];
+
+    // Update UI
+    document.getElementById('cap-name').innerText = `${cap.web_name} (£${(cap.now_cost / 10).toFixed(1)}m)`;
+    document.getElementById('cap-reason').innerText = `Form: ${cap.form} | Selected by ${cap.selected_by_percent}%`;
+
+    document.getElementById('diff-name').innerText = `${diff.web_name} (£${(diff.now_cost / 10).toFixed(1)}m)`;
+    document.getElementById('diff-reason').innerText = `ICT Index: ${diff.ict_index} | Only ${diff.selected_by_percent}% ownership!`;
+}
 
