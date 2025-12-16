@@ -124,6 +124,13 @@
         const BASE_URL = 'https://api.football-data.org/v4/competitions/SA/';
         const headers = { 'X-Auth-Token': API_KEY };
 
+// No headers needed in JS anymore! Netlify handles it.
+const BASE_URL = '/api/competitions/SA/'; 
+
+// Update your fetch calls to remove the { headers }
+const sRes = await fetch(`${BASE_URL}standings`);
+
+
         async function init() {
             document.getElementById('loader').style.display = 'block';
             
