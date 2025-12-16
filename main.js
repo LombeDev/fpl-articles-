@@ -1317,12 +1317,28 @@ async function loadFDRTicker() {
 function loadEssentials(players) {
     const container = document.getElementById('essential-list-container');
     
-    // 1. Filter and Sort
+    // Check if players array exists
+    if (!players || players.length === 0) {
+        console.error("No player data found for Essentials section.");
+        return;
+    }
+
+    // 1. Filter and Sort (Converting string to number safely)
     const essentials = players
-        .filter(p => parseFloat(p.selected_by_percent) > 30)
-        .sort((a, b) => b.selected_by_percent - a.selected_by_percent);
+        .filter(p => {
+            const ownership = parseFloat(p.selected_by_percent);
+            return ownership > 30; // Find players with > 30% ownership
+        })
+        .sort((a, b) => parseFloat(b.selected_by_percent) - parseFloat(a.selected_by_percent));
+
+    console.log("Found Essentials:", essentials); // Debug: Check your F12 console!
 
     // 2. Build the UI
+    if (essentials.length === 0) {
+        container.innerHTML = "<p>No players currently meet the 'Essential' criteria (>30%).</p>";
+        return;
+    }
+
     container.innerHTML = essentials.map(player => `
         <div class="shield-card">
             <div class="shield-header">
