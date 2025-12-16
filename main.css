@@ -1,6 +1,7 @@
 /* --- Global Styles and Variables (Dark Theme) --- */
 
 :root {
+    /* Primary Palette */
     --primary-color: #00ff73; 
     --secondary-color: #03f6f4; 
     --background-dark: #1a1a2e; 
@@ -8,17 +9,38 @@
     --text-light: #f0f0f0;
     --text-muted: #b4b4c8;
     --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    
+    /* Functional Colors */
+    --border-color: #3d3d5f; 
+    --border-color-light: #50507a;
+    --input-bg: var(--background-dark);
+    --card-bg: var(--background-light);
+    --header-bg: var(--background-dark);
+    --hover-bg: rgba(0, 255, 115, 0.05);
+    --active-sort-bg: #353555;
+
+    /* Difficulty & Status */
     --fdr-difficulty-1: #00ff73;
     --fdr-difficulty-3: #ffc400;
     --fdr-difficulty-5: #ff4d4d;
+    
+    /* Stats Colors */
+    --stat-average: #03f6f4;
+    --stat-high-score: #ffc400;
+    --stat-top-player: #ff4d4d;
+    --stat-captain: var(--primary-color);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* FIX: Ensure all elements are constrained by their content box on mobile */
     min-width: 0; 
+}
+
+html {
+    scroll-padding-top: 80px; /* Offset for sticky header */
+    scroll-behavior: smooth;
 }
 
 body {
@@ -26,7 +48,6 @@ body {
     background-color: var(--background-dark);
     color: var(--text-light);
     line-height: 1.6;
-    /* FIX: The ultimate guardrail to prevent horizontal scroll from breaking out */
     overflow-x: hidden; 
 }
 
@@ -36,40 +57,32 @@ body {
     margin: 0 auto;
 }
 
-a {
-    color: var(--primary-color);
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-a:hover {
-    color: var(--secondary-color);
-}
-
-.highlight {
-    color: var(--primary-color);
-}
-
-/* --- Header & Navigation --- */
+/* --- Navigation & Sticky Header --- */
 header {
     background-color: var(--background-light);
     box-shadow: var(--card-shadow);
     padding: 15px 0;
     border-bottom: 3px solid var(--primary-color);
+    /* STICKY CONFIGURATION */
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
 }
 
 .header-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative; /* Needed for absolute positioning of mobile menu */
+    position: relative;
 }
 
 .logo {
     font-size: 1.8rem;
+    font-weight: bold;
 }
 
-/* --- Navigation Desktop Styles (Default) --- */
 nav ul {
     list-style: none;
     display: flex;
@@ -83,21 +96,21 @@ nav ul li a {
     color: var(--text-light);
     font-weight: 500;
     font-size: 1.05rem;
+    transition: color 0.3s;
 }
 
 nav ul li a:hover {
     color: var(--primary-color);
 }
 
-/* --- New Hamburger Menu Styles (Desktop Hidden) --- */
+/* --- Hamburger Menu --- */
 .menu-toggle {
-    display: none; /* Hidden by default on desktop */
+    display: none; 
     background: none;
     border: none;
     cursor: pointer;
     padding: 10px;
-    z-index: 100; 
-    align-self: center;
+    z-index: 1001; 
 }
 
 .bar {
@@ -109,18 +122,9 @@ nav ul li a:hover {
     transition: all 0.3s ease-in-out;
 }
 
-/* Styles for when the menu is active (JavaScript adds the 'menu-open' class) */
-.header-container.menu-open .bar:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
-}
-
-.header-container.menu-open .bar:nth-child(2) {
-    opacity: 0;
-}
-
-.header-container.menu-open .bar:nth-child(3) {
-    transform: translateY(-8px) rotate(-45deg);
-}
+.header-container.menu-open .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.header-container.menu-open .bar:nth-child(2) { opacity: 0; }
+.header-container.menu-open .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
 /* --- Main Layout Grid --- */
 .site-content-wrapper {
@@ -130,21 +134,8 @@ nav ul li a:hover {
     margin-top: 30px;
 }
 
-/* --- Main Content Section Styling --- */
 #main-content {
     grid-column: 1 / 2;
-}
-
-.data-section, .card-section {
-    margin-bottom: 30px;
-}
-
-.data-section h2, .card-section h2 {
-    font-size: 1.8rem;
-    color: var(--text-light);
-    margin-bottom: 20px;
-    padding-bottom: 5px;
-    border-bottom: 2px solid var(--background-light);
 }
 
 .card {
@@ -156,39 +147,43 @@ nav ul li a:hover {
     border-left: 5px solid var(--primary-color);
 }
 
-.card:hover {
-    transform: translateY(-2px);
+.card:hover { transform: translateY(-2px); }
+
+/* --- Tables & Data Sections --- */
+.stats-table-container, .analyzer-table-container {
+    overflow-x: auto;
+    background-color: var(--background-light);
+    border-radius: 0 0 8px 8px;
+    box-shadow: var(--card-shadow);
 }
 
-/* --- FPL Data Overview Grid --- */
-.fpl-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
 }
 
-.fpl-grid .card {
-    text-align: center;
-    border-left: none;
-    border-top: 5px solid var(--primary-color);
-}
-
-.fpl-value {
-    font-size: 2.2rem;
-    font-weight: bold;
+thead th {
+    background-color: var(--background-dark);
     color: var(--secondary-color);
-    margin-top: 5px;
+    padding: 12px 15px;
+    text-align: left;
+    position: sticky;
+    top: 0; /* Sticky headers for tables */
+    z-index: 10;
+    white-space: nowrap;
 }
 
-.fpl-label {
-    color: var(--text-muted);
+tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 /* --- FDR Ticker --- */
 .fdr-grid {
     display: flex;
     gap: 15px;
-    overflow-x: auto; /* KEY: Scrollable section */
+    overflow-x: auto;
     padding-bottom: 10px; 
 }
 
@@ -197,347 +192,15 @@ nav ul li a:hover {
     padding: 15px;
     background-color: var(--background-light);
     border-radius: 8px;
-    box-shadow: var(--card-shadow);
 }
 
-.fdr-team-card h3 {
-    margin-top: 0;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: var(--primary-color);
-}
-
-.fdr-fixtures div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-.fdr-badge {
-    padding: 3px 8px;
-    border-radius: 4px;
-    color: var(--background-dark);
-    font-weight: bold;
-    font-size: 0.8rem;
-}
-
-.fdr-1 { background-color: var(--fdr-difficulty-1); }
-.fdr-3 { background-color: var(--fdr-difficulty-3); }
-.fdr-5 { background-color: var(--fdr-difficulty-5); }
-
-
-/* --- News and Injury Cards (Using the general .card) --- */
-.news-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.news-card h3 {
-    color: var(--secondary-color);
-    font-size: 1.3rem;
-    margin-bottom: 10px;
-}
-
-.news-card p {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-}
-
-.injury-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 20px;
-}
-
-.injury-card {
-    padding: 15px;
-    border-left-width: 4px;
-}
-
-.injury-card.injured { border-left-color: #ff4d4d; }
-.injury-card.suspended { border-left-color: #ffc400; }
-.injury-card.doubt { border-left-color: #03f6f4; }
-
-.injury-card h4 {
-    margin-top: 0;
-    font-size: 1.1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.status-badge {
-    font-weight: bold;
-    font-size: 0.8rem;
-}
-
-.status-badge.injured { color: #ff4d4d; }
-.status-badge.suspended { color: #ffc400; }
-.status-badge.doubt { color: #03f6f4; }
-
-
-/* --- Stats Table --- */
-.stats-filters {
-    background-color: var(--background-light);
-    padding: 15px;
-    border-radius: 8px 8px 0 0;
-    margin-bottom: 2px;
-    /* FIX: Allow filters to wrap on narrow screens */
-    display: flex;
-    flex-wrap: wrap; 
-    align-items: center;
-}
-
-.stats-filters label {
-    margin-right: 20px;
-    font-weight: bold;
-    color: var(--text-light);
-    /* FIX: Add bottom margin for vertical spacing when wrapping */
-    margin-bottom: 10px; 
-}
-
-.stats-filters select {
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid var(--background-dark);
-    background-color: var(--background-dark);
-    color: var(--text-light);
-    font-size: 1rem;
-}
-
-.stats-table-container {
-    overflow-x: auto; /* KEY FIX: Forces horizontal scroll within this element */
-    background-color: var(--background-light);
-    border-radius: 0 0 8px 8px;
-    box-shadow: var(--card-shadow);
-}
-
-#player-stats-table, #league-analyzer-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-#player-stats-table th, #player-stats-table td,
-#league-analyzer-table th, #league-analyzer-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #3d3d5f;
-    white-space: nowrap; /* Prevent wrapping so overflow-x: auto works */
-}
-
-#player-stats-table thead th, #league-analyzer-table thead th {
-    background-color: var(--background-dark);
-    color: var(--secondary-color);
-    cursor: pointer;
-}
-
-#player-stats-table tbody tr:hover, #league-analyzer-table tbody tr:not(.my-team-row):hover {
-    background-color: rgba(0, 255, 115, 0.05); /* Slight hover effect */
-}
-
-/* --- GW Wrapped Styles --- */
-.wrapped-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-}
-
-.wrapped-card {
-    background-color: var(--background-light);
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: var(--card-shadow);
-    border-top: 5px solid var(--secondary-color);
-}
-
-.wrapped-card h4 {
-    color: var(--text-muted);
-    font-size: 1rem;
-    margin-bottom: 5px;
-}
-
-.wrapped-value {
-    font-size: 2.5rem;
-    font-weight: bold;
-}
-
-.wrapped-stat-name {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    margin-top: 5px;
-}
-
-/* --- Live Scores Styles --- */
-.scores-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
-}
-
-.match-card {
-    background-color: var(--background-light);
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: var(--card-shadow);
-    border-left: 4px solid var(--primary-color);
-}
-
-.match-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-    color: var(--text-muted);
-}
-
-.match-status.live {
-    color: #ff4d4d; /* Red for Live */
-    font-weight: bold;
-    animation: pulse 1.5s infinite;
-}
-
-.match-status.ft {
-    color: var(--primary-color); /* Green for Full Time */
-    font-weight: bold;
-}
-
-.match-teams {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.3rem;
-    font-weight: bold;
-}
-
-.team-score {
-    color: var(--secondary-color);
-    font-size: 1.5rem;
-}
-
-.team-name {
-    flex-grow: 1;
-}
-
-/* Live Animation */
-@keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-
-/* --- Price Tracker Styles --- */
-.price-change-container {
-    display: flex;
-    gap: 20px;
-}
-
-.price-table-card {
-    flex: 1;
-    min-width: 45%;
-    padding: 15px;
-    border-left: 5px solid var(--background-dark);
-}
-
-.price-table-card h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.4rem;
-    padding-bottom: 5px;
-    border-bottom: 2px solid var(--background-dark);
-}
-
-.price-table-card .rise { color: var(--primary-color); }
-.price-table-card .fall { color: #ff4d4d; }
-
-.price-table-card table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.price-table-card th, .price-table-card td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #3d3d5f;
-}
-
-.price-table-card thead th {
-    background-color: var(--background-dark);
-    color: var(--secondary-color);
-}
-
-/* --- Mini-League Analyzer Styles --- */
-
-.analyzer-filters {
-    background-color: var(--background-light);
-    padding: 15px;
-    border-radius: 8px 8px 0 0;
-    margin-bottom: 2px;
-    /* FIX: Allow filters to wrap */
-    display: flex;
-    flex-wrap: wrap; 
-    justify-content: space-between;
-    align-items: center;
-}
-
-.analyzer-filters label {
-    margin-right: 20px;
-    font-weight: bold;
-    color: var(--text-light);
-    /* FIX: Ensure label wraps with space */
-    margin-bottom: 10px; 
-}
-
-.analyzer-filters select {
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid var(--background-dark);
-    background-color: var(--background-dark);
-    color: var(--text-light);
-    font-size: 1rem;
-}
-
-#update-analyzer-btn {
-    background-color: var(--secondary-color);
-    color: var(--background-dark);
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s;
-    /* FIX: Ensure button moves to the next line if needed */
-    margin-bottom: 10px; 
-}
-
-#update-analyzer-btn:hover {
-    background-color: var(--primary-color);
-}
-
-#league-analyzer-table tbody tr.my-team-row {
-    background-color: rgba(0, 255, 135, 0.1); 
-    border-left: 5px solid var(--primary-color);
-    font-weight: bold;
-}
-
-.rank-movement {
-    display: inline-block;
-    margin-left: 5px;
-    font-size: 0.9em;
-}
-
-.rank-up { color: var(--primary-color); }
-.rank-down { color: #ff4d4d; }
-.rank-same { color: var(--text-muted); }
-
+.fdr-1 { background-color: var(--fdr-difficulty-1); color: var(--background-dark); }
+.fdr-3 { background-color: var(--fdr-difficulty-3); color: var(--background-dark); }
+.fdr-5 { background-color: var(--fdr-difficulty-5); color: var(--text-light); }
 
 /* --- Sidebar Area --- */
 #sidebar {
     grid-column: 2 / 3;
-    padding-top: 10px; 
 }
 
 .sidebar-widget {
@@ -549,81 +212,10 @@ nav ul li a:hover {
     border-top: 3px solid var(--primary-color);
 }
 
-/* Deadline Widget Styling */
-.deadline-widget {
-    text-align: center;
-    border-top-color: var(--secondary-color);
-}
-
-.deadline-widget h3 {
-    margin-top: 0;
-    color: var(--text-light);
-}
-
-.deadline-widget #countdown-timer {
-    font-size: 2rem;
-    color: var(--primary-color);
-    margin: 10px 0;
-}
-
-.deadline-widget p {
-    font-size: 1.1rem;
-    color: var(--text-muted);
-}
-
-/* League Widget Styling */
-.league-widget .league-rank, .league-widget .league-points {
-    font-size: 1.1rem;
-    margin: 8px 0;
-}
-
-.league-widget strong {
-    color: var(--primary-color);
-    font-size: 1.3rem;
-}
-
-.league-widget button {
-    background-color: var(--primary-color);
-    color: var(--background-dark);
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-    font-weight: bold;
-    width: 100%;
-}
-
-/* Transfer Summary Widget */
-#sidebar-transfers-list {
-    list-style: none;
-}
-
-#sidebar-transfers-list li {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    border-bottom: 1px dashed #3d3d5f;
-    font-size: 0.95rem;
-}
-
-/* --- Footer --- */
-footer {
-    background-color: var(--background-light);
-    padding: 20px 0;
-    text-align: center;
-    margin-top: 20px;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-}
-
-/* ------------------------------------------------------------- */
-/* --- Responsive Layout Adjustment (Tablet/Small Desktop) --- */
-/* ------------------------------------------------------------- */
+/* --- Responsive Layout (Max 992px) --- */
 @media (max-width: 992px) {
-    /* Stack the columns on tablet/mobile views */
     .site-content-wrapper {
-        grid-template-columns: 1fr; /* Single column layout */
+        grid-template-columns: 1fr;
     }
     
     #sidebar {
@@ -631,267 +223,55 @@ footer {
         order: -1; 
     }
 
-    /* ** IMPORTANT: Updated Header for Hamburger ** */
-    .header-container {
-        flex-direction: row; /* Keep logo and hamburger side-by-side */
-        justify-content: space-between;
-    }
-
     .menu-toggle {
-        display: block; /* Show hamburger button on mobile/tablet */
+        display: block;
     }
 
     nav {
-        /* Mobile menu positioning */
         position: absolute;
-        top: 60px; /* Position below the header bar (adjust if necessary) */
+        top: 60px;
         left: 0;
         width: 100%;
-        max-height: 0; /* Hidden by default */
+        max-height: 0;
         overflow: hidden;
         background-color: var(--background-dark);
         box-shadow: var(--card-shadow);
         transition: max-height 0.3s ease-in-out;
-        z-index: 99;
+        z-index: 999;
     }
-    
+
     nav ul {
-        flex-direction: column; /* Stack links vertically */
+        flex-direction: column;
         padding: 10px 0;
-        margin-top: 0; /* Override old margin */
     }
 
     nav ul li {
         margin: 0;
         text-align: center;
-        padding: 10px 0;
-        border-bottom: 1px solid var(--background-light);
-    }
-    nav ul li:last-child {
-        border-bottom: none;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--border-color);
     }
 
-    /* State when the menu is OPEN */
     .header-container.menu-open nav {
-        max-height: 300px; /* Sufficient height to show all links */
-    }
-    /* ** END IMPORTANT UPDATE ** */
-
-    .price-change-container {
-        flex-direction: column;
-    }
-
-    /* Reduce horizontal padding on container */
-    .container {
-        padding-left: 15px;
-        padding-right: 15px;
+        max-height: 500px;
     }
 }
 
-
-/* ------------------------------------------------------------- */
-/* --- NEW FIX: Mobile Phone Portrait (MAX-WIDTH 600PX) --- */
-/* ------------------------------------------------------------- */
+/* --- Mobile Portrait (Max 600px) --- */
 @media (max-width: 600px) {
-    
-    /* Global Padding Adjustment */
-    .container {
-        padding-left: 10px;
-        padding-right: 10px;
+    .fpl-grid, .wrapped-grid, .scores-grid, .news-grid {
+        grid-template-columns: 1fr;
     }
 
-    /* Collapse ALL GRIDS to a single column */
-    .fpl-grid,
-    .wrapped-grid,
-    .scores-grid,
-    .news-grid,
-    .injury-list {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    
-    /* Ensure Filters stack vertically */
     .analyzer-filters {
         flex-direction: column;
         align-items: stretch;
     }
-    .analyzer-filters label {
-        margin: 5px 0;
-    }
-    #update-analyzer-btn {
-        margin-top: 5px;
-        margin-bottom: 0;
-    }
-
-    /* Reduce Table Cell Padding for compactness */
-    #player-stats-table th, #player-stats-table td,
-    #league-analyzer-table th, #league-analyzer-table td {
-        padding: 8px 10px;
-        font-size: 0.85rem;
-    }
-    
-    /* Adjustments for the smallest content */
-    .data-section h2, .card-section h2 {
-        font-size: 1.4rem;
-    }
 }
 
-
-
-/* --- Mini-League Analyzer Styles --- */
-
-#mini-league-analyzer h2 {
-    color: var(--primary-color);
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 10px;
-}
-
-.analyzer-filters {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    background: var(--card-bg);
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: var(--shadow-small);
-}
-
-.analyzer-filters label,
-.analyzer-filters select,
-.analyzer-filters button {
-    font-size: 0.95rem;
-    padding: 8px 12px;
-    border-radius: 5px;
-}
-
-#update-analyzer-btn {
-    background-color: var(--highlight-color);
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-#update-analyzer-btn:hover {
-    background-color: var(--secondary-color);
-}
-
-/* --- Table Styling --- */
-
-#league-analyzer-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-}
-
-#league-analyzer-table thead th {
-    background-color: var(--header-bg);
-    color: var(--text-color-header);
-    padding: 10px 8px;
-    text-align: left;
-    cursor: pointer;
-    user-select: none;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    white-space: nowrap;
-}
-
-#league-analyzer-table tbody tr {
-    border-bottom: 1px solid var(--border-color);
-    transition: background-color 0.1s;
-}
-
-#league-analyzer-table tbody tr:hover {
-    background-color: var(--hover-bg);
-}
-
-#league-analyzer-table tbody td {
-    padding: 10px 8px;
-    vertical-align: middle;
-}
-
-
-/* --- Advanced Player Stats Centre Styles --- */
-
-#stats-centre h2 {
-    color: var(--primary-color);
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 10px;
-}
-
-.stats-filters {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-    background: var(--card-bg);
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: var(--shadow-small);
-}
-
-.stats-filters label {
-    font-weight: bold;
-    color: var(--text-color);
-}
-
-.stats-filters select {
-    padding: 8px 12px;
-    border-radius: 5px;
-    border: 1px solid var(--border-color);
-    background-color: var(--input-bg);
-    color: var(--text-color);
-    appearance: none; /* Remove default arrow */
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23999" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 8px top 50%;
-    background-size: 10px;
-    padding-right: 30px; /* Make space for the custom arrow */
-}
-
-/* --- Stats Table Styling --- */
-
-#player-stats-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-}
-
-#player-stats-table thead th {
-    background-color: var(--header-bg);
-    color: var(--text-color-header);
-    padding: 10px 8px;
-    text-align: left;
-    cursor: pointer;
-    user-select: none;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    white-space: nowrap;
-}
-
-#player-stats-table tbody tr {
-    border-bottom: 1px solid var(--border-color);
-    transition: background-color 0.1s;
-}
-
-#player-stats-table tbody tr:hover {
-    background-color: var(--hover-bg);
-}
-
-#player-stats-table tbody td {
-    padding: 10px 8px;
-    vertical-align: middle;
-}
-
-/* Active Sort Column */
-#player-stats-table th.active-sort-column {
-    background-color: var(--active-sort-bg); /* Darker shade to indicate sorting */
-}
-
-
-/* Position Badges */
+/* --- Status & Rank Badges --- */
+.change-up { color: var(--primary-color); }
+.change-down { color: var(--fdr-difficulty-5); }
 .pos-badge {
     padding: 3px 6px;
     border-radius: 4px;
@@ -899,289 +279,7 @@ footer {
     font-weight: bold;
     color: white;
 }
-.pos-GKP { background-color: #4CAF50; } /* Green */
-.pos-DEF { background-color: #2196F3; } /* Blue */
-.pos-MID { background-color: #FFC107; color: black; } /* Yellow/Amber */
-.pos-FWD { background-color: #F44336; } /* Red */
-
-/* Top Performer Highlight */
-.top-performer {
-    background-color: rgba(255, 215, 0, 0.1);
-    font-weight: 600;
-}
-
-/* Highlighted Ranks */
-#league-analyzer-table .top-rank { background-color: rgba(255, 215, 0, 0.15); font-weight: bold; }
-#league-analyzer-table .second-rank { background-color: rgba(192, 192, 192, 0.15); }
-#league-analyzer-table .third-rank { background-color: rgba(205, 127, 50, 0.15); }
-
-/* Active Sort Column */
-#league-analyzer-table th.active-sort-column {
-    background-color: var(--active-sort-bg); /* Darker shade to indicate sorting */
-}
-
-
-
-/* --- News Feed Styles --- */
-
-#news-rss-container {
-    padding: 20px;
-}
-
-#news-rss-container h2 {
-    color: var(--primary-color);
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
-.news-list {
-    list-style: none;
-    padding: 0;
-}
-
-.news-list li {
-    margin-bottom: 10px;
-    border-bottom: 1px solid var(--border-color-light);
-    padding-bottom: 10px;
-}
-
-.news-list li a {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-decoration: none;
-    color: var(--text-color);
-    transition: color 0.2s;
-}
-
-.news-list li a:hover {
-    color: var(--primary-color);
-}
-
-.news-title {
-    font-weight: 500;
-    flex-grow: 1;
-    margin-right: 10px;
-    line-height: 1.4;
-}
-
-.news-date {
-    font-size: 0.8rem;
-    color: var(--text-color-light);
-    flex-shrink: 0;
-}
-
-
-
-/* ----------------------------------------------------------------- */
-/* --- NEW: Missing Variable Definitions and Core Utilities --- */
-/* ----------------------------------------------------------------- */
-
-:root {
-    /* Define missing variables using existing theme colors */
-    --border-color: #3d3d5f; /* Dark Blue-Gray */
-    --border-color-light: #50507a;
-    --text-color: var(--text-light); 
-    --text-color-header: var(--secondary-color);
-    --input-bg: var(--background-dark);
-    --card-bg: var(--background-light);
-    --header-bg: var(--background-dark);
-    --hover-bg: rgba(0, 255, 115, 0.05); /* Slight primary-color tint */
-    --active-sort-bg: #353555; /* Darker background for active sort */
-
-    /* Custom GW Wrapped Colors */
-    --stat-average: #03f6f4; /* Secondary color */
-    --stat-high-score: #ffc400; /* Yellow */
-    --stat-top-player: #ff4d4d; /* Red/Orange */
-    --stat-captain: var(--primary-color);
-}
-
-/* --- Utility Classes for Data Status --- */
-
-.loading-message {
-    color: var(--secondary-color);
-    font-style: italic;
-    padding: 20px;
-    text-align: center;
-}
-
-.no-data {
-    color: var(--text-muted);
-    font-style: italic;
-    padding: 20px;
-    text-align: center;
-}
-
-.error-message {
-    color: var(--fdr-difficulty-5); /* Red/Error Color */
-    font-weight: bold;
-    padding: 20px;
-    text-align: center;
-}
-
-/* --- Rank/Price Change Icons --- */
-
-/* Basic styling for all change icons */
-.change-up, .change-down, .change-no-change {
-    font-weight: bold;
-    margin-left: 5px;
-    font-size: 0.85rem;
-    display: inline-block;
-}
-
-/* Rank UP (Primary Color) */
-.change-up { 
-    color: var(--primary-color); 
-}
-
-/* Rank DOWN (Error Color) */
-.change-down { 
-    color: var(--fdr-difficulty-5); 
-}
-
-/* Price Up (Darker Green) and Price Down (Darker Red) for contrast */
-.price-up {
-    color: #00cc66; /* Slightly darker primary green */
-}
-
-.price-down {
-    color: #cc3d3d; /* Slightly darker red */
-}
-
-.change-no-change {
-    color: var(--text-muted);
-}
-
-/* ----------------------------------------------------------------- */
-/* --- NEW: Gameweek Wrapped Styles (Updating existing rules) --- */
-/* ----------------------------------------------------------------- */
-
-/* Use the new class structure from the JS file */
-.gw-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-}
-
-.stat-card {
-    background-color: var(--background-light);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: var(--card-shadow);
-    text-align: center;
-    /* Base for individual color borders */
-    border-top: 5px solid transparent; 
-}
-
-.stat-label {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    margin-bottom: 5px;
-}
-
-.stat-value {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin: 5px 0;
-}
-
-.stat-detail {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.2;
-}
-
-/* Specific Stat Card Colors */
-.stat-average { border-top-color: var(--stat-average); }
-.stat-average .stat-value { color: var(--stat-average); }
-
-.stat-high-score { border-top-color: var(--stat-high-score); }
-.stat-high-score .stat-value { color: var(--stat-high-score); }
-
-.stat-top-player { border-top-color: var(--stat-top-player); }
-.stat-top-player .stat-value { color: var(--stat-top-player); }
-
-.stat-captain { border-top-color: var(--stat-captain); }
-.stat-captain .stat-value { color: var(--stat-captain); }
-
-.note {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 20px;
-    display: block;
-    text-align: right;
-}
-
-/* ----------------------------------------------------------------- */
-/* --- NEW: FPL News Feed Styles --- */
-/* ----------------------------------------------------------------- */
-
-#news-rss-container {
-    /* Use the standard card styling, adjusting padding */
-    padding: 0;
-    margin-top: 30px; 
-}
-
-#news-rss-container h2 {
-    /* Standard section header */
-    padding: 20px 20px 10px 20px;
-}
-
-.news-list {
-    list-style: none;
-    padding: 0 20px 20px 20px; /* Padding for the list content */
-}
-
-.news-list li {
-    margin-bottom: 0;
-    border-bottom: 1px solid var(--border-color-light);
-    padding: 12px 0;
-    transition: background-color 0.2s;
-}
-
-.news-list li:last-child {
-    border-bottom: none;
-}
-
-.news-list li a {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-decoration: none;
-    color: var(--text-light);
-}
-
-.news-list li a:hover {
-    color: var(--primary-color);
-}
-
-.news-title {
-    font-weight: 500;
-    flex-grow: 1;
-    margin-right: 15px;
-    line-height: 1.4;
-    font-size: 1rem;
-}
-
-.news-date {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    flex-shrink: 0;
-}
-
-/* --- Mobile Fix for News Feed --- */
-@media (max-width: 600px) {
-    .news-list li a {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .news-title {
-        margin-right: 0;
-        margin-bottom: 5px;
-    }
-    .news-date {
-        align-self: flex-end;
-    }
-}
+.pos-GKP { background-color: #4CAF50; }
+.pos-DEF { background-color: #2196F3; }
+.pos-MID { background-color: #FFC107; color: black; }
+.pos-FWD { background-color: #F44336; }
