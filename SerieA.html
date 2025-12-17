@@ -119,96 +119,102 @@
         </div>
     </div>
 
-    <script>
-        const API_KEY = 'c24eb6d142cc4b42a529bed2b380d7db'; // <--- PUT YOUR KEY HERE
-        const BASE_URL = 'https://api.football-data.org/v4/competitions/SA/';
-        const headers = { 'X-Auth-Token': API_KEY };
 
-// No headers needed in JS anymore! Netlify handles it.
-const BASE_URL = '/api/competitions/SA/'; 
+<script>
+    // 1. Configuration
+    // When using Netlify Redirects, we point to our local '/api' path.
+    // Your netlify.toml should redirect /api/* to https://api.football-data.org/v4/*
+    const PROXY_URL = '/api/competitions/SA/'; 
 
-// Update your fetch calls to remove the { headers }
-const sRes = await fetch(`${BASE_URL}standings`);
+    async function init() {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'block';
+        
+        try {
+            // 2. Fetch all data in parallel for better performance
+            const [standingsRes, scorersRes, fixturesRes] = await Promise.all([
+                fetch(`${PROXY_URL}standings`),
+                fetch(`${PROXY_URL}scorers`),
+                getFixtures()
+            ]);
 
+            // 3. Parse JSON
+            const sData = await standingsRes.json();
+            const scData = await scorersRes.json();
+            const fData = await fixturesRes.json();
 
-        async function init() {
-            document.getElementById('loader').style.display = 'block';
-            
-            try {
-                // 1. Fetch Standings
-                const sRes = await fetch(`${BASE_URL}standings`, { headers });
-                const sData = await sRes.json();
-                renderStandings(sData.standings[0].table);
+            // 4. Render to UI
+            if (sData.standings) renderStandings(sData.standings[0].table);
+            if (scData.scorers) renderScorers(scData.scorers);
+            if (fData.matches) renderFixtures(fData.matches);
 
-                // 2. Fetch Scorers
-                const scRes = await fetch(`${BASE_URL}scorers`, { headers });
-                const scData = await scRes.json();
-                renderScorers(scData.scorers);
+        } catch (err) {
+            console.error("Dashboard Error:", err);
+            // If the proxy fails (e.g., running locally without Netlify Dev), show a hint
+            alert("Could not load data. If running locally, ensure you are using 'netlify dev'.");
+        } finally {
+            loader.style.display = 'none';
+        }
+    }
 
-                // 3. Fetch Fixtures
-                const today = new Date().toISOString().split('T')[0];
-                const nextWeek = new Date();
-                nextWeek.setDate(nextWeek.getDate() + 10); // Look 10 days ahead
-                const endDate = nextWeek.toISOString().split('T')[0];
-                
-                const fRes = await fetch(`${BASE_URL}matches?dateFrom=${today}&dateTo=${endDate}`, { headers });
-                const fData = await fRes.json();
-                renderFixtures(fData.matches);
+    async function getFixtures() {
+        const today = new Date().toISOString().split('T')[0];
+        const nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 10);
+        const endDate = nextWeek.toISOString().split('T')[0];
+        
+        return fetch(`${PROXY_URL}matches?dateFrom=${today}&dateTo=${endDate}`);
+    }
 
-            } catch (err) {
-                console.error("API Error:", err);
-                alert("Could not load data. Check console for details.");
-            } finally {
-                document.getElementById('loader').style.display = 'none';
-            }
+    function renderStandings(data) {
+        const body = document.getElementById('standings-body');
+        body.innerHTML = data.map(team => `
+            <tr>
+                <td>${team.position}</td>
+                <td><img src="${team.team.crest}" class="crest" alt="crest"> ${team.team.shortName}</td>
+                <td>${team.won}/${team.draw}/${team.lost}</td>
+                <td>${team.goalDifference}</td>
+                <td class="pts">${team.points}</td>
+            </tr>
+        `).join('');
+    }
+
+    function renderScorers(data) {
+        const body = document.getElementById('scorers-body');
+        body.innerHTML = data.slice(0, 10).map(s => `
+            <tr>
+                <td><strong>${s.player.name}</strong><br><small style="color:var(--text-dim)">${s.team.name}</small></td>
+                <td class="pts">${s.goals}</td>
+            </tr>
+        `).join('');
+    }
+
+    function renderFixtures(matches) {
+        const list = document.getElementById('fixtures-list');
+        if (!matches || matches.length === 0) {
+            list.innerHTML = '<p style="color:var(--text-dim); padding: 20px;">No matches found for the upcoming week.</p>';
+            return;
         }
 
-        function renderStandings(data) {
-            const body = document.getElementById('standings-body');
-            body.innerHTML = data.map(team => `
-                <tr>
-                    <td>${team.position}</td>
-                    <td><img src="${team.team.crest}" class="crest"> ${team.team.shortName}</td>
-                    <td>${team.won}/${team.draw}/${team.lost}</td>
-                    <td>${team.goalDifference}</td>
-                    <td class="pts">${team.points}</td>
-                </tr>
-            `).join('');
-        }
+        list.innerHTML = matches.map(m => {
+            const date = new Date(m.utcDate).toLocaleString([], { 
+                weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+            });
+            return `
+                <div class="fixture-row">
+                    <div style="width: 150px;"><span class="date-badge">${date}</span></div>
+                    <div style="flex: 1; text-align: right;"><img src="${m.homeTeam.crest}" class="crest" alt=""> ${m.homeTeam.shortName}</div>
+                    <div style="padding: 0 15px; color: var(--text-dim);">vs</div>
+                    <div style="flex: 1; text-align: left;">${m.awayTeam.shortName} <img src="${m.awayTeam.crest}" class="crest" alt=""></div>
+                    <div style="width: 100px; text-align: right; color: var(--accent-blue);">MD ${m.matchday}</div>
+                </div>
+            `;
+        }).join('');
+    }
 
-        function renderScorers(data) {
-            const body = document.getElementById('scorers-body');
-            body.innerHTML = data.slice(0, 10).map(s => `
-                <tr>
-                    <td><strong>${s.player.name}</strong><br><small style="color:var(--text-dim)">${s.team.name}</small></td>
-                    <td class="pts">${s.goals}</td>
-                </tr>
-            `).join('');
-        }
-
-        function renderFixtures(matches) {
-            const list = document.getElementById('fixtures-list');
-            if (matches.length === 0) {
-                list.innerHTML = '<p style="color:var(--text-dim)">No matches found for the upcoming week.</p>';
-                return;
-            }
-
-            list.innerHTML = matches.map(m => {
-                const date = new Date(m.utcDate).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-                return `
-                    <div class="fixture-row">
-                        <div style="width: 150px;"><span class="date-badge">${date}</span></div>
-                        <div style="flex: 1; text-align: right;"><img src="${m.homeTeam.crest}" class="crest"> ${m.homeTeam.shortName}</div>
-                        <div style="padding: 0 15px; color: var(--text-dim);">vs</div>
-                        <div style="flex: 1; text-align: left;">${m.awayTeam.shortName} <img src="${m.awayTeam.crest}" class="crest"></div>
-                        <div style="width: 100px; text-align: right; color: var(--accent-blue);">Matchday ${m.matchday}</div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Run on load
-        init();
-    </script>
+    // Initialize Dashboard
+    init();
+</script>
+    
 </body>
 </html>
