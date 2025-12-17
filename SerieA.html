@@ -2,162 +2,141 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Serie A FPL Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-
-<style>
-    :root {
-        --bg-color: #0f0f12;
-        --card-bg: #1e1e26;
-        --accent-blue: #007bff;
-        --accent-green: #00ff88;
-        --text-main: #ffffff;
-        --text-dim: #a0a0b0;
-        --border: #333344;
-    }
-
-    /* FIX 1: Prevent horizontal body scroll */
-    html, body {
-        max-width: 100vw;
-        overflow-x: hidden;
-        margin: 0;
-        padding: 0;
-    }
-
-    body {
-        background-color: var(--bg-color);
-        color: var(--text-main);
-        font-family: 'Inter', -apple-system, sans-serif;
-        display: block;
-        min-height: 100vh;
-    }
-
-    /* Nav Bar */
-    header {
-        background: var(--card-bg);
-        border-bottom: 1px solid var(--border);
-        padding: 15px 0;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
-    
-    .header-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 15px;
-    }
-
-    .logo { font-size: 1.2rem; margin: 0; color: #fff; font-weight: bold; }
-    .highlight { color: var(--accent-blue); }
-
-    #main-nav ul {
-        display: flex;
-        list-style: none;
-        gap: 15px;
-        margin: 0;
-        padding: 0;
-    }
-
-    #main-nav a {
-        color: var(--text-dim);
-        text-decoration: none;
-        font-size: 0.85rem;
-        font-weight: 500;
-    }
-
-    /* FIX 2: Responsive Table Containers */
-    .table-container {
-        width: 100%;
-        overflow-x: auto; /* Allows table to scroll sideways if too wide */
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .main-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px 10px; /* Reduced padding for mobile */
-    }
-
-    .dashboard-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 20px;
-    }
-
-    .card {
-        background: var(--card-bg);
-        border-radius: 12px;
-        padding: 15px;
-        border: 1px solid var(--border);
-        margin-bottom: 20px;
-    }
-
-    h2 { font-size: 1.1rem; margin-top: 0; color: var(--accent-blue); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 300px; }
-    th, td { padding: 10px 5px; text-align: left; border-bottom: 1px solid var(--border); }
-
-    .crest { width: 20px; height: 20px; vertical-align: middle; margin-right: 5px; }
-    .pts { font-weight: bold; color: var(--accent-green); }
-
-    /* FIX 3: Responsive Fixtures */
-    .fixture-row {
-        display: flex;
-        flex-wrap: wrap; /* Allows items to drop to next line on tiny screens */
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 0;
-        border-bottom: 1px solid var(--border);
-        gap: 10px;
-    }
-
-    /* Mobile Responsive Logic */
-    @media (max-width: 850px) {
-        .dashboard-grid {
-            grid-template-columns: 1fr; /* Stack columns vertically */
+    <style>
+        :root {
+            --bg-color: #0f0f12;
+            --card-bg: #1e1e26;
+            --accent-blue: #007bff;
+            --accent-green: #00ff88;
+            --text-main: #ffffff;
+            --text-dim: #a0a0b0;
+            --border: #333344;
         }
 
-        .menu-toggle { display: flex; flex-direction: column; gap: 4px; background: none; border: none; cursor: pointer; }
-        .bar { width: 22px; height: 2px; background: white; }
+        /* Prevent side-scrolling on the whole page */
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
 
-        #main-nav { 
-            display: none; 
-            width: 100%; 
-            position: absolute; 
-            top: 60px; 
-            left: 0; 
-            background: var(--card-bg); 
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, sans-serif;
+            display: block;
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--card-bg);
             border-bottom: 1px solid var(--border);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
         }
 
-        #main-nav.active { display: block; }
-        #main-nav ul { flex-direction: column; padding: 15px; gap: 10px; }
-        
-        /* Smaller font for mobile fixtures */
-        .fixture-row { font-size: 0.8rem; }
-    }
-</style>
+        .logo { font-size: 1.2rem; margin: 0; color: #fff; font-weight: bold; }
+        .highlight { color: var(--accent-blue); }
 
-    
+        /* Responsive Table Container */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* Smooth scroll for iOS */
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 10px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            margin-bottom: 15px;
+        }
+
+        h2 { font-size: 1.1rem; margin-top: 0; color: var(--accent-blue); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 320px; }
+        th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid var(--border); }
+
+        .crest { width: 20px; height: 20px; vertical-align: middle; margin-right: 5px; }
+        .pts { font-weight: bold; color: var(--accent-green); }
+
+        .fixture-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 850px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            
+            #main-nav { 
+                display: none; 
+                width: 100%; 
+                position: absolute; 
+                top: 60px; 
+                left: 0; 
+                background: var(--card-bg); 
+                border-bottom: 1px solid var(--border);
+                box-shadow: 0 10px 15px rgba(0,0,0,0.5);
+            }
+
+            #main-nav.active { display: block; }
+            #main-nav ul { flex-direction: column; padding: 20px; gap: 15px; }
+            #main-nav ul li a { display: block; width: 100%; font-size: 1rem; }
+
+            .menu-toggle { display: flex; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; }
+            .bar { width: 25px; height: 2px; background: white; }
+            
+            .fixture-row { flex-wrap: wrap; justify-content: center; text-align: center; gap: 5px; }
+            .fixture-row div { width: 100% !important; text-align: center !important; }
+        }
+
+        #loader { position: fixed; bottom: 20px; right: 20px; background: var(--card-bg); padding: 5px 10px; border-radius: 5px; border: 1px solid var(--accent-green); color: var(--accent-green); display: none; }
+    </style>
 </head>
 <body>
 
     <header>
         <div class="container header-container">
             <h1 class="logo">KOPALA <span class="highlight">FPL</span></h1>
-
-            <button class="menu-toggle" id="mobile-menu" aria-label="Toggle navigation">
+            <button class="menu-toggle" id="mobile-menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
             </button>
-            
             <nav id="main-nav">
                 <ul>
                     <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
@@ -166,43 +145,47 @@
                     <li><a href="#stats-centre"><i class="fa-solid fa-chart-line"></i> Stats</a></li>
                     <li><a href="#mini-league-analyzer"><i class="fa-solid fa-trophy"></i> Leagues</a></li>
                     <li><a href="#price-tracker"><i class="fa-solid fa-dollar-sign"></i> Prices</a></li>
-                    <li><a href="mailto:lombeicloud@gmail.com"><i class="fa-solid fa-user-secret"></i> Join league</a></li>
+                    <li><a href="mailto:lombeicloud@gmail.com"><i class="fa-solid fa-user-secret"></i> Join</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <div class="main-content">
-        <div id="loader">Updating data...</div>
+        <div id="loader">Updating...</div>
 
         <div class="dashboard-grid">
             <div class="card">
                 <h2>League Table</h2>
-                <table id="standings-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Club</th>
-                            <th>W/D/L</th>
-                            <th>GD</th>
-                            <th>PTS</th>
-                        </tr>
-                    </thead>
-                    <tbody id="standings-body"></tbody>
-                </table>
+                <div class="table-container">
+                    <table id="standings-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Club</th>
+                                <th>W/D/L</th>
+                                <th>GD</th>
+                                <th>PTS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="standings-body"></tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="card">
                 <h2>Top Scorers</h2>
-                <table id="scorers-table">
-                    <thead>
-                        <tr>
-                            <th>Player</th>
-                            <th>G</th>
-                        </tr>
-                    </thead>
-                    <tbody id="scorers-body"></tbody>
-                </table>
+                <div class="table-container">
+                    <table id="scorers-table">
+                        <thead>
+                            <tr>
+                                <th>Player</th>
+                                <th>G</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scorers-body"></tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="card" style="grid-column: span 2;">
@@ -213,21 +196,16 @@
     </div>
 
     <script>
-        // 1. Mobile Menu Toggle Logic
+        // Toggle Logic
         const menuToggle = document.getElementById('mobile-menu');
         const mainNav = document.getElementById('main-nav');
+        menuToggle.addEventListener('click', () => mainNav.classList.toggle('active'));
 
-        menuToggle.addEventListener('click', () => {
-            mainNav.classList.toggle('active');
-        });
-
-        // 2. Data Fetching Logic
+        // API Logic
         const PROXY_URL = '/api/competitions/SA/'; 
 
         async function init() {
-            const loader = document.getElementById('loader');
-            loader.style.display = 'block';
-            
+            document.getElementById('loader').style.display = 'block';
             try {
                 const [standingsRes, scorersRes, fixturesRes] = await Promise.all([
                     fetch(`${PROXY_URL}standings`),
@@ -242,12 +220,10 @@
                 if (sData.standings) renderStandings(sData.standings[0].table);
                 if (scData.scorers) renderScorers(scData.scorers);
                 if (fData.matches) renderFixtures(fData.matches);
-
             } catch (err) {
-                console.error("Dashboard Error:", err);
-                alert("Data sync failed. Check netlify.toml config.");
+                console.error("API Error", err);
             } finally {
-                loader.style.display = 'none';
+                document.getElementById('loader').style.display = 'none';
             }
         }
 
@@ -255,16 +231,14 @@
             const today = new Date().toISOString().split('T')[0];
             const nextWeek = new Date();
             nextWeek.setDate(nextWeek.getDate() + 10);
-            const endDate = nextWeek.toISOString().split('T')[0];
-            return fetch(`${PROXY_URL}matches?dateFrom=${today}&dateTo=${endDate}`);
+            return fetch(`${PROXY_URL}matches?dateFrom=${today}&dateTo=${nextWeek.toISOString().split('T')[0]}`);
         }
 
         function renderStandings(data) {
-            const body = document.getElementById('standings-body');
-            body.innerHTML = data.map(team => `
+            document.getElementById('standings-body').innerHTML = data.map(team => `
                 <tr>
                     <td>${team.position}</td>
-                    <td><img src="${team.team.crest}" class="crest" alt=""> ${team.team.shortName}</td>
+                    <td><img src="${team.team.crest}" class="crest"> ${team.team.shortName}</td>
                     <td>${team.won}/${team.draw}/${team.lost}</td>
                     <td>${team.goalDifference}</td>
                     <td class="pts">${team.points}</td>
@@ -273,8 +247,7 @@
         }
 
         function renderScorers(data) {
-            const body = document.getElementById('scorers-body');
-            body.innerHTML = data.slice(0, 10).map(s => `
+            document.getElementById('scorers-body').innerHTML = data.slice(0, 10).map(s => `
                 <tr>
                     <td><strong>${s.player.name}</strong><br><small style="color:var(--text-dim)">${s.team.name}</small></td>
                     <td class="pts">${s.goals}</td>
@@ -285,21 +258,17 @@
         function renderFixtures(matches) {
             const list = document.getElementById('fixtures-list');
             if (!matches || matches.length === 0) {
-                list.innerHTML = '<p style="color:var(--text-dim); padding: 20px;">No upcoming matches found.</p>';
+                list.innerHTML = '<p style="color:var(--text-dim); text-align:center;">No upcoming matches.</p>';
                 return;
             }
-
             list.innerHTML = matches.map(m => {
-                const date = new Date(m.utcDate).toLocaleString([], { 
-                    weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
-                });
+                const date = new Date(m.utcDate).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
                 return `
                     <div class="fixture-row">
-                        <div style="width: 150px;"><span class="date-badge">${date}</span></div>
-                        <div style="flex: 1; text-align: right;"><img src="${m.homeTeam.crest}" class="crest" alt=""> ${m.homeTeam.shortName}</div>
-                        <div style="padding: 0 15px; color: var(--text-dim);">vs</div>
-                        <div style="flex: 1; text-align: left;">${m.awayTeam.shortName} <img src="${m.awayTeam.crest}" class="crest" alt=""></div>
-                        <div style="width: 100px; text-align: right; color: var(--accent-blue);">MD ${m.matchday}</div>
+                        <div><span style="background:#2a2a35; padding:2px 8px; border-radius:4px;">${date}</span></div>
+                        <div style="flex:1; text-align:right;"><img src="${m.homeTeam.crest}" class="crest"> ${m.homeTeam.shortName}</div>
+                        <div style="padding:0 10px; color:var(--text-dim)">vs</div>
+                        <div style="flex:1; text-align:left;">${m.awayTeam.shortName} <img src="${m.awayTeam.crest}" class="crest"></div>
                     </div>
                 `;
             }).join('');
