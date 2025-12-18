@@ -1,121 +1,4 @@
-:root {
-    --bg-color: #1a1a2e;
-    --card-bg: #1e1e26;
-    --accent-blue: #007bff;
-    --accent-green: #00ff88;
-    --text-main: #ffffff;
-    --text-dim: #a0a0b0;
-    --border: #333344;
-}
-
- --background-light: #2c2c44; 
-    --text-light: #f0f0f0;
-    --text-muted: #b4b4c8;
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    
-    /* Functional Colors */
-    --border-color: #3d3d5f; 
-    --border-color-light: #50507a;
-    --input-bg: var(--background-dark);
-    --card-bg: var(--background-light);
-    --header-bg: var(--background-dark);
-    --hover-bg: rgba(0, 255, 115, 0.05);
-    --active-sort-bg: #353555;
-
-
-html, body {
-    max-width: 100%;
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    font-family: 'Inter', -apple-system, sans-serif;
-}
-
-/* Header & Nav */
-header {
-    background: var(--card-bg);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-.logo { font-size: 1.2rem; margin: 0; font-weight: bold; }
-.highlight { color: var(--accent-blue); }
-
-
-
-.active-link { color: var(--accent-green) !important; }
-
-/* Grid System */
-.main-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 15px 10px;
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
-}
-
-.card {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid var(--border);
-}
-
-.full-width { grid-column: span 2; }
-
-/* Tables */
-.table-container {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 320px; }
-th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid var(--border); }
-h2 { font-size: 1.1rem; color: var(--accent-blue); border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 0; }
-
-.crest { width: 20px; height: 20px; vertical-align: middle; margin-right: 5px; }
-.pts { font-weight: bold; color: var(--accent-green); }
-
-/* Fixtures */
-.fixture-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-}
-
-/* Mobile Responsive */
-@media (max-width: 850px) {
-    .dashboard-grid { grid-template-columns: 1fr; }
-    .full-width { grid-column: span 1; }
-    
- 
-
-#loader { position: fixed; bottom: 20px; right: 20px; color: var(--accent-green); display: none; background: #000; padding: 5px; border-radius: 4px; }
-
-
-
-
+/* --- 1. Original Dark Theme Variables --- */
 :root {
     --bg-color: #0f0f12;
     --card-bg: #1e1e26;
@@ -124,6 +7,7 @@ h2 { font-size: 1.1rem; color: var(--accent-blue); border-bottom: 1px solid var(
     --text-main: #ffffff;
     --text-dim: #a0a0b0;
     --border: #333344;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 html, body {
@@ -136,7 +20,7 @@ html, body {
     font-family: 'Inter', -apple-system, sans-serif;
 }
 
-/* Header & Nav */
+/* --- 2. Professional Header --- */
 header {
     background: var(--card-bg);
     border-bottom: 1px solid var(--border);
@@ -150,55 +34,143 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 0 auto;
     padding: 0 15px;
 }
 
-.logo { font-size: 1.2rem; margin: 0; font-weight: bold; }
-.highlight { color: var(--accent-blue); }
-
-
-
-.active-link { color: var(--accent-green) !important; }
-
-/* Grid System */
+/* --- 3. Professional Grid Layout --- */
 .main-content {
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 0 auto;
-    padding: 15px 10px;
+    /* Small horizontal padding for mobile edge-to-edge feel */
+    padding: 20px 8px; 
 }
 
 .dashboard-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
+    /* 3-column grid for desktop */
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 25px; /* Even spacing between all sections */
+    align-items: start;
 }
 
 .card {
     background: var(--card-bg);
     border-radius: 12px;
-    padding: 15px;
+    padding: 20px;
     border: 1px solid var(--border);
+    box-shadow: var(--card-shadow);
+    /* Ensures all cards in a row have the same height */
+    height: 100%; 
+    display: flex;
+    flex-direction: column;
 }
 
-.full-width { grid-column: span 2; }
+/* Layout Helpers */
+.full-width { grid-column: span 3; }
+.two-thirds { grid-column: span 2; }
 
-/* Tables */
-.table-container {
-    width: 100%;
+/* --- 4. League Navigation Cards --- */
+.league-nav-container {
+    padding: 10px 0;
+    background: transparent;
+}
+
+.league-nav-bar {
+    display: flex;
+    gap: 12px;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    padding: 10px 5px;
+    scrollbar-width: none;
+}
+.league-nav-bar::-webkit-scrollbar { display: none; }
+
+.league-btn {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 110px;
+    height: 70px;
+    background: var(--card-bg);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 320px; }
-th, td { padding: 12px 8px; text-align: left; border-bottom: 1px solid var(--border); }
-h2 { font-size: 1.1rem; color: var(--accent-blue); border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 0; }
+.league-btn:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-green);
+}
 
-.crest { width: 20px; height: 20px; vertical-align: middle; margin-right: 5px; }
+.league-btn.active {
+    border: 2px solid var(--text-main) !important;
+    background: var(--card-bg);
+    transform: scale(1.05);
+}
+
+/* --- 5. Professional Tables --- */
+.table-container {
+    max-height: 500px;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: var(--card-bg);
+    color: var(--accent-blue);
+    padding: 12px 8px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    z-index: 10;
+}
+
+td { padding: 12px 8px; border-bottom: 1px solid var(--border); }
+
 .pts { font-weight: bold; color: var(--accent-green); }
 
-/* Fixtures */
+/* --- 6. Responsive Logic --- */
+
+/* Tablet (2 columns) */
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .full-width, .two-thirds { grid-column: span 2; }
+}
+
+/* Mobile (1 column + Edge-to-Edge) */
+@media (max-width: 600px) {
+    .main-content {
+        padding: 15px 0px; /* Zero side padding */
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 20px; /* Space between vertical sections */
+    }
+
+    .card {
+        border-radius: 0; /* Cards touch screen edges perfectly */
+        border-left: none;
+        border-right: none;
+        padding: 20px 15px;
+    }
+
+    .full-width, .two-thirds { grid-column: span 1; }
+}
+
+/* --- 7. Fixtures Logic --- */
 .fixture-row {
     display: flex;
     align-items: center;
@@ -206,117 +178,3 @@ h2 { font-size: 1.1rem; color: var(--accent-blue); border-bottom: 1px solid var(
     padding: 12px 0;
     border-bottom: 1px solid var(--border);
 }
-
-/* Mobile Responsive */
-@media (max-width: 850px) {
-    .dashboard-grid { grid-template-columns: 1fr; }
-    .full-width { grid-column: span 1; }
-    
- 
-
-#loader { position: fixed; bottom: 20px; right: 20px; color: var(--accent-green); display: none; background: #000; padding: 5px; border-radius: 4px; }
-
-
-
-
-  /* Container for the league navigation */
-.league-nav-container {
-    padding: 20px 0;
-    background: transparent; /* Keeps your dashboard background visible */
-    overflow: hidden;
-}
-
-/* The scrollable row */
-.league-nav-bar {
-    display: flex;
-    gap: 15px;
-    overflow-x: auto;
-    padding: 10px 15px;
-    scrollbar-width: none; /* Hides scrollbar on Firefox */
-    -ms-overflow-style: none; /* Hides scrollbar on IE/Edge */
-}
-
-/* Hide scrollbar for Chrome/Safari */
-.league-nav-bar::-webkit-scrollbar {
-    display: none;
-}
-
-/* The "Neat Card" Button Style */
-.league-btn {
-    /* Layout */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-width: 100px;
-    height: 60px;
-    padding: 10px 20px;
-    
-    /* Aesthetics from your photo */
-    background: #ffffff; /* White background like the photo */
-    color: #333333; /* Dark text for readability */
-    border: 1px solid #e0e0e0; /* Subtle light border */
-    border-radius: 12px; /* Rounded corners like the photo */
-    
-    /* Interaction */
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    white-space: nowrap;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Very light shadow */
-}
-
-/* Hover Effect */
-.league-btn:hover {
-    transform: translateY(-3px); /* Subtle lift */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    border-color: var(--accent-green);
-}
-
-/* Active State (When a league is selected) */
-.league-btn.active {
-    background: #f8f9fa; /* Slightly different white/grey */
-    border: 2px solid #000000; /* Bold black border to show it's selected */
-    color: #000000;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-}
-
-/* Add an icon style if you want to keep them */
-.league-btn i {
-    margin-bottom: 4px;
-    font-size: 1.1rem;
-    color: var(--accent-blue);
-} 
-
-
-
-
-/* This controls the height of the card sections */
-.table-container {
-    max-height: 450px; /* Limits the table height */
-    overflow-y: auto;  /* Adds vertical scroll when content is too long */
-    overflow-x: auto;  /* Adds horizontal scroll for small mobile screens */
-    scrollbar-width: thin;
-    scrollbar-color: #ccc transparent;
-    border-radius: 0 0 12px 12px;
-}
-
-/* Make the table headers "Sticky" so they stay at the top while scrolling */
-#standings-table thead th, 
-#scorers-table thead th {
-    position: sticky;
-    top: 0;
-    background-color: #ffffff; /* Match your card background */
-    z-index: 10;
-    box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1); /* Adds a nice separator line */
-}
-
-/* Custom scrollbar for Chrome/Safari to keep it neat */
-.table-container::-webkit-scrollbar {
-    width: 6px;
-}
-.table-container::-webkit-scrollbar-thumb {
-    background-color: #e0e0e0;
-    border-radius: 10px;
-}    
