@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Serie A FPL Dashboard</title>
+    <title>KOPALA FPL | Football Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="serieA.css">
@@ -12,7 +12,7 @@
 
     <header>
         <div class="container header-container">
-            <h1 class="logo">OTHER <span class="highlight">LEAGUES</span></h1>
+            <h1 class="logo">KOPALA <span class="highlight">FPL</span></h1>
             <button class="menu-toggle" id="mobile-menu" aria-label="Toggle Menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -22,94 +22,132 @@
                 <ul>
                     <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
                     <li><a href="#live-scores"><i class="fa-solid fa-calendar-check"></i> EPL Live</a></li>
-          
-                   
                     <li><a href="mailto:lombeicloud@gmail.com"><i class="fa-solid fa-user-secret"></i> Join the League</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
+    <div class="league-nav-container">
+        <div class="league-nav-bar">
+            <button class="league-btn active" onclick="switchLeague('PL')">
+                <i class="fa-solid fa-crown"></i> EPL
+            </button>
+            <button class="league-btn" onclick="switchLeague('PD')">
+                <i class="fa-solid fa-sun"></i> La Liga
+            </button>
+            <button class="league-btn" onclick="switchLeague('SA')">
+                <i class="fa-solid fa-futbol"></i> Serie A
+            </button>
+            <button class="league-btn" onclick="switchLeague('BL1')">
+                <i class="fa-solid fa-shield-halved"></i> Bundesliga
+            </button>
+            <button class="league-btn" onclick="switchLeague('FL1')">
+                <i class="fa-solid fa-tower-observation"></i> Ligue 1
+            </button>
+            <button class="league-btn" onclick="switchLeague('CL')">
+                <i class="fa-solid fa-star"></i> UCL
+            </button>
+            <button class="league-btn" onclick="switchLeague('DED')">
+                <i class="fa-solid fa-wind"></i> Eredivisie
+            </button>
+            <button class="league-btn" onclick="switchLeague('ELC')">
+                <i class="fa-solid fa-trophy"></i> Championship
+            </button>
+        </div>
+    </div>
+
     <main class="main-content">
-        <div id="loader">Updating...</div>
+        <div class="container">
+            <h1 id="section-title" style="margin-bottom: 20px; color: var(--accent-green); font-size: 1.8rem;">English Premier League</h1>
+            
+            <div id="loader">Syncing Live Data...</div>
 
-        <div class="dashboard-grid">
-            <section class="card">
-                <h2>League Table</h2>
-                <div class="table-container">
-                    <table id="standings-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Club</th>
-                                <th>W/D/L</th>
-                                <th>GD</th>
-                                <th>PTS</th>
-                            </tr>
-                        </thead>
-                        <tbody id="standings-body"></tbody>
-                    </table>
-                </div>
-            </section>
+            <div class="dashboard-grid">
+                <section class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-list-ol"></i> League Table</h2>
+                    </div>
+                    <div class="table-container">
+                        <table id="standings-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Club</th>
+                                    <th>W/D/L</th>
+                                    <th>GD</th>
+                                    <th>PTS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="standings-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </section>
 
-            <section class="card">
-                <h2>Top Scorers</h2>
-                <div class="table-container">
-                    <table id="scorers-table">
-                        <thead>
-                            <tr>
-                                <th>Player</th>
-                                <th>G</th>
-                            </tr>
-                        </thead>
-                        <tbody id="scorers-body"></tbody>
-                    </table>
-                </div>
-            </section>
+                <section class="card">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-bullseye"></i> Top Scorers</h2>
+                    </div>
+                    <div class="table-container">
+                        <table id="scorers-table">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>G</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scorers-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </section>
 
-            <section class="card full-width">
-                <h2>Upcoming Fixtures</h2>
-                <div id="fixtures-list"></div>
-            </section>
+                <section class="card full-width">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-calendar-days"></i> Upcoming Fixtures</h2>
+                    </div>
+                    <div id="fixtures-list">
+                        </div>
+                </section>
+            </div>
         </div>
     </main>
 
-<footer class="main-footer">
-    <div class="container footer-grid">
-        <div class="footer-col">
-            <h2 class="logo">KOPALA <span class="highlight">FPL</span></h2>
-            <p>Your ultimate destination for FPL scouting, live scores, and mini-league analysis.</p>
-            <div class="social-links">
-                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="https://www.facebook.com/profile.php?id=100070121261260"><i class="fa-brands fa-facebook"></i></a>
-               
-                <a href="https://youtube.com/@kopalascoutreportfc?si=94IQ9qJL9_syVNEN"><i class="fa-brands fa-youtube"></i></a>
+    <footer class="main-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h2 class="logo">KOPALA <span class="highlight">FPL</span></h2>
+                <p>Your ultimate destination for FPL scouting, live scores, and mini-league analysis.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=100070121261260"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://youtube.com/@kopalascoutreportfc?si=94IQ9qJL9_syVNEN"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#stats-centre">Player Stats</a></li>
+                    <li><a href="leagues.html?id=PL">Leagues</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="mailto:lombeicloud@gmail.com">Contact Us</a></li>
+                    <li><a href="#">Join the League</a></li>
+                </ul>
             </div>
         </div>
-
-        <div class="footer-col">
-            <h3>Quick Links</h3>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="#stats-centre">Player Stats</a></li>
-                <li><a href="SerieA.html">Serie A</a></li>
-            </ul>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 KOPALA FPL. All rights reserved. Not affiliated with the Premier League.</p>
         </div>
-
-        <div class="footer-col">
-            <h3>Support</h3>
-            <ul>
-                <li><a href="mailto:lombeicloud@gmail.com">Contact Us</a></li>
-                <li><a href="#">Join the League</a></li>
-            </ul>
-        </div>
-    </div>
-    
-    <div class="footer-bottom">
-        <p>&copy; 2026 KOPALA FPL. All rights reserved. Not affiliated with the Premier League.</p>
-    </div>
-</footer>
-
+    </footer>
 
     <script src="serieA.js"></script>
     <script src="main.js"></script>
