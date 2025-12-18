@@ -6,25 +6,68 @@ menuToggle.addEventListener('click', () => {
     mainNav.classList.toggle('active');
 });
 
-// 2. API Configuration
-const PROXY_URL = '/api/competitions/SA/'; 
+// 2. League Mapping Configuration
+const LEAGUE_MAP = {
+    'PL': 'English Premier League',
+    'PD': 'La Liga',
+    'SA': 'Serie A',
+    'BL1': 'Bundesliga',
+    'FL1': 'Ligue 1',
+    'CL': 'Champions League',
+    'DED': 'Eredivisie',
+    'ELC': 'Championship'
+};
 
+// State variable to track the active league (defaults to EPL)
+let activeLeague = 'PL';
+
+// 3. The Switcher Function
+// This is called when a user clicks a league button
+async function switchLeague(leagueId) {
+    activeLeague = leagueId;
+
+    // Update the UI Header
+    const titleElement = document.getElementById('section-title');
+    if (titleElement) titleElement.innerText = LEAGUE_MAP[leagueId];
+
+    // Highlight the active button
+    document.querySelectorAll('.league-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('onclick').includes(leagueId)) {
+            btn.classList.add('active');
+        }
+    });
+
+    // Refresh the data
+    init();
+}
+
+// 4. API Configuration & Data Fetching
 async function init() {
     const loader = document.getElementById('loader');
     loader.style.display = 'block';
+
+    // We now build the URL dynamically using the activeLeague variable
+    const PROXY_URL = `/api/competitions/${activeLeague}/`; 
     
     try {
         const [standingsRes, scorersRes, fixturesRes] = await Promise.all([
             fetch(`${PROXY_URL}standings`),
             fetch(`${PROXY_URL}scorers`),
-            getFixtures()
+            getFixtures(PROXY_URL) // Pass URL to the helper
         ]);
 
         const sData = await standingsRes.json();
         const scData = await scorersRes.json();
         const fData = await fixturesRes.json();
 
-        if (sData.standings) renderStandings(sData.standings[0].table);
+        // Standard Table Rendering
+        if (sData.standings) {
+            // Champions League has a different data structure (multiple groups)
+            // This line ensures we grab the first table available
+            renderStandings(sData.standings[0].table);
+        }
+        
         if (scData.scorers) renderScorers(scData.scorers);
         if (fData.matches) renderFixtures(fData.matches);
 
@@ -35,13 +78,15 @@ async function init() {
     }
 }
 
-async function getFixtures() {
+// Helper to get fixtures based on current league
+async function getFixtures(url) {
     const today = new Date().toISOString().split('T')[0];
     const nextWeek = new Date();
     nextWeek.setDate(nextWeek.getDate() + 10);
-    return fetch(`${PROXY_URL}matches?dateFrom=${today}&dateTo=${nextWeek.toISOString().split('T')[0]}`);
+    return fetch(`${url}matches?dateFrom=${today}&dateTo=${nextWeek.toISOString().split('T')[0]}`);
 }
 
+// 5. Render Functions (Your working logic, kept intact)
 function renderStandings(data) {
     const body = document.getElementById('standings-body');
     body.innerHTML = data.map(team => `
@@ -85,5 +130,5 @@ function renderFixtures(matches) {
     }).join('');
 }
 
-// Start the app
+// Start the app with default league
 init();
