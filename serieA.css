@@ -1,12 +1,21 @@
 :root {
-    --bg-color: #0f0f12;
-    --card-bg: #1e1e26;
-    --accent-blue: #007bff;
-    --accent-green: #00ff88;
-    --text-main: #ffffff;
-    --text-dim: #a0a0b0;
-    --border: #333344;
-}
+    /* Primary Palette */
+    --primary-color: #00ff73; 
+    --secondary-color: #03f6f4; 
+    --background-dark: #1a1a2e; 
+    --background-light: #2c2c44; 
+    --text-light: #f0f0f0;
+    --text-muted: #b4b4c8;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    
+    /* Functional Colors */
+    --border-color: #3d3d5f; 
+    --border-color-light: #50507a;
+    --input-bg: var(--background-dark);
+    --card-bg: var(--background-light);
+    --header-bg: var(--background-dark);
+    --hover-bg: rgba(0, 255, 115, 0.05);
+    --active-sort-bg: #353555;
 
 html, body {
     max-width: 100%;
