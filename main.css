@@ -236,3 +236,110 @@ tr:hover {
     #main-nav { display: none; } /* Requires JS to show */
     .menu-toggle { display: flex; }
 }
+
+
+
+/* --- Loading Overlay --- */
+#loading-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: var(--primary-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+#loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* --- Manager Table Special Styling --- */
+.top-rank { border-left: 5px solid #ffd700; background: rgba(255, 215, 0, 0.05); }
+.second-rank { border-left: 5px solid #c0c0c0; background: rgba(192, 192, 192, 0.05); }
+.third-rank { border-left: 5px solid #cd7f32; background: rgba(205, 127, 50, 0.05); }
+
+.rank-number {
+    font-weight: 800;
+    width: 30px;
+    display: inline-block;
+}
+
+/* --- Position Badges --- */
+.pos-badge {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #fff;
+}
+.pos-GKP { background: #ebff00; color: #000; }
+.pos-DEF { background: #00ff87; color: #000; }
+.pos-MID { background: #05f0ff; color: #000; }
+.pos-FWD { background: #ff005a; color: #fff; }
+
+/* --- Icons & Price Changes --- */
+.change-up { color: var(--rise-color); font-weight: bold; }
+.change-down { color: var(--fall-color); font-weight: bold; }
+.change-no-change { color: var(--text-dim); }
+
+/* --- Stats Centre Filters --- */
+.stats-filters, .analyzer-filters {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    background: var(--secondary-dark);
+    padding: 15px;
+    border-radius: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+select, button {
+    background: #111827;
+    border: 1px solid var(--border-color);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: var(--accent-green);
+    color: var(--primary-dark);
+}
+
+/* --- Gameweek Wrapped Grid --- */
+.gw-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.stat-card {
+    background: #111827;
+    padding: 15px;
+    border-radius: 6px;
+    text-align: center;
+    border-bottom: 3px solid var(--accent-green);
+}
+
+.stat-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; }
+.stat-value { font-size: 1.25rem; font-weight: 800; margin: 5px 0; }
+.stat-detail { font-size: 0.7rem; color: var(--accent-green); }
+
+/* --- Lazy Loading Animation --- */
+.lazy {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease-out;
+}
+
+.lazy-loaded {
+    opacity: 1;
+    transform: translateY(0);
+}
