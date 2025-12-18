@@ -1,33 +1,33 @@
-/* --- Global Styles and Variables (Dark Theme) --- */
+/* --- Global Styles and Variables (Light Theme) --- */
 
 :root {
-    /* Primary Palette */
-    --primary-color: #00ff73; 
-    --secondary-color: #03f6f4; 
-    --background-dark: #1a1a2e; 
-    --background-light: #2c2c44; 
-    --text-light: #f0f0f0;
-    --text-muted: #b4b4c8;
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    /* Primary Palette - Light Mode Optimized */
+    --primary-color: #008d51;    /* Professional FPL Green */
+    --secondary-color: #007bff;  /* Brand Blue */
+    --background-dark: #f4f7f6;  /* Soft grey page background */
+    --background-light: #ffffff; /* Pure white for cards/header */
+    --text-light: #1a1a2e;       /* Dark text for light bg */
+    --text-muted: #60607a;       /* Grey for secondary text */
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     
     /* Functional Colors */
-    --border-color: #3d3d5f; 
-    --border-color-light: #50507a;
-    --input-bg: var(--background-dark);
-    --card-bg: var(--background-light);
-    --header-bg: var(--background-dark);
-    --hover-bg: rgba(0, 255, 115, 0.05);
-    --active-sort-bg: #353555;
+    --border-color: #e2e4e7;     /* Light grey borders */
+    --border-color-light: #f0f2f5;
+    --input-bg: #ffffff;
+    --card-bg: #ffffff;
+    --header-bg: #ffffff;
+    --hover-bg: rgba(0, 141, 81, 0.05);
+    --active-sort-bg: #f8f9fa;
 
     /* Difficulty & Status */
     --fdr-difficulty-1: #00ff73;
-    --fdr-difficulty-3: #ffc400;
-    --fdr-difficulty-5: #ff4d4d;
+    --fdr-difficulty-3: #eff1f3;
+    --fdr-difficulty-5: #ff2e55;
     
     /* Stats Colors */
-    --stat-average: #03f6f4;
+    --stat-average: #007bff;
     --stat-high-score: #ffc400;
-    --stat-top-player: #ff4d4d;
+    --stat-top-player: #ff2e55;
     --stat-captain: var(--primary-color);
 }
 
@@ -39,12 +39,12 @@
 }
 
 html {
-    scroll-padding-top: 80px; /* Offset for sticky header */
+    scroll-padding-top: 80px;
     scroll-behavior: smooth;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
     background-color: var(--background-dark);
     color: var(--text-light);
     line-height: 1.6;
@@ -60,11 +60,9 @@ body {
 /* --- Navigation & Sticky Header --- */
 header {
     background-color: var(--background-light);
-    box-shadow: var(--card-shadow);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     padding: 15px 0;
     border-bottom: 3px solid var(--primary-color);
-    /* STICKY CONFIGURATION */
-    position: -webkit-sticky;
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -75,12 +73,12 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
 }
 
 .logo {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: bold;
+    color: var(--text-light);
 }
 
 nav ul {
@@ -88,400 +86,178 @@ nav ul {
     display: flex;
 }
 
-nav ul li {
-    margin-left: 25px;
-}
+nav ul li { margin-left: 25px; }
 
 nav ul li a {
     color: var(--text-light);
-    font-weight: 500;
-    font-size: 1.05rem;
+    text-decoration: none;
+    font-weight: 600;
     transition: color 0.3s;
 }
 
-nav ul li a:hover {
-    color: var(--primary-color);
-}
-
-/* --- Hamburger Menu --- */
-.menu-toggle {
-    display: none; 
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    z-index: 1001; 
-}
-
-.bar {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background-color: var(--primary-color);
-    margin: 5px auto;
-    transition: all 0.3s ease-in-out;
-}
-
-.header-container.menu-open .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-.header-container.menu-open .bar:nth-child(2) { opacity: 0; }
-.header-container.menu-open .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+nav ul li a:hover { color: var(--primary-color); }
 
 /* --- Main Layout Grid --- */
 .site-content-wrapper {
     display: grid;
-    grid-template-columns: 1fr 300px; 
+    grid-template-columns: 1fr 320px; 
     gap: 30px;
     margin-top: 30px;
 }
 
-#main-content {
-    grid-column: 1 / 2;
-}
-
 .card {
-    background-color: var(--background-light);
+    background-color: var(--card-bg);
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 12px;
     box-shadow: var(--card-shadow);
-    transition: transform 0.2s;
+    border: 1px solid var(--border-color);
     border-left: 5px solid var(--primary-color);
+    transition: transform 0.2s;
 }
 
-.card:hover { transform: translateY(-2px); }
+.card:hover { transform: translateY(-3px); }
 
 /* --- Tables & Data Sections --- */
 .stats-table-container, .analyzer-table-container {
-    overflow-x: auto;
-    background-color: var(--background-light);
-    border-radius: 0 0 8px 8px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
     box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9rem;
 }
 
 thead th {
-    background-color: var(--background-dark);
-    color: var(--secondary-color);
-    padding: 12px 15px;
-    text-align: left;
-    position: sticky;
-    top: 0; /* Sticky headers for tables */
-    z-index: 10;
-    white-space: nowrap;
+    background-color: #f8f9fa;
+    color: var(--text-muted);
+    padding: 15px;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--border-color);
 }
 
 tbody td {
-    padding: 12px 15px;
-    border-bottom: 1px solid var(--border-color);
+    padding: 14px 15px;
+    border-bottom: 1px solid var(--border-color-light);
+    color: var(--text-light);
 }
 
-/* --- FDR Ticker --- */
-.fdr-grid {
-    display: flex;
-    gap: 15px;
-    overflow-x: auto;
-    padding-bottom: 10px; 
-}
-
-.fdr-team-card {
-    min-width: 150px;
-    padding: 15px;
-    background-color: var(--background-light);
-    border-radius: 8px;
-}
-
-.fdr-1 { background-color: var(--fdr-difficulty-1); color: var(--background-dark); }
-.fdr-3 { background-color: var(--fdr-difficulty-3); color: var(--background-dark); }
-.fdr-5 { background-color: var(--fdr-difficulty-5); color: var(--text-light); }
-
-/* --- Sidebar Area --- */
-#sidebar {
-    grid-column: 2 / 3;
-}
-
-.sidebar-widget {
-    background-color: var(--background-light);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: var(--card-shadow);
-    margin-bottom: 20px;
-    border-top: 3px solid var(--primary-color);
-}
-
-/* --- Responsive Layout (Max 992px) --- */
-@media (max-width: 992px) {
-    .site-content-wrapper {
-        grid-template-columns: 1fr;
-    }
-    
-    #sidebar {
-        grid-column: 1 / 2;
-        order: -1; 
-    }
-
-    .menu-toggle {
-        display: block;
-    }
-
-    nav {
-        position: absolute;
-        top: 60px;
-        left: 0;
-        width: 100%;
-        max-height: 0;
-        overflow: hidden;
-        background-color: var(--background-dark);
-        box-shadow: var(--card-shadow);
-        transition: max-height 0.3s ease-in-out;
-        z-index: 999;
-    }
-
-    nav ul {
-        flex-direction: column;
-        padding: 10px 0;
-    }
-
-    nav ul li {
-        margin: 0;
-        text-align: center;
-        padding: 15px 0;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .header-container.menu-open nav {
-        max-height: 500px;
-    }
-}
-
-/* --- Mobile Portrait (Max 600px) --- */
-@media (max-width: 600px) {
-    .fpl-grid, .wrapped-grid, .scores-grid, .news-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .analyzer-filters {
-        flex-direction: column;
-        align-items: stretch;
-    }
-}
-
-/* --- Status & Rank Badges --- */
-.change-up { color: var(--primary-color); }
-.change-down { color: var(--fdr-difficulty-5); }
-.pos-badge {
-    padding: 3px 6px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    font-weight: bold;
-    color: white;
-}
-.pos-GKP { background-color: #4CAF50; }
-.pos-DEF { background-color: #2196F3; }
-.pos-MID { background-color: #FFC107; color: black; }
-.pos-FWD { background-color: #F44336; }
-
-
-/* --- FDR Heatmap Specific Styles --- */
-.fdr-grid {
-    overflow-x: auto;
-    background-color: var(--background-light);
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: var(--card-shadow);
-}
-
-.fdr-heatmap {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 4px; /* Creates the "button" look between cells */
-    font-size: 0.9rem;
-}
-
-.fdr-heatmap th {
-    background-color: #e2e4e7; /* Light gray header */
-    color: #333;
-    padding: 8px;
-    border-radius: 4px;
-    font-weight: 600;
-}
-
-.fdr-heatmap th.fdr-team-col {
-    background-color: #008d51; /* Official FPL Green */
-    color: white;
-}
-
-.fdr-team-name {
-    background-color: #f0f0f0;
-    color: #333;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 4px;
-    padding: 10px;
-}
-
-/* Heatmap Cell Styling */
-.fdr-cell {
-    text-align: center;
-    padding: 10px;
-    border-radius: 4px;
-    font-weight: 500;
-    min-width: 60px;
-    color: #1a1a2e; /* Dark text for contrast against pastel bg */
-}
-
-/* FDR Color Palette from Reference Image */
-.fdr-bg-1 { background-color: #00ff73; } /* Very Easy - Bright Green */
-.fdr-bg-2 { background-color: #b3ffcf; } /* Easy - Light Green */
-.fdr-bg-3 { background-color: #e2e4e7; } /* Normal - Gray */
-.fdr-bg-4 { background-color: #ffb3c1; } /* Hard - Light Red */
-.fdr-bg-5 { background-color: #ff2e55; color: white; } /* Very Hard - Deep Red */
-.fdr-bg-blank { background-color: #3d3d5f; color: white; }
-
-/* Sticky first column for the Heatmap */
-.fdr-team-name {
-    position: sticky;
-    left: 0;
-    z-index: 2;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-}
-
-
-
-/* --- Professional Footer Styles --- */
-.main-footer {
-    background-color: #1a1a2e; /* Dark professional blue */
-    color: #ffffff;
-    padding: 60px 0 20px;
-    margin-top: 50px;
-    border-top: 4px solid var(--primary-color);
-}
-
-.footer-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 40px;
-    margin-bottom: 40px;
-}
-
-.footer-col h3 {
-    color: var(--secondary-color);
-    margin-bottom: 20px;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-}
-
-.footer-col p {
-    color: #adb5bd;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-.footer-col ul {
-    list-style: none;
-    padding: 0;
-}
-
-.footer-col ul li {
-    margin-bottom: 12px;
-}
-
-.footer-col ul li a {
-    color: #adb5bd;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.footer-col ul li a:hover {
-    color: var(--secondary-color);
-}
-
-/* Social Media Icons */
-.social-links a {
-    color: #ffffff;
-    font-size: 1.5rem;
-    margin-right: 15px;
-    transition: transform 0.3s, color 0.3s;
-    display: inline-block;
-}
-
-.social-links a:hover {
-    color: var(--primary-color);
-    transform: translateY(-3px);
-}
-
-/* Bottom Bar */
-.footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 20px;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #6c757d;
-}
-
-/* Responsive Footer */
-@media (max-width: 768px) {
-    .footer-grid {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-    .social-links {
-        justify-content: center;
-    }
-}
-
-
-
+/* --- Injury List (Light Mode) --- */
 .injury-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
 }
 
 .injury-card {
-    background: #2a2a40;
-    border-radius: 8px;
-    padding: 15px;
-    border-left: 5px solid #555; /* Default gray */
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid var(--border-color);
+    border-left: 5px solid #6c757d; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
-/* Border colors based on status */
-.status-out { border-left-color: #ff4d4d !important; }      /* Red */
-.status-suspended { border-left-color: #000000 !important; } /* Black */
-.status-doubtful { border-left-color: #ffaa00 !important; }  /* Orange */
+.status-out { border-left-color: #ff2e55 !important; }      
+.status-suspended { border-left-color: #1a1a2e !important; } 
+.status-doubtful { border-left-color: #ffc400 !important; }  
 
-.injury-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 0.7rem;
-    font-weight: bold;
+.player-name { 
+    margin: 5px 0; 
+    color: var(--text-light); 
+    font-weight: 700;
+    font-size: 1.1rem;
 }
 
-.status-badge {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 2px 6px;
-    border-radius: 4px;
-}
-
-.team-tag { color: #00ff87; }
-
-.player-name { margin: 5px 0; color: #fff; }
+.team-tag { color: var(--primary-color); font-weight: 600; }
 
 .injury-news {
     font-size: 0.85rem;
-    color: #adb5bd;
-    font-style: italic;
-    line-height: 1.3;
+    color: var(--text-muted);
+    line-height: 1.4;
 }
 
-.chance-tag {
-    margin-top: 10px;
-    font-size: 0.8rem;
-    color: #ffeb3b;
-    font-weight: bold;
+/* --- FDR Heatmap (Light Mode) --- */
+.fdr-grid {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+}
+
+.fdr-heatmap th {
+    background-color: #f0f2f5;
+    color: var(--text-light);
+}
+
+.fdr-team-name {
+    background-color: #f8f9fa;
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+}
+
+.fdr-cell {
+    border-radius: 4px;
+    color: #1a1a2e; /* Dark text for contrast */
+}
+
+/* FDR Color Palette - Pastel versions for readability */
+.fdr-bg-1 { background-color: #00ff73; } 
+.fdr-bg-2 { background-color: #b3ffcf; } 
+.fdr-bg-3 { background-color: #e2e4e7; } 
+.fdr-bg-4 { background-color: #ffb3c1; } 
+.fdr-bg-5 { background-color: #ff2e55; color: white; }
+
+/* --- Sidebar Area --- */
+.sidebar-widget {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 25px;
+    border: 1px solid var(--border-color);
+    border-top: 4px solid var(--primary-color);
+}
+
+/* --- Footer (Clean Professional) --- */
+.main-footer {
+    background-color: #ffffff;
+    color: #1a1a2e;
+    padding: 60px 0 20px;
+    margin-top: 50px;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-col h3 {
+    color: var(--primary-color);
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+.footer-col p, .footer-col ul li a {
+    color: var(--text-muted);
+}
+
+.footer-col ul li a:hover { color: var(--secondary-color); }
+
+.footer-bottom {
+    border-top: 1px solid var(--border-color-light);
+    color: #999;
+}
+
+/* --- Responsive Menu Adjustments --- */
+@media (max-width: 992px) {
+    nav {
+        background-color: var(--card-bg);
+        border-top: 1px solid var(--border-color);
+    }
+    
+    nav ul li {
+        border-bottom: 1px solid var(--border-color-light);
+    }
 }
