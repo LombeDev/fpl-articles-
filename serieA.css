@@ -273,3 +273,35 @@ h2 { font-size: 1.1rem; color: var(--accent-blue); border-bottom: 1px solid var(
     font-size: 1.1rem;
     color: var(--accent-blue);
 } 
+
+
+
+
+/* This controls the height of the card sections */
+.table-container {
+    max-height: 450px; /* Limits the table height */
+    overflow-y: auto;  /* Adds vertical scroll when content is too long */
+    overflow-x: auto;  /* Adds horizontal scroll for small mobile screens */
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+    border-radius: 0 0 12px 12px;
+}
+
+/* Make the table headers "Sticky" so they stay at the top while scrolling */
+#standings-table thead th, 
+#scorers-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff; /* Match your card background */
+    z-index: 10;
+    box-shadow: 0 2px 2px -1px rgba(0,0,0,0.1); /* Adds a nice separator line */
+}
+
+/* Custom scrollbar for Chrome/Safari to keep it neat */
+.table-container::-webkit-scrollbar {
+    width: 6px;
+}
+.table-container::-webkit-scrollbar-thumb {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+}    
