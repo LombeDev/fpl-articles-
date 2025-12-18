@@ -1,487 +1,238 @@
-/* --- Global Styles and Variables (Dark Theme) --- */
-
+/* --- Root Variables (FPL Scout Style Palette) --- */
 :root {
-    /* Primary Palette */
-    --primary-color: #00ff73; 
-    --secondary-color: #03f6f4; 
-    --background-dark: #1a1a2e; 
-    --background-light: #2c2c44; 
-    --text-light: #f0f0f0;
-    --text-muted: #b4b4c8;
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    
-    /* Functional Colors */
-    --border-color: #3d3d5f; 
-    --border-color-light: #50507a;
-    --input-bg: var(--background-dark);
-    --card-bg: var(--background-light);
-    --header-bg: var(--background-dark);
-    --hover-bg: rgba(0, 255, 115, 0.05);
-    --active-sort-bg: #353555;
-
-    /* Difficulty & Status */
-    --fdr-difficulty-1: #00ff73;
-    --fdr-difficulty-3: #ffc400;
-    --fdr-difficulty-5: #ff4d4d;
-    
-    /* Stats Colors */
-    --stat-average: #03f6f4;
-    --stat-high-score: #ffc400;
-    --stat-top-player: #ff4d4d;
-    --stat-captain: var(--primary-color);
+    --primary-dark: #111827;
+    --secondary-dark: #1f2937;
+    --accent-green: #00ff87; /* Classic FPL Green */
+    --accent-purple: #37003c; /* PL Purple */
+    --text-main: #f3f4f6;
+    --text-dim: #9ca3af;
+    --white: #ffffff;
+    --border-color: #374151;
+    --card-bg: #1f2937;
+    --rise-color: #05ff80;
+    --fall-color: #ff005a;
 }
 
+/* --- Global Reset --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    min-width: 0; 
-}
-
-html {
-    scroll-padding-top: 80px; /* Offset for sticky header */
-    scroll-behavior: smooth;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--background-dark);
-    color: var(--text-light);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--primary-dark);
+    color: var(--text-main);
     line-height: 1.6;
-    overflow-x: hidden; 
 }
 
 .container {
-    width: 95%;
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
+    padding: 0 15px;
 }
 
-/* --- Navigation & Sticky Header --- */
+/* --- Header & Navigation --- */
 header {
-    background-color: var(--background-light);
-    box-shadow: var(--card-shadow);
-    padding: 15px 0;
-    border-bottom: 3px solid var(--primary-color);
-    /* STICKY CONFIGURATION */
-    position: -webkit-sticky;
+    background-color: var(--accent-purple);
+    padding: 1rem 0;
+    border-bottom: 3px solid var(--accent-green);
     position: sticky;
     top: 0;
     z-index: 1000;
-    width: 100%;
 }
 
 .header-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
 }
 
 .logo {
-    font-size: 1.8rem;
-    font-weight: bold;
+    font-weight: 800;
+    letter-spacing: -1px;
+    font-size: 1.5rem;
 }
 
-nav ul {
-    list-style: none;
+.highlight {
+    color: var(--accent-green);
+}
+
+#main-nav ul {
     display: flex;
+    list-style: none;
+    gap: 20px;
 }
 
-nav ul li {
-    margin-left: 25px;
-}
-
-nav ul li a {
-    color: var(--text-light);
-    font-weight: 500;
-    font-size: 1.05rem;
+#main-nav a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
     transition: color 0.3s;
 }
 
-nav ul li a:hover {
-    color: var(--primary-color);
+#main-nav a:hover {
+    color: var(--accent-green);
 }
-
-/* --- Hamburger Menu --- */
-.menu-toggle {
-    display: none; 
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    z-index: 1001; 
-}
-
-.bar {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background-color: var(--primary-color);
-    margin: 5px auto;
-    transition: all 0.3s ease-in-out;
-}
-
-.header-container.menu-open .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-.header-container.menu-open .bar:nth-child(2) { opacity: 0; }
-.header-container.menu-open .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
 /* --- Main Layout Grid --- */
 .site-content-wrapper {
     display: grid;
-    grid-template-columns: 1fr 300px; 
-    gap: 30px;
+    grid-template-columns: 1fr; /* Mobile default */
+    gap: 25px;
     margin-top: 30px;
+    margin-bottom: 50px;
 }
 
-#main-content {
-    grid-column: 1 / 2;
+@media (min-width: 992px) {
+    .site-content-wrapper {
+        grid-template-columns: 1fr 320px; /* Desktop Grid */
+    }
 }
 
-.card {
-    background-color: var(--background-light);
-    padding: 20px;
+/* --- Card Styles --- */
+.card, .data-section, .sidebar-widget {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    box-shadow: var(--card-shadow);
-    transition: transform 0.2s;
-    border-left: 5px solid var(--primary-color);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.card:hover { transform: translateY(-2px); }
+h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--accent-green);
+    padding-left: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
-/* --- Tables & Data Sections --- */
-.stats-table-container, .analyzer-table-container {
+/* --- Tables (The Scout Look) --- */
+.stats-table-container {
     overflow-x: auto;
-    background-color: var(--background-light);
-    border-radius: 0 0 8px 8px;
-    box-shadow: var(--card-shadow);
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.9rem;
+    margin-top: 10px;
+    font-size: 0.85rem;
 }
 
-thead th {
-    background-color: var(--background-dark);
-    color: var(--secondary-color);
-    padding: 12px 15px;
+th {
+    background-color: #111827;
+    color: var(--text-dim);
     text-align: left;
-    position: sticky;
-    top: 0; /* Sticky headers for tables */
-    z-index: 10;
-    white-space: nowrap;
+    padding: 12px;
+    text-transform: uppercase;
+    font-size: 0.75rem;
 }
 
-tbody td {
-    padding: 12px 15px;
+td {
+    padding: 12px;
     border-bottom: 1px solid var(--border-color);
 }
 
-/* --- FDR Ticker --- */
-.fdr-grid {
-    display: flex;
+tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* --- Price Tracker Specifics --- */
+.rise { color: var(--rise-color); }
+.fall { color: var(--fall-color); }
+
+.price-change-container {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 15px;
-    overflow-x: auto;
-    padding-bottom: 10px; 
 }
 
-.fdr-team-card {
-    min-width: 150px;
-    padding: 15px;
-    background-color: var(--background-light);
-    border-radius: 8px;
-}
-
-.fdr-1 { background-color: var(--fdr-difficulty-1); color: var(--background-dark); }
-.fdr-3 { background-color: var(--fdr-difficulty-3); color: var(--background-dark); }
-.fdr-5 { background-color: var(--fdr-difficulty-5); color: var(--text-light); }
-
-/* --- Sidebar Area --- */
-#sidebar {
-    grid-column: 2 / 3;
-}
-
-.sidebar-widget {
-    background-color: var(--background-light);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: var(--card-shadow);
-    margin-bottom: 20px;
-    border-top: 3px solid var(--primary-color);
-}
-
-/* --- Responsive Layout (Max 992px) --- */
-@media (max-width: 992px) {
-    .site-content-wrapper {
-        grid-template-columns: 1fr;
-    }
-    
-    #sidebar {
-        grid-column: 1 / 2;
-        order: -1; 
-    }
-
-    .menu-toggle {
-        display: block;
-    }
-
-    nav {
-        position: absolute;
-        top: 60px;
-        left: 0;
-        width: 100%;
-        max-height: 0;
-        overflow: hidden;
-        background-color: var(--background-dark);
-        box-shadow: var(--card-shadow);
-        transition: max-height 0.3s ease-in-out;
-        z-index: 999;
-    }
-
-    nav ul {
-        flex-direction: column;
-        padding: 10px 0;
-    }
-
-    nav ul li {
-        margin: 0;
-        text-align: center;
-        padding: 15px 0;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .header-container.menu-open nav {
-        max-height: 500px;
+@media (min-width: 768px) {
+    .price-change-container {
+        grid-template-columns: 1fr 1fr;
     }
 }
 
-/* --- Mobile Portrait (Max 600px) --- */
-@media (max-width: 600px) {
-    .fpl-grid, .wrapped-grid, .scores-grid, .news-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .analyzer-filters {
-        flex-direction: column;
-        align-items: stretch;
-    }
-}
-
-/* --- Status & Rank Badges --- */
-.change-up { color: var(--primary-color); }
-.change-down { color: var(--fdr-difficulty-5); }
-.pos-badge {
-    padding: 3px 6px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    font-weight: bold;
-    color: white;
-}
-.pos-GKP { background-color: #4CAF50; }
-.pos-DEF { background-color: #2196F3; }
-.pos-MID { background-color: #FFC107; color: black; }
-.pos-FWD { background-color: #F44336; }
-
-
-/* --- FDR Heatmap Specific Styles --- */
-.fdr-grid {
-    overflow-x: auto;
-    background-color: var(--background-light);
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: var(--card-shadow);
-}
-
-.fdr-heatmap {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 4px; /* Creates the "button" look between cells */
-    font-size: 0.9rem;
-}
-
-.fdr-heatmap th {
-    background-color: #e2e4e7; /* Light gray header */
-    color: #333;
-    padding: 8px;
-    border-radius: 4px;
-    font-weight: 600;
-}
-
-.fdr-heatmap th.fdr-team-col {
-    background-color: #008d51; /* Official FPL Green */
-    color: white;
-}
-
-.fdr-team-name {
-    background-color: #f0f0f0;
-    color: #333;
-    font-weight: bold;
+/* --- Sidebar Widgets --- */
+.deadline-widget {
+    background: linear-gradient(135deg, #37003c 0%, #111827 100%);
     text-align: center;
-    border-radius: 4px;
-    padding: 10px;
 }
 
-/* Heatmap Cell Styling */
-.fdr-cell {
-    text-align: center;
-    padding: 10px;
-    border-radius: 4px;
-    font-weight: 500;
-    min-width: 60px;
-    color: #1a1a2e; /* Dark text for contrast against pastel bg */
+#countdown-timer {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent-green);
+    margin: 10px 0;
 }
 
-/* FDR Color Palette from Reference Image */
-.fdr-bg-1 { background-color: #00ff73; } /* Very Easy - Bright Green */
-.fdr-bg-2 { background-color: #b3ffcf; } /* Easy - Light Green */
-.fdr-bg-3 { background-color: #e2e4e7; } /* Normal - Gray */
-.fdr-bg-4 { background-color: #ffb3c1; } /* Hard - Light Red */
-.fdr-bg-5 { background-color: #ff2e55; color: white; } /* Very Hard - Deep Red */
-.fdr-bg-blank { background-color: #3d3d5f; color: white; }
-
-/* Sticky first column for the Heatmap */
-.fdr-team-name {
-    position: sticky;
-    left: 0;
-    z-index: 2;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-}
-
-
-
-/* --- Professional Footer Styles --- */
+/* --- Footer --- */
 .main-footer {
-    background-color: #1a1a2e; /* Dark professional blue */
-    color: #ffffff;
-    padding: 60px 0 20px;
+    background: #000;
+    padding: 50px 0 20px;
     margin-top: 50px;
-    border-top: 4px solid var(--primary-color);
 }
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 40px;
     margin-bottom: 40px;
 }
 
 .footer-col h3 {
-    color: var(--secondary-color);
+    color: var(--accent-green);
     margin-bottom: 20px;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-}
-
-.footer-col p {
-    color: #adb5bd;
-    line-height: 1.6;
-    margin-bottom: 20px;
+    font-size: 1rem;
 }
 
 .footer-col ul {
     list-style: none;
-    padding: 0;
 }
 
 .footer-col ul li {
-    margin-bottom: 12px;
-}
-
-.footer-col ul li a {
-    color: #adb5bd;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.footer-col ul li a:hover {
-    color: var(--secondary-color);
-}
-
-/* Social Media Icons */
-.social-links a {
-    color: #ffffff;
-    font-size: 1.5rem;
-    margin-right: 15px;
-    transition: transform 0.3s, color 0.3s;
-    display: inline-block;
-}
-
-.social-links a:hover {
-    color: var(--primary-color);
-    transform: translateY(-3px);
-}
-
-/* Bottom Bar */
-.footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 20px;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #6c757d;
-}
-
-/* Responsive Footer */
-@media (max-width: 768px) {
-    .footer-grid {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-    .social-links {
-        justify-content: center;
-    }
-}
-
-
-
-.injury-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.injury-card {
-    background: #2a2a40;
-    border-radius: 8px;
-    padding: 15px;
-    border-left: 5px solid #555; /* Default gray */
-}
-
-/* Border colors based on status */
-.status-out { border-left-color: #ff4d4d !important; }      /* Red */
-.status-suspended { border-left-color: #000000 !important; } /* Black */
-.status-doubtful { border-left-color: #ffaa00 !important; }  /* Orange */
-
-.injury-header {
-    display: flex;
-    justify-content: space-between;
     margin-bottom: 10px;
-    font-size: 0.7rem;
-    font-weight: bold;
 }
 
-.status-badge {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 2px 6px;
-    border-radius: 4px;
+.footer-col a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: 0.3s;
 }
 
-.team-tag { color: #00ff87; }
-
-.player-name { margin: 5px 0; color: #fff; }
-
-.injury-news {
-    font-size: 0.85rem;
-    color: #adb5bd;
-    font-style: italic;
-    line-height: 1.3;
+.footer-col a:hover {
+    color: var(--white);
 }
 
-.chance-tag {
-    margin-top: 10px;
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
     font-size: 0.8rem;
-    color: #ffeb3b;
-    font-weight: bold;
+    color: var(--text-dim);
+}
+
+/* --- Mobile Menu Toggle --- */
+.menu-toggle {
+    display: none; /* Add JS logic to toggle #main-nav on mobile */
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.bar {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+}
+
+@media (max-width: 768px) {
+    #main-nav { display: none; } /* Requires JS to show */
+    .menu-toggle { display: flex; }
 }
