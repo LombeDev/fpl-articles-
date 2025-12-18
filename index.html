@@ -8,214 +8,199 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+
 <div id="loading-overlay">
-    <div class="loader-content">
+    <div class="loader-content" style="text-align: center;">
         <h1 class="logo">KOPALA <span class="highlight">FPL</span></h1>
-        <p>Fetching Live Scout Data...</p>
+        <p><i class="fa-solid fa-spinner fa-spin"></i> Fetching Live Scout Data...</p>
     </div>
 </div>
-    <header>
-        <div class="container header-container">
-            <h1 class="logo">KOPALA <span class="highlight">FPL</span></h1>
 
-            <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-            <nav id="main-nav">
-                <ul>
-                    <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
-                    <li><a href="#live-scores"><i class="fa fa-calendar-check-o"></i> EPL Live</a></li>
-                    <li><a
-href="serieA.html"><i class="fa fa-futbol-o"></i> Matches</a></li>
-                    <li><a
-href="#stats-centre"><i class="fa-solid fa-chart-line"></i> Stats</a></li>
-                 
-                    <li><a href="#price-tracker"><i class="fa fa-usd"></i> Prices</a></li>
-                    <li><a href="mailto: lombeicloud@gmail.com"><i class="fa fa-user-secret"></i> Join the league</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+<header>
+    <div class="container header-container">
+        <h1 class="logo">KOPALA <span class="highlight">FPL</span></h1>
 
-    <div class="site-content-wrapper container">
+        <button class="menu-toggle" aria-expanded="false" aria-controls="main-nav">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
 
-        <div id="main-content">
-            <section id="live-scores" class="card full-width">
-    <div class="card-header">
-        <h2 style="color: var(--accent-green);">
-            <i class="fa-solid fa-circle-dot" style="font-size: 0.8rem; vertical-align: middle;"></i> 
-            Live EPL Scores
-        </h2>
+        <nav id="main-nav">
+            <ul>
+                <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="#live-scores"><i class="fa-solid fa-circle-play"></i> EPL Live</a></li>
+                <li><a href="serieA.html"><i class="fa-solid fa-futbol"></i> Matches</a></li>
+                <li><a href="#stats-centre"><i class="fa-solid fa-chart-line"></i> Stats</a></li>
+                <li><a href="mailto:lombeicloud@gmail.com"><i class="fa-solid fa-envelope"></i> Join League</a></li>
+            </ul>
+        </nav>
     </div>
-    
-    <hr>
+</header>
 
-    <div class="scores-grid" id="scores-container">
-        <p style="text-align: center; color: var(--text-dim); padding: 20px;">
-            Checking for live matches...
-        </p>
-    </div>
-</section>
-            <br>
-            <br>
-            <section id="mini-league-analyzer" class="data-section">
-                <h2>🏆 Kopala FPL Mini League - GW <span id="analyzer-gw">--</span></h2>
-                <div class="analyzer-filters">
-                    <label>Show: 
-                        <select id="analyzer-view-filter">
-                            <option value="current">Current Standings</option>
-                            <option value="transfers">GW Transfers Made</option>
-                            <option value="value">Team Value</option>
-                        </select>
-                    </label>
-                    <button id="update-analyzer-btn"><i class="fa-solid fa-sync-alt"></i> Refresh Data</button>
-                </div>
-                <div class="stats-table-container">
-                    <table id="league-analyzer-table">
-                        <thead>
-                            <tr>
-                                <th data-sort="rank">Rank <i class="fa-solid fa-sort"></i></th>
-                                <th data-sort="manager">Manager</th>
-                                <th data-sort="team-name">Team Name</th>
-                                <th data-sort="gw-points">GW Pts</th>
-                                <th data-sort="total-points">Total Pts</th>
-                                <th data-sort="transfers">GW Transfers</th>
-                                <th data-sort="tv">Team Value (£m)</th>
-                                <th data-sort="orank">O-Rank</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
-                </div>
-            </section>
-<br>
-            <br>
-            <section id="price-tracker" class="data-section">
-                <h2>💸 Price Change Tracker - Predicted Risers & Fallers</h2>
-                <div class="price-change-container">
-                    <div class="card price-table-card">
-                        <h3 class="rise"><i class="fa-solid fa-arrow-up"></i> Top 10 Price Risers</h3>
-                        <table id="rising-table">
-                            <thead><tr><th>Player</th><th>Team</th><th>Price</th></tr></thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                    <br>
-                    <br>
-                    <div class="card price-table-card">
-                        <h3 class="fall"><i class="fa-solid fa-arrow-down"></i> Top 10 Price Fallers</h3>
-                        <table id="falling-table">
-                            <thead><tr><th>Player</th><th>Team</th><th>Price</th></tr></thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-            
-            
-            <br>
-            <br>
-            <section id="stats-centre" class="data-section">
-                <h2>⭐ Advanced Player Stats</h2>
-                <div class="stats-filters">
-                    <label>Position: 
-                        <select id="pos-filter">
-                            <option value="ALL">All</option>
-                            <option value="GKP">Goalkeepers</option>
-                            <option value="DEF">Defenders</option>
-                            <option value="MID">Midfielders</option>
-                            <option value="FWD">Forwards</option>
-                        </select>
-                    </label>
-                    <label>Metric: 
-                        <select id="metric-filter">
-                            <option value="TSB">Total Score</option>
-                            <option value="ICT">ICT Index</option>
-                            <option value="PPM">Points Per Million</option>
-                        </select>
-                    </label>
-                </div>
-                <div class="stats-table-container">
-                    <table id="player-stats-table">
-                        <thead>
-                            <tr>
-                                <th data-sort="name">Player <i class="fa-solid fa-sort"></i></th>
-                                <th data-sort="team">Team</th>
-                                <th data-sort="pos">Pos</th>
-                                <th data-sort="price">Price (£m)</th>
-                                <th data-sort="TSB">Total Score</th>
-                                <th data-sort="ICT">ICT Index</th>
-                                <th data-sort="PPM">PPM</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
-                </div>
-            </section>
+<div class="site-content-wrapper container">
 
-        </div> 
+    <main id="main-content">
         
-        <aside id="sidebar">
-
-            <div class="sidebar-widget deadline-widget">
-                <h3>Gameweek <span id="current-gw">--</span> Deadline:</h3>
-                <div id="countdown-timer">--h --m --s</div>
-                <p>Most Captained: <span id="most-captained">Erling Haaland</span></p>
+        <section id="live-scores" class="card">
+            <div class="card-header">
+                <h2 style="color: var(--accent-green);">
+                    <i class="fa-solid fa-circle-dot"></i> Live EPL Scores
+                </h2>
             </div>
-
-
-            <div class="sidebar-widget transfer-summary-widget">
-                <h3>Transfers Quick View</h3>
-                <ul id="sidebar-transfers-list">
-                    </ul>
+            <div class="scores-grid" id="scores-container">
+                <p style="text-align: center; color: var(--text-dim); padding: 20px;">
+                    Checking for live matches...
+                </p>
             </div>
+        </section>
+
+        <section id="mini-league-analyzer" class="data-section">
+            <h2>🏆 Kopala FPL Mini League - GW <span id="analyzer-gw">--</span></h2>
+            <div class="analyzer-filters">
+                <label>View: 
+                    <select id="analyzer-view-filter">
+                        <option value="current">Current Standings</option>
+                        <option value="transfers">GW Transfers Made</option>
+                        <option value="value">Team Value</option>
+                    </select>
+                </label>
+                <button id="update-analyzer-btn"><i class="fa-solid fa-sync-alt"></i> Refresh</button>
+            </div>
+            <div class="stats-table-container">
+                <table id="league-analyzer-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="rank">Rank <i class="fa-solid fa-sort"></i></th>
+                            <th data-sort="manager">Manager</th>
+                            <th data-sort="team-name">Team Name</th>
+                            <th data-sort="gw-points">GW Pts</th>
+                            <th data-sort="total-points">Total Pts</th>
+                            <th data-sort="transfers">Transfers</th>
+                            <th data-sort="tv">Value</th>
+                            <th data-sort="orank">O-Rank</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="stats-centre" class="data-section">
+            <h2><i class="fa-solid fa-star"></i> Advanced Player Stats</h2>
+            <div class="stats-filters">
+                <label>Position: 
+                    <select id="pos-filter">
+                        <option value="ALL">All Positions</option>
+                        <option value="GKP">Goalkeepers</option>
+                        <option value="DEF">Defenders</option>
+                        <option value="MID">Midfielders</option>
+                        <option value="FWD">Forwards</option>
+                    </select>
+                </label>
+                <label>Metric: 
+                    <select id="metric-filter">
+                        <option value="TSB">Total Score</option>
+                        <option value="ICT">ICT Index</option>
+                        <option value="PPM">Points Per Million</option>
+                    </select>
+                </label>
+            </div>
+            <div class="stats-table-container">
+                <table id="player-stats-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="name">Player <i class="fa-solid fa-sort"></i></th>
+                            <th data-sort="team">Team</th>
+                            <th data-sort="pos">Pos</th>
+                            <th data-sort="price">Price</th>
+                            <th data-sort="TSB">Pts</th>
+                            <th data-sort="ICT">ICT</th>
+                            <th data-sort="PPM">PPM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <aside id="sidebar">
+
+        <div class="sidebar-widget deadline-widget">
+            <h3>GW <span id="current-gw">--</span> Deadline:</h3>
+            <div id="countdown-timer">--h --m --s</div>
+            <p style="font-size: 0.8rem; margin-top: 5px;">
+                Top Captain: <span id="most-captained" class="highlight">Erling Haaland</span>
+            </p>
+        </div>
+
+        <div class="sidebar-widget price-tracker-widget">
+            <h3><i class="fa-solid fa-money-bill-trend-up"></i> Price Changes</h3>
             
-        </aside>
+            <div class="price-mini-section">
+                <h4 class="rise"><i class="fa-solid fa-caret-up"></i> Top Risers</h4>
+                <table id="rising-table" class="mini-table">
+                    <thead><tr><th>Player</th><th>Price</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
 
-    </div> 
-    
+            <div class="price-mini-section" style="margin-top: 20px;">
+                <h4 class="fall"><i class="fa-solid fa-caret-down"></i> Top Fallers</h4>
+                <table id="falling-table" class="mini-table">
+                    <thead><tr><th>Player</th><th>Price</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="sidebar-widget transfer-summary-widget">
+            <h3><i class="fa-solid fa-right-left"></i> Transfers View</h3>
+            <ul id="sidebar-transfers-list" style="list-style: none; font-size: 0.8rem; color: var(--text-dim);">
+                </ul>
+        </div>
+        
+    </aside>
+</div> 
 
 <footer class="main-footer">
     <div class="container footer-grid">
         <div class="footer-col">
             <h2 class="logo">KOPALA <span class="highlight">FPL</span></h2>
             <p>Your ultimate destination for FPL scouting, live scores, and mini-league analysis.</p>
-            <div class="social-links">
-                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="https://www.facebook.com/profile.php?id=100070121261260"><i class="fa-brands fa-facebook"></i></a>
-               
+            <div class="social-links" style="margin-top: 15px; font-size: 1.2rem;">
+                <a href="#" style="margin-right: 15px;"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="https://www.facebook.com/profile.php?id=100070121261260" style="margin-right: 15px;"><i class="fa-brands fa-facebook"></i></a>
                 <a href="https://youtube.com/@kopalascoutreportfc?si=94IQ9qJL9_syVNEN"><i class="fa-brands fa-youtube"></i></a>
             </div>
         </div>
 
         <div class="footer-col">
             <h3>Quick Links</h3>
-            <ul>
+            <ul style="list-style: none;">
                 <li><a href="#live-scores">Live Scores</a></li>
                 <li><a href="#stats-centre">Player Stats</a></li>
-                <li><a href="SerieA.html">Serie A</a></li>
+                <li><a href="SerieA.html">Serie A Hub</a></li>
             </ul>
         </div>
 
         <div class="footer-col">
             <h3>Support</h3>
-            <ul>
-                <li><a href="mailto:lombeicloud@gmail.com">Contact Us</a></li>
-                <li><a href="#">Join the League</a></li>
+            <ul style="list-style: none;">
+                <li><a href="mailto:lombeicloud@gmail.com">Contact Developer</a></li>
+                <li><a href="#">League Rules</a></li>
             </ul>
         </div>
     </div>
     
     <div class="footer-bottom">
-        <p>&copy; 2026 KOPALA FPL. All rights reserved. Not affiliated with the Premier League.</p>
+        <p>&copy; 2026 KOPALA FPL. All rights reserved. Data provided by FPL API.</p>
     </div>
 </footer>
 
-    
-    <script src="main.js"></script>
-    </body>
+<script src="main.js"></script>
+</body>
 </html>
