@@ -1,4 +1,4 @@
-/* --- Root Variables (Maintaining your specific palette) --- */
+/* --- Root Variables & Palette --- */
 :root {
     --bg-color: #0f0f12;
     --card-bg: #1e1e26;
@@ -9,7 +9,7 @@
     --border: #333344;
 }
 
-/* --- Global Reset --- */
+/* --- Global Reset & Foundation --- */
 html, body {
     max-width: 100%;
     overflow-x: hidden;
@@ -18,13 +18,14 @@ html, body {
     background-color: var(--bg-color);
     color: var(--text-main);
     font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.4;
 }
 
-/* --- Header & Navigation (Fixed for Hamburger) --- */
+/* --- Header & Mobile Nav Support --- */
 header {
     background: var(--card-bg);
     border-bottom: 1px solid var(--border);
-    padding: 12px 0;
+    padding: 10px 0;
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -39,13 +40,15 @@ header {
     padding: 0 15px;
 }
 
-/* --- Mobile Toggle Support --- */
+.logo { font-size: 1.1rem; font-weight: bold; }
+.highlight { color: var(--accent-blue); }
+
 .menu-toggle {
     display: none;
     flex-direction: column;
     justify-content: space-between;
-    width: 25px;
-    height: 18px;
+    width: 22px;
+    height: 16px;
     background: none;
     border: none;
     cursor: pointer;
@@ -53,130 +56,156 @@ header {
 
 .bar {
     width: 100%;
-    height: 3px;
+    height: 2px;
     background-color: var(--text-main);
     transition: 0.3s;
-    border-radius: 2px;
 }
 
-/* --- Grid System --- */
+/* --- Grid & Layout --- */
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 15px 10px;
+    padding: 10px;
 }
 
 .dashboard-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 20px;
+    gap: 15px;
 }
 
 .card {
     background: var(--card-bg);
-    border-radius: 12px;
-    padding: 15px;
+    border-radius: 8px;
+    padding: 12px;
     border: 1px solid var(--border);
+    margin-bottom: 15px;
 }
 
-.full-width { grid-column: span 2; }
-
-/* --- Optimized Compact Tables --- */
+/* --- Compact Tables & Logos --- */
 .table-container {
     width: 100%;
-    max-height: 450px;
+    max-height: 500px;
     overflow-y: auto;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    border-radius: 0 0 12px 12px;
 }
 
-table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    font-size: 0.85rem; 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem; /* Compact Desktop font */
 }
 
-th, td { 
-    padding: 12px 8px; 
-    text-align: left; 
-    border-bottom: 1px solid var(--border); 
-}
-
-/* Sticky Header Logic */
 thead th {
     position: sticky;
     top: 0;
     background-color: var(--card-bg);
     z-index: 10;
-    box-shadow: 0 2px 2px -1px rgba(0,0,0,0.3);
+    padding: 10px 6px;
+    border-bottom: 2px solid var(--border);
+    color: var(--text-dim);
+    text-transform: uppercase;
+    font-size: 0.7rem;
 }
 
-/* --- League Nav Bar (Scrollable Row) --- */
+td {
+    padding: 8px 6px;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Team Logo Styling (Small on Desktop) */
+.crest {
+    width: 20px; /* Small desktop size */
+    height: 20px;
+    object-fit: contain;
+    vertical-align: middle;
+    margin-right: 6px;
+    flex-shrink: 0;
+}
+
+.pts { font-weight: bold; color: var(--accent-green); }
+
+/* --- League Navigation Bar --- */
 .league-nav-bar {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     overflow-x: auto;
-    padding: 10px 5px;
+    padding: 10px 0;
     scrollbar-width: none;
 }
-.league-nav-bar::-webkit-scrollbar { display: none; }
 
 .league-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 90px;
-    padding: 10px;
+    min-width: 85px;
+    padding: 8px;
     background: #ffffff;
     color: #333;
-    border-radius: 12px;
+    border-radius: 10px;
     border: 1px solid #e0e0e0;
     cursor: pointer;
+    font-size: 0.75rem;
     font-weight: 600;
-    font-size: 0.8rem;
-    transition: 0.3s;
 }
 
-/* --- Mobile Specific Shrink (The Core Change) --- */
+/* --- Live Fixture Rows --- */
+.fixture-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+}
+
+/* --- MOBILE OPTIMIZATION (Max Shrink) --- */
 @media (max-width: 768px) {
     .dashboard-grid { grid-template-columns: 1fr; }
-    .full-width { grid-column: span 1; }
-    
     .menu-toggle { display: flex; }
     
-    /* Shrink the tables to fit */
-    table { font-size: 0.7rem; }
-    th, td { padding: 8px 4px; }
+    /* Table & Font Shrink */
+    table { font-size: 0.65rem; }
+    th, td { padding: 6px 3px; }
     
-    /* Truncate Long Names */
-    .manager-name, .team-name {
-        max-width: 85px;
+    /* Logo Shrink for Mobile */
+    .crest {
+        width: 16px; 
+        height: 16px;
+        margin-right: 4px;
+    }
+
+    /* Name Truncation to save space */
+    .team-name, .manager-name {
+        max-width: 70px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        display: inline-block;
+        vertical-align: middle;
     }
 
-    /* Compact Scoreboard Row */
-    .fixture-row {
-        font-size: 0.75rem;
-        padding: 8px 0;
-    }
+    .card { padding: 10px; }
+    
+    /* Hamburger Animation Open */
+    .header-container.menu-open .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .header-container.menu-open .bar:nth-child(2) { opacity: 0; }
+    .header-container.menu-open .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 }
 
-/* --- Hamburger Animation --- */
-.header-container.menu-open .bar:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
-.header-container.menu-open .bar:nth-child(2) { opacity: 0; }
-.header-container.menu-open .bar:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+/* --- Custom Scrollbar --- */
+.table-container::-webkit-scrollbar { width: 4px; height: 4px; }
+.table-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-/* --- Footer & Loader --- */
 #loader { 
     position: fixed; 
     bottom: 20px; 
     right: 20px; 
     color: var(--accent-green); 
     background: #000; 
-    padding: 8px; 
+    padding: 6px 12px; 
     border-radius: 4px; 
+    font-size: 0.7rem;
     z-index: 2000;
 }
