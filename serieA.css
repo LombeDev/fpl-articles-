@@ -101,83 +101,80 @@ h2 { font-size: 1.1rem; color: var(--accent-blue); border-bottom: 1px solid var(
 
 
 
- /* 1. Main Container for Desktop */
+/* 1. Main Container - Centers the cards on desktop */
 .league-nav-container {
-    padding: 30px 0; /* More breathing room on desktop */
+    width: 100%;
     background: transparent;
-    max-width: 1200px; /* Limits width so it doesn't stretch to screen edges */
-    margin: 0 auto; /* Centers the whole navigation area */
+    padding: 20px 0;
+    display: flex;
+    justify-content: center; /* Centers cards on desktop */
 }
 
-/* 2. The Scrollable Row */
+/* 2. The Navigation Bar - Allows scrolling if there are too many cards */
 .league-nav-bar {
     display: flex;
-    gap: 20px; /* Slightly wider gap for desktop */
-    overflow-x: auto;
-    padding: 10px 5px;
-    scrollbar-width: thin; /* Show a subtle scrollbar on desktop for mouse users */
-    scrollbar-color: var(--border) transparent;
+    gap: 15px;
+    overflow-x: auto; /* Enables horizontal scroll/swipe */
+    padding: 15px;
+    max-width: 1200px; /* Keeps cards from spreading too far on big screens */
+    width: 100%;
+    scrollbar-width: thin; /* Desktop scrollbar */
+    scrollbar-color: #ccc transparent;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Chrome/Safari Scrollbar Styling for Desktop */
+/* Hide scrollbar for a cleaner look on Chrome/Safari */
 .league-nav-bar::-webkit-scrollbar {
     height: 6px;
-}
-.league-nav-bar::-webkit-scrollbar-track {
-    background: transparent;
 }
 .league-nav-bar::-webkit-scrollbar-thumb {
     background: #e0e0e0;
     border-radius: 10px;
 }
 
-/* 3. The Neat Card Button (Desktop Focus) */
+/* 3. The League Button - Styled exactly like your photo */
 .league-btn {
+    /* Fixed Card Sizing */
+    flex: 0 0 auto; /* Prevents cards from shrinking */
+    min-width: 120px;
+    height: 70px;
+    
+    /* Card Aesthetics */
+    background: #ffffff;
+    color: #333333;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    
+    /* Layout */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    
-    /* Fixed sizing for that "Photo" look */
-    min-width: 130px; 
-    height: 80px; 
-    padding: 15px;
-    
-    background: #ffffff;
-    color: #333333;
-    border: 1px solid #e0e0e0;
-    border-radius: 14px; /* Slightly rounder for desktop */
-    
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    transition: all 0.25s ease-in-out;
-    white-space: nowrap;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* 4. Desktop Specific Hover & Active */
-@media (min-width: 1024px) {
-    .league-btn:hover {
-        transform: translateY(-5px); /* Stronger lift on desktop */
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        border-color: #000000;
-        background: #fafafa;
-    }
+/* 4. Desktop Hover Effect */
+.league-btn:hover {
+    transform: translateY(-4px); /* Lifts up on mouse hover */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    border-color: #b0b0b0;
 }
 
+/* 5. Active/Selected State - The bold look from your photo */
 .league-btn.active {
     background: #ffffff;
-    border: 2px solid #000000; /* Bold black border like the photo */
+    border: 2px solid #000000 !important; /* Thick black border */
     color: #000000;
-    transform: scale(1.05); /* Make the active one slightly larger */
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    z-index: 2;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: scale(1.02);
 }
 
-/* 5. Icon Spacing */
+/* Icon style */
 .league-btn i {
-    margin-bottom: 8px;
-    font-size: 1.2rem;
-    color: #555;
+    margin-bottom: 5px;
+    font-size: 1.1rem;
 }
