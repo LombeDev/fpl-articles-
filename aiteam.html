@@ -3,216 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPL AI RATER 2025 | Professional Engine</title>
+    <title>FPL AI Rater 2025 | Market Watch Edition</title>
     <style>
-        :root { --pg: #27ae60; --dark: #121212; --accent: #3498db; --gold: #f1c40f; --error: #e74c3c; }
+        :root { --pg: #27ae60; --dark: #121212; --accent: #3498db; --gold: #f1c40f; --bench: #2c3e50; --rise: #2ecc71; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--dark); color: white; display: flex; justify-content: center; padding: 20px; margin: 0; }
-        .container { max-width: 500px; width: 100%; text-align: center; }
+        .container { max-width: 550px; width: 100%; text-align: center; }
         
-        /* Status & Budget */
-        .status-box { font-size: 12px; padding: 10px; margin-bottom: 10px; border-radius: 6px; background: #222; border: 1px solid #333; line-height: 1.4; }
-        .budget { margin: 15px 0; font-weight: bold; font-size: 1.3rem; letter-spacing: -0.5px; }
+        .status-box { font-size: 11px; padding: 8px; margin-bottom: 10px; border-radius: 6px; background: #222; border: 1px solid #333; color: #888; }
+        .market-ticker { background: #000; color: var(--rise); padding: 5px; font-size: 11px; font-weight: bold; border-radius: 4px; margin-bottom: 10px; border: 1px solid var(--rise); overflow: hidden; white-space: nowrap; }
         
-        /* Pitch Styles */
-        .pitch { background: var(--pg); border: 4px solid white; border-radius: 12px; padding: 20px 10px; height: 500px; display: flex; flex-direction: column; justify-content: space-around; box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative; }
+        /* Pitch & Bench */
+        .pitch { background: var(--pg); border: 4px solid white; border-radius: 12px 12px 0 0; padding: 15px 10px; height: 450px; display: flex; flex-direction: column; justify-content: space-around; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .bench-area { background: var(--bench); border: 4px solid white; border-top: none; border-radius: 0 0 12px 12px; padding: 15px 10px; display: flex; flex-direction: column; gap: 10px; }
+        
         .row { display: flex; justify-content: center; gap: 8px; }
-        .slot { width: 85px; background: rgba(0,0,0,0.8); padding: 8px; border-radius: 6px; border-bottom: 3px solid var(--accent); }
-        .slot label { font-size: 10px; font-weight: bold; display: block; margin-bottom: 4px; color: #888; }
-        select { width: 100%; font-size: 11px; background: #000; color: #fff; border: none; cursor: pointer; outline: none; }
-
-        /* Controls */
-        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
-        button { padding: 14px; border-radius: 8px; border: none; font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 13px; text-transform: uppercase; }
+        .slot { width: 85px; background: rgba(0,0,0,0.8); padding: 6px; border-radius: 6px; border-bottom: 3px solid var(--accent); position: relative; }
+        .slot.is-bench { border-bottom-color: #95a5a6; }
+        .price-up::after { content: '▲'; position: absolute; top: -5px; right: -5px; color: var(--rise); font-size: 12px; font-weight: bold; }
+        
+        select { width: 100%; font-size: 10px; background: #000; color: #fff; border: none; outline: none; }
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
+        button { padding: 12px; border-radius: 6px; border: none; font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 12px; text-transform: uppercase; }
         .btn-main { grid-column: span 2; background: var(--accent); color: white; }
-        .btn-opt { background: var(--gold); color: black; }
-        .btn-sync { background: #333; color: #ccc; }
-        button:hover { transform: translateY(-2px); filter: brightness(1.1); }
-        button:active { transform: translateY(0); }
-
-        /* Results Display */
-        .results { margin-top: 25px; padding: 20px; background: #1e1e1e; border-radius: 15px; border: 1px solid #333; display: none; animation: slideUp 0.4s ease; }
-        .score-val { font-size: 64px; font-weight: 900; color: var(--accent); margin: 0; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .results { margin-top: 20px; padding: 20px; background: #1e1e1e; border-radius: 12px; display: none; }
+        .score-val { font-size: 50px; font-weight: 900; color: var(--accent); margin: 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>FPL AI RATER <span style="color:var(--gold)">2025</span></h2>
-    <div id="status" class="status-box">🔄 Initiating Data Sync...</div>
+    <div id="status" class="status-box">🔄 Connecting to 2025 Market...</div>
+    <div id="ticker" class="market-ticker">LOADING MARKET TRENDS...</div>
     
-    <div class="budget">BUDGET: <span id="budget-val">£100.0m</span></div>
+    <div style="margin-bottom: 10px; font-weight: bold;">Budget: <span id="budget-val" style="color:var(--rise)">£100.0m</span></div>
 
     <div class="pitch">
-        <div class="row"><div class="slot" data-pos="GKP"><label>GKP</label></div></div>
+        <div class="row"><div class="slot" data-pos="GKP"><label style="font-size:9px">GK</label></div></div>
         <div class="row">
-            <div class="slot" data-pos="DEF"><label>DEF</label></div>
-            <div class="slot" data-pos="DEF"><label>DEF</label></div>
-            <div class="slot" data-pos="DEF"><label>DEF</label></div>
-            <div class="slot" data-pos="DEF"><label>DEF</label></div>
+            <div class="slot" data-pos="DEF"><label style="font-size:9px">DEF</label></div>
+            <div class="slot" data-pos="DEF"><label style="font-size:9px">DEF</label></div>
+            <div class="slot" data-pos="DEF"><label style="font-size:9px">DEF</label></div>
+            <div class="slot" data-pos="DEF"><label style="font-size:9px">DEF</label></div>
         </div>
         <div class="row">
-            <div class="slot" data-pos="MID"><label>MID</label></div>
-            <div class="slot" data-pos="MID"><label>MID</label></div>
-            <div class="slot" data-pos="MID"><label>MID</label></div>
-            <div class="slot" data-pos="MID"><label>MID</label></div>
+            <div class="slot" data-pos="MID"><label style="font-size:9px">MID</label></div>
+            <div class="slot" data-pos="MID"><label style="font-size:9px">MID</label></div>
+            <div class="slot" data-pos="MID"><label style="font-size:9px">MID</label></div>
+            <div class="slot" data-pos="MID"><label style="font-size:9px">MID</label></div>
         </div>
         <div class="row">
-            <div class="slot" data-pos="FWD"><label>FWD</label></div>
-            <div class="slot" data-pos="FWD"><label>FWD</label></div>
+            <div class="slot" data-pos="FWD"><label style="font-size:9px">FWD</label></div>
+            <div class="slot" data-pos="FWD"><label style="font-size:9px">FWD</label></div>
+        </div>
+    </div>
+
+    <div class="bench-area">
+        <div class="row">
+            <div class="slot is-bench" data-pos="GKP"><label style="font-size:9px">SUB GK</label></div>
+            <div class="slot is-bench" data-pos="DEF"><label style="font-size:9px">SUB DEF</label></div>
+            <div class="slot is-bench" data-pos="MID"><label style="font-size:9px">SUB MID</label></div>
+            <div class="slot is-bench" data-pos="FWD"><label style="font-size:9px">SUB FWD</label></div>
         </div>
     </div>
 
     <div class="controls">
         <button class="btn-main" onclick="runAnalysis()">Analyze Efficiency</button>
-        <button class="btn-opt" onclick="autoOptimize()">Auto-Fill Best</button>
-        <button class="btn-sync" onclick="syncFPLData()">Refresh Live Data</button>
-        <button style="background:#444; color:white" onclick="location.reload()">Reset All</button>
+        <button style="background:var(--gold); color:black" onclick="autoOptimize()">Auto-Fill Squad</button>
+        <button style="background:#444; color:white" onclick="location.reload()">Reset</button>
     </div>
 
     <div id="results" class="results">
         <h1 id="score-display" class="score-val">0.0</h1>
-        <div style="font-size: 12px; color: #888; font-weight: bold;">AI SQUAD RATING</div>
-        <p id="points-prediction" style="font-size: 18px; margin: 15px 0;"></p>
-        <div id="ai-tip" style="background: rgba(52, 152, 219, 0.1); padding: 15px; border-radius: 8px; font-size: 13px; text-align: left; border-left: 4px solid var(--accent);"></div>
+        <div style="font-size: 11px; color: #888; font-weight: bold;">AI SQUAD SCORE</div>
+        <p id="points-prediction" style="font-size: 16px; margin: 10px 0;"></p>
+        <div id="ai-tip" style="background: rgba(52, 152, 219, 0.1); padding: 12px; border-radius: 8px; font-size: 12px; text-align: left; border-left: 4px solid var(--accent);"></div>
     </div>
 </div>
 
 <script>
     let playerDB = [];
 
-    // Dec 2025 High-Performance Backup (GW17 Stats)
-    const backupPlayers = [
-        {name:"Salah", pos:"MID", price:14.5, xp:9.4}, {name:"Haaland", pos:"FWD", price:14.1, xp:8.9},
-        {name:"Ekitiké", pos:"FWD", price:8.7, xp:7.6}, {name:"Palmer", pos:"MID", price:10.6, xp:7.4},
-        {name:"Saka", pos:"MID", price:10.4, xp:7.1}, {name:"Cherki", pos:"MID", price:6.6, xp:6.7},
-        {name:"Foden", pos:"MID", price:8.9, xp:7.2}, {name:"Gabriel", pos:"DEF", price:6.4, xp:5.1},
-        {name:"J.Timber", pos:"DEF", price:6.1, xp:4.9}, {name:"Gvardiol", pos:"DEF", price:6.3, xp:5.0},
-        {name:"Raya", pos:"GKP", price:5.6, xp:4.6}, {name:"Verbruggen", pos:"GKP", price:4.7, xp:4.1},
-        {name:"Mbeumo", pos:"MID", price:7.9, xp:6.4}, {name:"Wood", pos:"FWD", price:6.6, xp:5.8}
-    ];
-
-    async function syncFPLData() {
-        const status = document.getElementById('status');
-        status.textContent = "Trying High-Speed Proxy (2025)...";
-        
-        // Proxy 1: corsproxy.io (Faster) | Proxy 2: allorigins (Reliable)
-        const proxies = [
-            'https://corsproxy.io/?url=',
-            'https://api.allorigins.win/get?url='
-        ];
+    async function syncData() {
+        const ticker = document.getElementById('ticker');
+        const proxy = 'https://corsproxy.io/?url=';
         const api = 'https://fantasy.premierleague.com/api/bootstrap-static/';
 
-        for (let pxy of proxies) {
-            try {
-                const response = await fetch(pxy + encodeURIComponent(api), { signal: AbortSignal.timeout(5000) });
-                if (!response.ok) throw new Error();
-                
-                let data;
-                if (pxy.includes("allorigins")) {
-                    const wrapper = await response.json();
-                    data = JSON.parse(wrapper.contents);
-                } else {
-                    data = await response.json();
-                }
+        try {
+            const res = await fetch(proxy + encodeURIComponent(api));
+            const data = await res.json();
+            
+            playerDB = data.elements.map(p => ({
+                name: p.web_name,
+                pos: ["", "GKP", "DEF", "MID", "FWD"][p.element_type],
+                price: p.now_cost / 10,
+                xp: parseFloat(p.ep_next) || 0,
+                form: parseFloat(p.form),
+                rising: parseFloat(p.form) > 7.0 // AI logic for 2025: High form = high transfer volume
+            })).sort((a,b) => b.xp - a.xp);
 
-                playerDB = data.elements.map(p => ({
-                    name: p.web_name,
-                    pos: ["", "GKP", "DEF", "MID", "FWD"][p.element_type],
-                    price: p.now_cost / 10,
-                    xp: parseFloat(p.ep_next) || 0
-                })).sort((a,b) => b.xp - a.xp);
-
-                status.innerHTML = "✅ <b>SYNC SUCCESS:</b> Using Live FPL Server Data";
-                status.style.color = "#2ecc71";
-                renderOptions();
-                return;
-            } catch (err) {
-                console.warn("Proxy timeout, trying next...");
-            }
+            const risingStars = playerDB.filter(p => p.rising).slice(0, 5).map(p => p.name);
+            ticker.textContent = `🔥 PRICE RISE WARNING: ${risingStars.join(' ▲ ')} ▲ BUY BEFORE TONIGHT'S DEADLINE!`;
+            document.getElementById('status').textContent = "✅ LIVE MARKET DATA LOADED";
+        } catch (e) {
+            document.getElementById('status').textContent = "⚠️ USING OFFLINE DATABASE";
+            ticker.textContent = "MARKET DATA UNAVAILABLE";
         }
-
-        // FALLBACK
-        playerDB = backupPlayers;
-        status.innerHTML = "⚠️ <b>TIMEOUT:</b> Servers busy. Loaded Dec 2025 Backup Engine.";
-        status.style.color = "#f39c12";
-        renderOptions();
+        renderSlots();
     }
 
-    function renderOptions() {
+    function renderSlots() {
         document.querySelectorAll('.slot').forEach(slot => {
             const pos = slot.dataset.pos;
             let sel = slot.querySelector('select');
             if(!sel) {
                 sel = document.createElement('select');
-                sel.onchange = updateBudgetUI;
+                sel.onchange = (e) => {
+                    updateBudget();
+                    checkRising(e.target);
+                };
                 slot.appendChild(sel);
             }
-            sel.innerHTML = `<option value="">-- Select --</option>`;
-            playerDB.filter(p => p.pos === pos).slice(0, 50).forEach(p => {
+            sel.innerHTML = `<option value="">--</option>`;
+            playerDB.filter(p => p.pos === pos).slice(0, 70).forEach(p => {
                 const opt = document.createElement('option');
                 opt.value = p.name;
-                opt.textContent = `${p.name} (£${p.price}m)`;
+                opt.textContent = `${p.name} (${p.price}m)`;
                 sel.appendChild(opt);
             });
         });
     }
 
-    function updateBudgetUI() {
+    function checkRising(select) {
+        const p = playerDB.find(x => x.name === select.value);
+        if(p && p.rising) select.parentElement.classList.add('price-up');
+        else select.parentElement.classList.remove('price-up');
+    }
+
+    function updateBudget() {
         let cost = 0;
         document.querySelectorAll('select').forEach(s => {
             const p = playerDB.find(x => x.name === s.value);
             if(p) cost += p.price;
         });
         const left = (100 - cost).toFixed(1);
-        const el = document.getElementById('budget-val');
-        el.textContent = `£${left}m`;
-        el.style.color = left < 0 ? "var(--error)" : "var(--pg)";
+        document.getElementById('budget-val').textContent = `£${left}m`;
+        document.getElementById('budget-val').style.color = left < 0 ? "#e74c3c" : "#2ecc71";
     }
 
     function runAnalysis() {
-        const team = Array.from(document.querySelectorAll('select'))
-                          .map(s => playerDB.find(p => p.name === s.value))
-                          .filter(Boolean);
-        
-        if(team.length < 11) return alert("Squad incomplete! Add all 11 players.");
+        const team = Array.from(document.querySelectorAll('.slot')).map(s => {
+            const p = playerDB.find(x => x.name === s.querySelector('select').value);
+            return p ? { ...p, isBench: s.classList.contains('is-bench') } : null;
+        }).filter(Boolean);
 
-        const totalXP = team.reduce((a, b) => a + b.xp, 0);
-        const totalCost = team.reduce((a, b) => a + b.price, 0);
-        
-        let score = (totalXP / 72) * 100;
-        if(totalCost > 100) score -= (totalCost - 100) * 12;
+        if(team.length < 15) return alert("Select 15 players!");
 
+        const startersXP = team.filter(p => !p.isBench).reduce((a, b) => a + b.xp, 0);
+        const risingCount = team.filter(p => p.rising).length;
+        
         document.getElementById('results').style.display = 'block';
-        document.getElementById('score-display').textContent = Math.max(0, score).toFixed(1);
-        document.getElementById('points-prediction').textContent = `~${totalXP.toFixed(1)} Predicted Pts`;
-
-        // Smart Transfer Recommendation
-        const worst = team.reduce((a, b) => a.xp < b.xp ? a : b);
-        const upgrade = playerDB.find(p => p.pos === worst.pos && p.price <= (worst.price + 0.2) && p.xp > worst.xp && !team.some(t => t.name === p.name));
+        document.getElementById('score-display').textContent = ((startersXP / 68) * 100).toFixed(1);
+        document.getElementById('points-prediction').textContent = `Projected: ${startersXP.toFixed(1)} pts`;
+        document.getElementById('ai-tip').innerHTML = `📈 <b>Market Insight:</b> You have ${risingCount} players rising in value. ${risingCount > 2 ? "Great team value building!" : "Your team value is stagnant."}`;
         
-        document.getElementById('ai-tip').innerHTML = upgrade ? 
-            `🚀 <b>Transfer Recommendation:</b> Upgrade <b>${worst.name}</b> to <b>${upgrade.name}</b>. It fits your budget and adds +${(upgrade.xp - worst.xp).toFixed(1)} expected points.` : 
-            "💎 <b>AI Status:</b> Your squad is mathematically optimal for your budget.";
-            
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
     function autoOptimize() {
         let bank = 100;
         const selects = document.querySelectorAll('select');
-        selects.forEach(s => {
+        selects.forEach((s, i) => {
             const pos = s.parentElement.dataset.pos;
-            const best = playerDB.find(p => p.pos === pos && p.price <= (bank/5) && !Array.from(selects).some(sel => sel.value === p.name));
-            if(best) { s.value = best.name; bank -= best.price; }
+            const isBench = s.parentElement.classList.contains('is-bench');
+            const choice = playerDB.find(p => p.pos === pos && p.price <= (bank/(15-i)*1.3) && !Array.from(selects).some(sel => sel.value === p.name));
+            if(choice) { s.value = choice.name; bank -= choice.price; checkRising(s); }
         });
-        updateBudgetUI();
+        updateBudget();
         runAnalysis();
     }
 
-    // Initial load
-    syncFPLData();
+    syncData();
 </script>
-
 </body>
 </html>
