@@ -19,7 +19,12 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--primary-dark); color: var(--text-main); line-height: 1.6; }
+body { 
+    font-family: 'Segoe UI', Roboto, sans-serif; 
+    background-color: var(--primary-dark); 
+    color: var(--text-main); 
+    line-height: 1.6; 
+}
 
 /* -----------------------------------------
     HEADER & NAV
@@ -48,7 +53,7 @@ header {
 #main-nav a { color: var(--white); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
 #main-nav a:hover { color: var(--accent-green); }
 
-/* HAMBURGER MENU STYLING */
+/* HAMBURGER MENU */
 .menu-toggle {
     display: none;
     flex-direction: column;
@@ -61,14 +66,12 @@ header {
     cursor: pointer;
     z-index: 1001;
 }
-
 .bar { 
     width: 100%; 
     height: 3px; 
     background-color: #ffffff !important; 
     transition: 0.3s; 
     border-radius: 2px;
-    display: block;
 }
 
 @media (max-width: 768px) {
@@ -85,48 +88,110 @@ header {
     }
     .header-container.menu-open #main-nav { display: block; }
     #main-nav ul { flex-direction: column; align-items: center; gap: 15px; }
-    
     .header-container.menu-open .bar:nth-child(1) { transform: translateY(9px) rotate(45deg); }
     .header-container.menu-open .bar:nth-child(2) { opacity: 0; }
     .header-container.menu-open .bar:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
 }
 
 /* -----------------------------------------
-    AI ENGINE & PITCH
+    PITCH & SLOTS
 ----------------------------------------- */
 .main-container { max-width: 550px; margin: 20px auto; width: 100%; text-align: center; padding: 20px; }
-.ticker { background: #000; color: var(--rise-color); padding: 10px; font-size: 11px; font-weight: 800; border-radius: 6px; margin-bottom: 15px; border: 1px solid var(--rise-color); border-left: 5px solid var(--rise-color); text-align: left; }
+.ticker { 
+    background: #000; 
+    color: var(--rise-color); 
+    padding: 10px; 
+    font-size: 11px; 
+    font-weight: 800; 
+    border-radius: 6px; 
+    margin-bottom: 15px; 
+    border: 1px solid var(--rise-color); 
+    border-left: 5px solid var(--rise-color); 
+    text-align: left; 
+}
 
-.pitch { background: var(--pg); border: 4px solid white; border-radius: 12px 12px 0 0; padding: 15px 10px; min-height: 400px; display: flex; flex-direction: column; justify-content: space-around; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
-.bench-area { background: var(--bench); border: 4px solid white; border-top: none; border-radius: 0 0 12px 12px; padding: 15px 10px; display: flex; flex-direction: column; gap: 10px; }
+.pitch { 
+    background: var(--pg); 
+    border: 4px solid white; 
+    border-radius: 12px 12px 0 0; 
+    padding: 15px 10px; 
+    min-height: 400px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-around; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+    position: relative; 
+}
+.bench-area { 
+    background: var(--bench); 
+    border: 4px solid white; 
+    border-top: none; 
+    border-radius: 0 0 12px 12px; 
+    padding: 15px 10px; 
+}
 
 .row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
-.slot { width: 85px; background: rgba(0,0,0,0.85); padding: 6px; border-radius: 6px; border-bottom: 3px solid var(--accent-green); position: relative; cursor: pointer; transition: 0.2s; }
-.slot:hover { transform: scale(1.05); background: rgba(255,255,255,0.1); }
+.slot { 
+    width: 85px; 
+    background: rgba(0,0,0,0.85); 
+    padding: 6px; 
+    border-radius: 6px; 
+    border-bottom: 3px solid var(--accent-green); 
+    position: relative; 
+    transition: 0.2s; 
+}
+.slot:hover { transform: scale(1.05); }
 
-.fdr-1 { border-bottom: 4px solid #00ff87 !important; }
+/* FDR COLORS */
+.fdr-1 { border-bottom: 4px solid #00ff87 !important; box-shadow: 0 0 10px rgba(0, 255, 135, 0.3); }
 .fdr-2 { border-bottom: 4px solid #96ff9a !important; }
 .fdr-4 { border-bottom: 4px solid #ff7676 !important; }
 .fdr-5 { border-bottom: 4px solid #800020 !important; }
 
-.price-up::after { content: '▲'; position: absolute; top: 2px; right: 4px; color: var(--rise-color); font-weight: 900; font-size: 14px; text-shadow: 1px 1px 2px #000; }
-.captain-badge { position: absolute; top: -10px; left: -10px; background: var(--gold); color: black; width: 22px; height: 22px; border-radius: 50%; font-weight: 900; font-size: 12px; line-height: 22px; display: none; border: 2px solid white; z-index: 10; animation: pulse 1.5s infinite; }
-@keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 5px var(--gold); } 50% { transform: scale(1.1); box-shadow: 0 0 15px var(--gold); } }
+.price-up::after { content: '▲'; position: absolute; top: 2px; right: 4px; color: var(--rise-color); font-size: 14px; }
+.captain-badge { 
+    position: absolute; top: -10px; left: -10px; 
+    background: var(--gold); color: black; 
+    width: 22px; height: 22px; border-radius: 50%; 
+    font-weight: 900; font-size: 12px; line-height: 22px; 
+    display: none; border: 2px solid white; z-index: 10; 
+    animation: pulse 1.5s infinite; 
+}
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
-select { width: 100%; font-size: 10px; background: transparent; color: inherit; border: none; font-weight: bold; cursor: pointer; outline: none; }
+select { width: 100%; font-size: 10px; background: transparent; color: inherit; border: none; font-weight: bold; cursor: pointer; }
 
-.planner-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #222; border: 2px solid var(--accent-green); padding: 20px; border-radius: 12px; z-index: 1100; width: 300px; box-shadow: 0 0 50px rgba(0,0,0,0.9); }
-.rec-item { background: #333; margin: 5px 0; padding: 8px; border-radius: 6px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--rise-color); }
+/* -----------------------------------------
+    MODALS & UI
+----------------------------------------- */
+.planner-modal { 
+    display: none; position: fixed; top: 50%; left: 50%; 
+    transform: translate(-50%, -50%); background: #222; 
+    border: 2px solid var(--accent-green); padding: 20px; 
+    border-radius: 12px; z-index: 1100; width: 300px; 
+}
+.rec-item { 
+    background: #333; margin: 5px 0; padding: 8px; 
+    border-radius: 6px; font-size: 12px; display: flex; 
+    justify-content: space-between; border-left: 3px solid var(--rise-color); 
+}
 
 .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
 button { padding: 12px; border-radius: 6px; border: none; font-weight: 800; cursor: pointer; font-size: 11px; text-transform: uppercase; }
 .btn-main { grid-column: span 2; background: var(--accent-green); color: var(--accent-purple); }
 
-#results { display: none; margin-top: 20px; background: var(--secondary-dark); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); text-align: left; }
-.verdict-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; }
+#results { 
+    display: none; margin-top: 20px; background: var(--secondary-dark); 
+    padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); 
+    text-align: left; 
+}
+.verdict-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .verdict-score { font-size: 2.5rem; font-weight: 900; color: var(--accent-green); }
 .verdict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .verdict-box { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; }
 .verdict-label { font-size: 10px; text-transform: uppercase; color: var(--text-dim); display: block; }
-.verdict-val { font-size: 14px; font-weight: bold; color: var(--white); }
-.ai-recommendation { margin-top: 15px; font-size: 13px; padding: 10px; background: var(--accent-purple); border-radius: 6px; border-left: 4px solid var(--accent-green); }
+.ai-recommendation { 
+    margin-top: 15px; font-size: 13px; padding: 10px; 
+    background: var(--accent-purple); border-radius: 6px; 
+    border-left: 4px solid var(--accent-green); 
+}
