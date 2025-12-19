@@ -491,3 +491,70 @@ th, td {
     transform: translateY(-3px);
     text-decoration: none; 
 }
+
+
+
+
+/* --- About Page Styling --- */
+.about-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+}
+
+.about-card {
+    max-width: 600px;
+    text-align: center;
+    padding: 40px;
+}
+
+.about-card h2 {
+    color: var(--accent-green);
+    margin: 20px 0;
+    font-size: 1.5rem;
+}
+
+.about-card p {
+    color: var(--text-dim);
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.divider {
+    border: 0;
+    height: 1px;
+    background: var(--border-color);
+    margin: 20px auto;
+    width: 50%;
+}
+
+.affiliate-notice {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 4px solid var(--accent-purple);
+    font-size: 0.85rem;
+    margin: 30px 0;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 20px;
+    transition: color 0.3s;
+}
+
+.back-link:hover {
+    color: var(--accent-green);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    .about-card {
+        padding: 20px;
+    }
+}
