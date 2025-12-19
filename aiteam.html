@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* -----------------------------------------
-           ROOT VARIABLES (PURPLE & GREEN THEME)
+           ROOT VARIABLES
         ----------------------------------------- */
         :root {
             --primary-dark: #111827;
@@ -30,7 +30,7 @@
         body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--primary-dark); color: var(--text-main); line-height: 1.6; }
 
         /* -----------------------------------------
-           HEADER & NAV (FIXED BARS)
+           HEADER & NAV (WHITE HAMBURGER BARS)
         ----------------------------------------- */
         header {
             background-color: var(--accent-purple);
@@ -56,6 +56,7 @@
         #main-nav a { color: var(--white); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
         #main-nav a:hover { color: var(--accent-green); }
 
+        /* WHITE HAMBURGER BUTTON */
         .menu-toggle {
             display: none;
             flex-direction: column;
@@ -66,8 +67,15 @@
             border: none;
             cursor: pointer;
             z-index: 1001;
+            padding: 0;
         }
-        .bar { width: 100%; height: 3px; background-color: var(--white); transition: 0.3s; border-radius: 2px; }
+        .bar { 
+            width: 100%; 
+            height: 3px; 
+            background-color: #ffffff !important; /* FORCED WHITE COLOR */
+            transition: 0.3s; 
+            border-radius: 2px; 
+        }
 
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
@@ -83,6 +91,8 @@
             }
             .header-container.menu-open #main-nav { display: block; }
             #main-nav ul { flex-direction: column; align-items: center; gap: 15px; }
+            
+            /* Hamburger to X Animation */
             .header-container.menu-open .bar:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
             .header-container.menu-open .bar:nth-child(2) { opacity: 0; }
             .header-container.menu-open .bar:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
@@ -113,7 +123,6 @@
         select { width: 100%; font-size: 10px; background: transparent; color: inherit; border: none; font-weight: bold; cursor: pointer; outline: none; }
         
         .planner-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #222; border: 2px solid var(--accent-green); padding: 20px; border-radius: 12px; z-index: 1100; width: 300px; box-shadow: 0 0 50px rgba(0,0,0,0.9); }
-        .planner-modal h4 { margin: 0 0 10px 0; color: var(--accent-green); font-size: 14px; }
         .rec-item { background: #333; margin: 5px 0; padding: 8px; border-radius: 6px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--rise-color); }
 
         .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
@@ -215,10 +224,10 @@
                 price: p.now_cost / 10,
                 xp: parseFloat(p.ep_next) || 0,
                 fdr: Math.floor(Math.random() * 5) + 1,
-                isRising: ["Palmer", "Semenyo", "Wilson", "Nunes", "Ekitike"].includes(p.web_name)
+                isRising: ["Palmer", "Semenyo", "Wilson"].includes(p.web_name)
             })).sort((a,b) => b.xp - a.xp);
-            document.getElementById('ticker').innerHTML = `⚠️ ALERT: <b>Mbeumo</b> & <b>Ndiaye</b> leaving for AFCON. Buy <b>Wilson</b> (£5.6m) before price rise!`;
-        } catch (e) { document.getElementById('ticker').textContent = "ERROR: RUNNING ON CACHED DATA"; }
+            document.getElementById('ticker').innerHTML = `⚠️ GW18 UPDATES: <b>Wilson</b> is the top AI pick for this week!`;
+        } catch (e) { document.getElementById('ticker').textContent = "OFFLINE MODE"; }
         renderSlots();
     }
 
@@ -283,9 +292,8 @@
 
     function runAnalysis() {
         document.getElementById('results').style.display = 'block';
-        const cost = 100 - parseFloat(document.getElementById('budget-val').textContent.replace('£',''));
         document.getElementById('score-display').textContent = (Math.random() * 20 + 75).toFixed(1);
-        document.getElementById('analysis-text').innerHTML = `<b>AI Verdict:</b> Your team value of £${cost.toFixed(1)}m is solid. <br><br>🚨 <b>Transfer Advice:</b> Click players on the pitch to see AI-optimized replacements for GW18!`;
+        document.getElementById('analysis-text').innerHTML = `<b>AI Verdict:</b> Team analysis complete. Click pitch slots to see smart transfer recommendations!`;
     }
 
     function autoOptimize() {
@@ -296,7 +304,6 @@
             if(choice) s.value = choice.name;
         });
         handleSelection();
-        runAnalysis();
     }
 
     syncData();
