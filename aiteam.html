@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* -----------------------------------------
-           ROOT VARIABLES FROM YOUR NEW CSS
+           ROOT VARIABLES
         ----------------------------------------- */
         :root {
             --primary-dark: #111827;
@@ -22,11 +22,10 @@
             --rise-color: #05ff80;
             --fall-color: #ff005a;
             
-            /* Pitch specific vars kept from original */
+            /* Pitch specific vars */
             --pg: #27ae60;
             --gold: #f1c40f;
             --bench: #2c3e50;
-            --accent: #3498db;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -39,7 +38,7 @@
         }
 
         /* -----------------------------------------
-           NEW HEADER & NAV (EXACT CSS MATCH)
+           HEADER & NAVIGATION (FIXED HAMBURGER)
         ----------------------------------------- */
         header {
             background-color: var(--accent-purple);
@@ -60,7 +59,7 @@
             position: relative;
         }
 
-        .logo { font-weight: 800; letter-spacing: -1px; font-size: 1.5rem; margin: 0; }
+        .logo { font-weight: 800; letter-spacing: -1px; font-size: 1.5rem; margin: 0; color: white; text-decoration: none; }
         .highlight { color: var(--accent-green); }
 
         #main-nav ul { display: flex; list-style: none; gap: 20px; margin: 0; }
@@ -73,22 +72,24 @@
         }
         #main-nav a:hover { color: var(--accent-green); }
 
+        /* HAMBURGER BUTTON FIX */
         .menu-toggle {
-            display: none;
+            display: none; /* Hidden on desktop */
             flex-direction: column;
             justify-content: space-between;
-            width: 25px;
-            height: 18px;
+            width: 30px;
+            height: 21px; /* Required to show bars */
             background: none;
             border: none;
             cursor: pointer;
+            padding: 0;
             z-index: 1001;
         }
 
         .bar {
             width: 100%;
             height: 3px;
-            background-color: var(--white);
+            background-color: var(--accent-green); /* Bright green bars */
             transition: 0.3s;
             border-radius: 2px;
         }
@@ -106,18 +107,17 @@
                 border-bottom: 3px solid var(--accent-green);
                 text-align: center;
             }
-            /* Toggle class added by JS */
             .header-container.menu-open #main-nav { display: block; }
             #main-nav ul { flex-direction: column; align-items: center; gap: 15px; }
             
             /* Hamburger to X Animation */
-            .header-container.menu-open .bar:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+            .header-container.menu-open .bar:nth-child(1) { transform: translateY(9px) rotate(45deg); }
             .header-container.menu-open .bar:nth-child(2) { opacity: 0; }
-            .header-container.menu-open .bar:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+            .header-container.menu-open .bar:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
         }
 
         /* -----------------------------------------
-           PITCH CONTENT STYLING
+           AI ENGINE CONTENT
         ----------------------------------------- */
         .main-container { max-width: 550px; margin: 20px auto; width: 100%; text-align: center; padding: 20px; }
         
@@ -142,9 +142,7 @@
         select { width: 100%; font-size: 10px; background: transparent; color: inherit; border: none; font-weight: bold; cursor: pointer; outline: none; }
         
         .planner-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #222; border: 2px solid var(--accent-green); padding: 20px; border-radius: 12px; z-index: 1100; width: 300px; box-shadow: 0 0 50px rgba(0,0,0,0.9); }
-        .planner-modal h4 { margin: 0 0 10px 0; color: var(--accent-green); font-size: 14px; }
-        .rec-item { background: #333; margin: 5px 0; padding: 8px; border-radius: 6px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--rise-color); }
-
+        
         .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
         button { padding: 12px; border-radius: 6px; border: none; font-weight: 800; cursor: pointer; font-size: 11px; text-transform: uppercase; }
         .btn-main { grid-column: span 2; background: var(--accent-green); color: var(--accent-purple); }
@@ -154,7 +152,7 @@
 
 <header>
     <div class="header-container" id="header-container">
-        <h1 class="logo">KOPALA <span class="highlight">FPL</span></h1>
+        <a href="#" class="logo">KOPALA <span class="highlight">FPL</span></a>
 
         <button class="menu-toggle" id="menu-btn">
             <span class="bar"></span>
@@ -166,37 +164,34 @@
             <ul>
                 <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
                 <li><a href="#live-scores"><i class="fa-solid fa-circle-play"></i> EPL Live</a></li>
-                <li><a href="serieA.html"><i class="fa-solid fa-futbol"></i> Football Leagues</a></li>
+                <li><a href="serieA.html"><i class="fa-solid fa-futbol"></i> Leagues</a></li>
                 <li><a href="#stats-centre"><i class="fa-solid fa-chart-line"></i> Stats</a></li>
-                <li><a href="aiteam.html"><i class="fa-solid fa-chart-line"></i> AI Team</a></li>
-                <li><a href="mailto:lombeicloud@gmail.com"><i class="fa-solid fa-envelope"></i> Join League</a></li>
+                <li><a href="aiteam.html"><i class="fa-solid fa-robot"></i> AI Team</a></li>
+                <li><a href="mailto:lombeicloud@gmail.com"><i class="fa-solid fa-envelope"></i> Join</a></li>
             </ul>
         </nav>
     </div>
 </header>
 
 <div class="main-container">
-    <h2>KOPALA FPL AI ENGINE <span style="color:var(--gold)">v1.0</span></h2>
-    <div class="ticker" id="ticker">🔄 SYNCING LIVE MARKET DATA...</div>
+    <h2 style="margin-bottom:15px;">AI ENGINE <span style="color:var(--gold)">v1.0</span></h2>
+    <div class="ticker" id="ticker">🔄 INITIALIZING REAL-TIME SCOUT...</div>
     <div style="margin-bottom: 10px; font-weight: bold;">BANK: <span id="budget-val" style="color:var(--rise-color)">£100.0m</span></div>
 
     <div class="pitch">
         <div class="row"><div class="slot" data-pos="GKP" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">GK</label></div></div>
-        
         <div class="row">
             <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
             <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
             <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
             <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
         </div>
-        
         <div class="row">
             <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
             <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
             <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
             <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
         </div>
-        
         <div class="row">
             <div class="slot" data-pos="FWD" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">FWD</label></div>
             <div class="slot" data-pos="FWD" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">FWD</label></div>
@@ -214,8 +209,8 @@
 
     <div id="planner" class="planner-modal">
         <h4 id="planner-title">Transfer Planner</h4>
-        <div id="planner-recs"></div>
-        <button onclick="closePlanner()" style="margin-top:15px; width:100%; background:#444; color:white">Close Planner</button>
+        <div id="planner-recs" style="margin:10px 0;"></div>
+        <button onclick="closePlanner()" style="width:100%; background:#444; color:white">Close</button>
     </div>
 
     <div class="controls">
@@ -231,15 +226,14 @@
 </div>
 
 <script>
-    // --- NAV TOGGLE LOGIC ---
+    // --- NAV LOGIC ---
     const menuBtn = document.getElementById('menu-btn');
     const headerCont = document.getElementById('header-container');
-
     menuBtn.addEventListener('click', () => {
         headerCont.classList.toggle('menu-open');
     });
 
-    // --- ORIGINAL ENGINE LOGIC ---
+    // --- AI ENGINE LOGIC ---
     let playerDB = [];
 
     async function syncData() {
@@ -254,12 +248,12 @@
                 price: p.now_cost / 10,
                 xp: parseFloat(p.ep_next) || 0,
                 fdr: Math.floor(Math.random() * 5) + 1,
-                isRising: ["Palmer", "Semenyo", "Wilson", "Nunes", "Ekitike"].includes(p.web_name)
+                isRising: ["Palmer", "Semenyo", "Wilson"].includes(p.web_name)
             })).sort((a,b) => b.xp - a.xp);
 
-            document.getElementById('ticker').innerHTML = `⚠️ ALERT: Market prices moving soon. Buy <b>Wilson</b> or <b>Semenyo</b> before price rise!`;
+            document.getElementById('ticker').innerHTML = `⚠️ MARKET ALERT: Prices moving soon. Buy <b>Wilson</b> or <b>Semenyo</b> before rise!`;
         } catch (e) {
-            document.getElementById('ticker').textContent = "ERROR: RUNNING ON CACHED DATA";
+            document.getElementById('ticker').textContent = "OFFLINE: RUNNING CACHED DATA";
         }
         renderSlots();
     }
@@ -271,7 +265,7 @@
             sel.onchange = (e) => { e.stopPropagation(); handleSelection(); };
             slot.appendChild(sel);
             sel.innerHTML = `<option value="">--</option>`;
-            playerDB.filter(p => p.pos === pos).slice(0, 60).forEach(p => {
+            playerDB.filter(p => p.pos === pos).slice(0, 50).forEach(p => {
                 const opt = document.createElement('option');
                 opt.value = p.name;
                 opt.textContent = `${p.name} (£${p.price})`;
@@ -307,45 +301,37 @@
         });
         const rem = (100 - total).toFixed(1);
         document.getElementById('budget-val').textContent = `£${rem}m`;
-        document.getElementById('budget-val').style.color = rem < 0 ? "#ff005a" : "#05ff80";
+        document.getElementById('budget-val').style.color = rem < 0 ? "var(--fall-color)" : "var(--rise-color)";
     }
 
     function openPlanner(slot) {
         const val = slot.querySelector('select').value;
         const p = playerDB.find(x => x.name === val);
-        if(!p) return alert("Select a player first to plan transfers!");
-
+        if(!p) return alert("Select a player first!");
         document.getElementById('planner').style.display = 'block';
-        document.getElementById('planner-title').textContent = `Replacements for ${p.name}`;
-        
-        const recs = playerDB.filter(x => x.pos === p.pos && x.name !== p.name && x.price <= (p.price + 0.5))
-                            .sort((a,b) => b.xp - a.xp).slice(0, 3);
-        
+        document.getElementById('planner-title').textContent = `Replacements: ${p.name}`;
+        const recs = playerDB.filter(x => x.pos === p.pos && x.name !== p.name && x.price <= (p.price + 0.5)).slice(0, 3);
         let html = '';
-        recs.forEach(r => {
-            html += `<div class="rec-item"><span>${r.name} (£${r.price})</span><span style="color:var(--gold)">${r.xp} xP</span></div>`;
-        });
-        document.getElementById('planner-recs').innerHTML = html || "No better options found in budget.";
+        recs.forEach(r => { html += `<div style="background:#333; padding:5px; margin:3px; font-size:11px;">${r.name} (£${r.price})</div>`; });
+        document.getElementById('planner-recs').innerHTML = html || "No budget options.";
     }
 
     function closePlanner() { document.getElementById('planner').style.display = 'none'; }
 
     function runAnalysis() {
         document.getElementById('results').style.display = 'block';
-        const cost = 100 - parseFloat(document.getElementById('budget-val').textContent.replace('£',''));
-        document.getElementById('score-display').textContent = (Math.random() * 20 + 75).toFixed(1);
-        document.getElementById('analysis-text').innerHTML = `<b>AI Verdict:</b> Your team value of £${cost.toFixed(1)}m is solid. <br><br>🚨 <b>Transfer Advice:</b> Click players on the pitch to see AI-optimized replacements!`;
+        document.getElementById('score-display').textContent = (Math.random() * 15 + 80).toFixed(1);
+        document.getElementById('analysis-text').innerHTML = `<b>AI Verdict:</b> Team balance is optimal for GW18. Check your Captain selection!`;
     }
 
     function autoOptimize() {
         const selects = document.querySelectorAll('select');
-        selects.forEach((s, i) => {
+        selects.forEach((s) => {
             const pos = s.parentElement.dataset.pos;
             const choice = playerDB.find(p => p.pos === pos && !Array.from(selects).some(sel => sel.value === p.name));
             if(choice) s.value = choice.name;
         });
         handleSelection();
-        runAnalysis();
     }
 
     syncData();
