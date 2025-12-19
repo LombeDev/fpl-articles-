@@ -30,7 +30,7 @@
         body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--primary-dark); color: var(--text-main); line-height: 1.6; }
 
         /* -----------------------------------------
-           HEADER & NAV (WHITE HAMBURGER BARS)
+           HEADER & NAV
         ----------------------------------------- */
         header {
             background-color: var(--accent-purple);
@@ -56,7 +56,6 @@
         #main-nav a { color: var(--white); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
         #main-nav a:hover { color: var(--accent-green); }
 
-        /* WHITE HAMBURGER BUTTON */
         .menu-toggle {
             display: none;
             flex-direction: column;
@@ -67,15 +66,8 @@
             border: none;
             cursor: pointer;
             z-index: 1001;
-            padding: 0;
         }
-        .bar { 
-            width: 100%; 
-            height: 3px; 
-            background-color: #ffffff !important; /* FORCED WHITE COLOR */
-            transition: 0.3s; 
-            border-radius: 2px; 
-        }
+        .bar { width: 100%; height: 3px; background-color: #ffffff; transition: 0.3s; border-radius: 2px; }
 
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
@@ -91,8 +83,6 @@
             }
             .header-container.menu-open #main-nav { display: block; }
             #main-nav ul { flex-direction: column; align-items: center; gap: 15px; }
-            
-            /* Hamburger to X Animation */
             .header-container.menu-open .bar:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
             .header-container.menu-open .bar:nth-child(2) { opacity: 0; }
             .header-container.menu-open .bar:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
@@ -104,21 +94,21 @@
         .main-container { max-width: 550px; margin: 20px auto; width: 100%; text-align: center; padding: 20px; }
         .ticker { background: #000; color: var(--rise-color); padding: 10px; font-size: 11px; font-weight: 800; border-radius: 6px; margin-bottom: 15px; border: 1px solid var(--rise-color); border-left: 5px solid var(--rise-color); text-align: left; }
         
-        .pitch { background: var(--pg); border: 4px solid white; border-radius: 12px 12px 0 0; padding: 15px 10px; height: 400px; display: flex; flex-direction: column; justify-content: space-around; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+        .pitch { background: var(--pg); border: 4px solid white; border-radius: 12px 12px 0 0; padding: 15px 10px; min-height: 400px; display: flex; flex-direction: column; justify-content: space-around; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
         .bench-area { background: var(--bench); border: 4px solid white; border-top: none; border-radius: 0 0 12px 12px; padding: 15px 10px; display: flex; flex-direction: column; gap: 10px; }
         
-        .row { display: flex; justify-content: center; gap: 8px; }
+        .row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
         .slot { width: 85px; background: rgba(0,0,0,0.85); padding: 6px; border-radius: 6px; border-bottom: 3px solid var(--accent-green); position: relative; cursor: pointer; transition: 0.2s; }
         .slot:hover { transform: scale(1.05); background: rgba(255,255,255,0.1); }
 
-        .fdr-1 { background: #00ff87 !important; color: #000; }
-        .fdr-2 { background: #96ff9a !important; color: #000; }
-        .fdr-4 { background: #ff7676 !important; color: #fff; }
-        .fdr-5 { background: #800020 !important; color: #fff; }
+        .fdr-1 { border-bottom: 4px solid #00ff87 !important; }
+        .fdr-2 { border-bottom: 4px solid #96ff9a !important; }
+        .fdr-4 { border-bottom: 4px solid #ff7676 !important; }
+        .fdr-5 { border-bottom: 4px solid #800020 !important; }
 
         .price-up::after { content: '▲'; position: absolute; top: 2px; right: 4px; color: var(--rise-color); font-weight: 900; font-size: 14px; text-shadow: 1px 1px 2px #000; }
-        .captain-badge { position: absolute; top: -10px; left: -10px; background: var(--gold); color: black; width: 22px; height: 22px; border-radius: 50%; font-weight: 900; font-size: 12px; line-height: 22px; display: none; border: 2px solid white; box-shadow: 0 0 10px var(--gold); z-index: 10; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+        .captain-badge { position: absolute; top: -10px; left: -10px; background: var(--gold); color: black; width: 22px; height: 22px; border-radius: 50%; font-weight: 900; font-size: 12px; line-height: 22px; display: none; border: 2px solid white; z-index: 10; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 5px var(--gold); } 50% { transform: scale(1.1); box-shadow: 0 0 15px var(--gold); } }
 
         select { width: 100%; font-size: 10px; background: transparent; color: inherit; border: none; font-weight: bold; cursor: pointer; outline: none; }
         
@@ -128,6 +118,18 @@
         .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
         button { padding: 12px; border-radius: 6px; border: none; font-weight: 800; cursor: pointer; font-size: 11px; text-transform: uppercase; }
         .btn-main { grid-column: span 2; background: var(--accent-green); color: var(--accent-purple); }
+
+        /* -----------------------------------------
+           NEW VERDICT STYLING
+        ----------------------------------------- */
+        #results { display: none; margin-top: 20px; background: var(--secondary-dark); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); text-align: left; }
+        .verdict-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; }
+        .verdict-score { font-size: 2.5rem; font-weight: 900; color: var(--accent-green); }
+        .verdict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .verdict-box { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; }
+        .verdict-label { font-size: 10px; text-transform: uppercase; color: var(--text-dim); display: block; }
+        .verdict-val { font-size: 14px; font-weight: bold; color: var(--white); }
+        .ai-recommendation { margin-top: 15px; font-size: 13px; padding: 10px; background: var(--accent-purple); border-radius: 6px; border-left: 4px solid var(--accent-green); }
     </style>
 </head>
 <body>
@@ -140,20 +142,19 @@
         </button>
         <nav id="main-nav">
             <ul>
-                <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
-                <li><a href="#live-scores"><i class="fa-solid fa-circle-play"></i> EPL Live</a></li>
-                <li><a href="serieA.html"><i class="fa-solid fa-futbol"></i> Leagues</a></li>
-                <li><a href="#stats-centre"><i class="fa-solid fa-chart-line"></i> Stats</a></li>
-                <li><a href="aiteam.html"><i class="fa-solid fa-robot"></i> AI Team</a></li>
-                <li><a href="mailto:lombeicloud@gmail.com"><i class="fa-solid fa-envelope"></i> Join</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#live-scores">Live</a></li>
+                <li><a href="serieA.html">Leagues</a></li>
+                <li><a href="aiteam.html">AI Team</a></li>
+                <li><a href="mailto:lombeicloud@gmail.com">Join</a></li>
             </ul>
         </nav>
     </div>
 </header>
 
 <div class="main-container">
-    <h2>KOPALA FPL AI ENGINE <span style="color:var(--gold)">v1.0</span></h2>
-    <div class="ticker" id="ticker">🔄 SYNCING GW18 LIVE MARKET DATA...</div>
+    <h2>KOPALA FPL AI SCANNER</h2>
+    <div class="ticker" id="ticker">🔄 INITIALIZING REAL-TIME SCOUT...</div>
     <div style="margin-bottom: 10px; font-weight: bold;">BANK: <span id="budget-val" style="color:var(--rise-color)">£100.0m</span></div>
 
     <div class="pitch">
@@ -186,9 +187,9 @@
     </div>
 
     <div id="planner" class="planner-modal">
-        <h4 id="planner-title">Transfer Planner</h4>
+        <h4 id="planner-title">Scout Recommendations</h4>
         <div id="planner-recs"></div>
-        <button onclick="closePlanner()" style="margin-top:15px; width:100%; background:#444; color:white">Close Planner</button>
+        <button onclick="closePlanner()" style="margin-top:15px; width:100%; background:#444; color:white">Close</button>
     </div>
 
     <div class="controls">
@@ -197,19 +198,45 @@
         <button style="background:#444; color:white" onclick="location.reload()">Reset Team</button>
     </div>
 
-    <div id="results" style="display:none; margin-top:20px; background:#1e1e1e; padding:15px; border-radius:12px; border:1px solid #333;">
-        <h1 id="score-display" style="font-size:45px; margin:0; color:var(--accent-green)">0.0</h1>
-        <div id="analysis-text" style="font-size:12px; margin-top:10px;"></div>
+    <div id="results">
+        <div class="verdict-header">
+            <div>
+                <span style="font-size:12px; color:var(--text-dim)">AI SQUAD RATING</span>
+                <div class="verdict-score" id="score-display">0.0</div>
+            </div>
+            <i class="fa-solid fa-robot" style="font-size: 40px; color: var(--accent-green)"></i>
+        </div>
+        
+        <div class="verdict-grid">
+            <div class="verdict-box">
+                <span class="verdict-label">Team Value</span>
+                <span class="verdict-val" id="v-value">£0.0m</span>
+            </div>
+            <div class="verdict-box">
+                <span class="verdict-label">Expected Points (xP)</span>
+                <span class="verdict-val" id="v-xp">0.0</span>
+            </div>
+            <div class="verdict-box">
+                <span class="verdict-label">Captain Risk</span>
+                <span class="verdict-val" id="v-captain">Low</span>
+            </div>
+            <div class="verdict-box">
+                <span class="verdict-label">Weakest Link</span>
+                <span class="verdict-val" id="v-weak">None</span>
+            </div>
+        </div>
+
+        <div class="ai-recommendation" id="ai-msg">
+            Select a full team to see the Scout's tactical advice.
+        </div>
     </div>
 </div>
 
 <script>
-    // --- NAV ---
     const menuBtn = document.getElementById('menu-btn');
     const headerCont = document.getElementById('header-container');
     menuBtn.addEventListener('click', () => { headerCont.classList.toggle('menu-open'); });
 
-    // --- ENGINE ---
     let playerDB = [];
 
     async function syncData() {
@@ -226,7 +253,7 @@
                 fdr: Math.floor(Math.random() * 5) + 1,
                 isRising: ["Palmer", "Semenyo", "Wilson"].includes(p.web_name)
             })).sort((a,b) => b.xp - a.xp);
-            document.getElementById('ticker').innerHTML = `⚠️ GW18 UPDATES: <b>Wilson</b> is the top AI pick for this week!`;
+            document.getElementById('ticker').innerHTML = `⚠️ SCAN COMPLETE: Current FPL API data synced successfully.`;
         } catch (e) { document.getElementById('ticker').textContent = "OFFLINE MODE"; }
         renderSlots();
     }
@@ -276,25 +303,61 @@
         document.getElementById('budget-val').style.color = rem < 0 ? "var(--fall-color)" : "var(--rise-color)";
     }
 
+    function runAnalysis() {
+        const results = document.getElementById('results');
+        results.style.display = 'block';
+        
+        let totalValue = 0;
+        let totalXP = 0;
+        let weakestPlayer = { name: "None", xp: 99 };
+        let selectedCount = 0;
+
+        document.querySelectorAll('.slot').forEach(slot => {
+            const val = slot.querySelector('select').value;
+            const p = playerDB.find(x => x.name === val);
+            if(p) {
+                selectedCount++;
+                totalValue += p.price;
+                if(!slot.classList.contains('is-bench')) {
+                    totalXP += p.xp;
+                    if(p.xp < weakestPlayer.xp) weakestPlayer = p;
+                }
+            }
+        });
+
+        const rating = ((totalXP / 60) * 100).toFixed(1);
+        document.getElementById('score-display').textContent = rating;
+        document.getElementById('v-value').textContent = `£${totalValue.toFixed(1)}m`;
+        document.getElementById('v-xp').textContent = totalXP.toFixed(1);
+        document.getElementById('v-weak').textContent = weakestPlayer.name;
+        
+        let capRisk = totalXP > 40 ? "Low" : "High";
+        document.getElementById('v-captain').textContent = capRisk;
+
+        let msg = "";
+        if(selectedCount < 15) {
+            msg = "Squad incomplete. Fill all 15 slots for a full tactical breakdown.";
+        } else if (rating > 85) {
+            msg = "🔥 <b>ELITE TEAM:</b> Your squad is in the top 1% for Expected Points. Minimal changes needed.";
+        } else {
+            msg = `💡 <b>AI ADVICE:</b> Your team value is £${totalValue.toFixed(1)}m. Replace <b>${weakestPlayer.name}</b> to improve your overall rating.`;
+        }
+        document.getElementById('ai-msg').innerHTML = msg;
+    }
+
     function openPlanner(slot) {
         const val = slot.querySelector('select').value;
         const p = playerDB.find(x => x.name === val);
-        if(!p) return alert("Select a player first!");
+        if(!p) return;
         document.getElementById('planner').style.display = 'block';
-        document.getElementById('planner-title').textContent = `Replacements for ${p.name}`;
+        document.getElementById('planner-title').textContent = `Scout: ${p.name}`;
         const recs = playerDB.filter(x => x.pos === p.pos && x.name !== p.name && x.price <= (p.price + 0.5)).sort((a,b) => b.xp - a.xp).slice(0, 3);
         let html = '';
-        recs.forEach(r => { html += `<div class="rec-item"><span>${r.name} (£${r.price})</span><span style="color:var(--gold)">${r.xp} xP</span></div>`; });
-        document.getElementById('planner-recs').innerHTML = html || "No better options found.";
+        recs.forEach(r => { html += `<div class="rec-item"><span>${r.name}</span><span style="color:var(--accent-green)">${r.xp} xP</span></div>`; });
+        document.getElementById('planner-recs').innerHTML = html || "No budget options.";
     }
 
     function closePlanner() { document.getElementById('planner').style.display = 'none'; }
-
-    function runAnalysis() {
-        document.getElementById('results').style.display = 'block';
-        document.getElementById('score-display').textContent = (Math.random() * 20 + 75).toFixed(1);
-        document.getElementById('analysis-text').innerHTML = `<b>AI Verdict:</b> Team analysis complete. Click pitch slots to see smart transfer recommendations!`;
-    }
 
     function autoOptimize() {
         const selects = document.querySelectorAll('select');
@@ -304,6 +367,7 @@
             if(choice) s.value = choice.name;
         });
         handleSelection();
+        runAnalysis();
     }
 
     syncData();
