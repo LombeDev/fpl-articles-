@@ -1,185 +1,176 @@
-const menuBtn = document.getElementById('menu-btn');
-const headerCont = document.getElementById('header-container');
-
-// UI - Navigation
-menuBtn.addEventListener('click', () => { 
-    headerCont.classList.toggle('menu-open'); 
-});
-
 let playerDB = [];
+let selectedSlotId = null;
 
-// DATA - Sync with FPL API
+// Initial Squad Structure (15 players)
+let squad = [
+    { id: 0, pos: 'GKP', name: '', isBench: false },
+    { id: 1, pos: 'DEF', name: '', isBench: false },
+    { id: 2, pos: 'DEF', name: '', isBench: false },
+    { id: 3, pos: 'DEF', name: '', isBench: false },
+    { id: 4, pos: 'DEF', name: '', isBench: false },
+    { id: 5, pos: 'MID', name: '', isBench: false },
+    { id: 6, pos: 'MID', name: '', isBench: false },
+    { id: 7, pos: 'MID', name: '', isBench: false },
+    { id: 8, pos: 'MID', name: '', isBench: false },
+    { id: 9, pos: 'FWD', name: '', isBench: false },
+    { id: 10, pos: 'FWD', name: '', isBench: false },
+    // Bench
+    { id: 11, pos: 'GKP', name: '', isBench: true },
+    { id: 12, pos: 'DEF', name: '', isBench: true },
+    { id: 13, pos: 'MID', name: '', isBench: true },
+    { id: 14, pos: 'FWD', name: '', isBench: true }
+];
+
 async function syncData() {
     const proxy = 'https://corsproxy.io/?url=';
     const api = 'https://fantasy.premierleague.com/api/bootstrap-static/';
     try {
         const res = await fetch(proxy + encodeURIComponent(api));
         const data = await res.json();
-        
-        // Map team IDs to Names
-        const teamMap = {};
-        data.teams.forEach(t => teamMap[t.id] = t.name);
-
         playerDB = data.elements.map(p => ({
             name: p.web_name,
-            team: teamMap[p.team],
             pos: ["", "GKP", "DEF", "MID", "FWD"][p.element_type],
             price: p.now_cost / 10,
-            xp: parseFloat(p.ep_next) || 0,
-            fdr: Math.floor(Math.random() * 5) + 1,
-            isRising: p.cost_change_event > 0
+            xp: parseFloat(p.ep_next) || 0
         })).sort((a,b) => b.xp - a.xp);
-        
-        document.getElementById('ticker').innerHTML = `⚠️ SCAN COMPLETE: ${playerDB.length} players synced.`;
-    } catch (e) { 
-        document.getElementById('ticker').textContent = "OFFLINE MODE: Using Cached Data"; 
+        document.getElementById('ticker').textContent = "✅ LIVE API DATA CONNECTED";
+    } catch (e) {
+        document.getElementById('ticker').textContent = "⚠️ OFFLINE MODE";
     }
-    renderSlots();
+    renderPitch();
 }
 
-// UI - Render Select Boxes
-function renderSlots() {
-    document.querySelectorAll('.slot').forEach(slot => {
-        const pos = slot.dataset.pos;
-        let sel = slot.querySelector('select') || document.createElement('select');
-        sel.onchange = (e) => { e.stopPropagation(); handleSelection(); };
-        slot.appendChild(sel);
-        sel.innerHTML = `<option value="">-- Select --</option>`;
-        
-        playerDB.filter(p => p.pos === pos).slice(0, 50).forEach(p => {
-            const opt = document.createElement('option');
-            opt.value = p.name;
-            opt.textContent = `${p.name} (${p.team}) £${p.price}`;
-            sel.appendChild(opt);
-        });
-    });
-}
+function renderPitch() {
+    const pitch = document.getElementById('pitch-container');
+    const bench = document.getElementById('bench-container');
+    pitch.innerHTML = ''; bench.innerHTML = '';
 
-// LOGIC - Handle Player Selection Changes
-function handleSelection() {
-    let maxXP = -1; 
-    let capSlot = null;
-
-    document.querySelectorAll('.slot').forEach(slot => {
-        const val = slot.querySelector('select').value;
-        const p = playerDB.find(x => x.name === val);
-        const badge = slot.querySelector('.captain-badge');
-        
-        if(badge) badge.style.display = 'none';
-        slot.className = slot.classList.contains('is-bench') ? 'slot is-bench' : 'slot';
-        
-        if(p) {
-            slot.classList.add(`fdr-${p.fdr}`);
-            if(p.isRising) slot.classList.add('price-up');
-            // Auto-Captain Logic: Highest XP in starting XI
-            if(!slot.classList.contains('is-bench') && p.xp > maxXP) { 
-                maxXP = p.xp; 
-                capSlot = slot; 
-            }
-        }
-    });
-
-    if(capSlot) capSlot.querySelector('.captain-badge').style.display = 'block';
-    updateBudget();
-}
-
-// LOGIC - Budget & Club Limit Check
-function updateBudget() {
-    let total = 0;
-    const clubCounts = {};
-    let limitExceeded = false;
-
-    document.querySelectorAll('select').forEach(s => {
-        const p = playerDB.find(x => x.name === s.value);
-        if(p) {
-            total += p.price;
-            clubCounts[p.team] = (clubCounts[p.team] || 0) + 1;
-            if(clubCounts[p.team] > 3) limitExceeded = true;
-        }
-    });
-
-    const rem = (100 - total).toFixed(1);
-    const budgetDisplay = document.getElementById('budget-val');
-    budgetDisplay.textContent = `£${rem}m`;
-    budgetDisplay.style.color = rem < 0 || limitExceeded ? "var(--fall-color)" : "var(--rise-color)";
-}
-
-// AI - Run Deep Analysis
-function runAnalysis() {
-    const results = document.getElementById('results');
-    results.style.display = 'block';
+    const positions = ['GKP', 'DEF', 'MID', 'FWD'];
+    const starters = squad.filter(s => !s.isBench);
     
-    let totalValue = 0, totalXP = 0, selectedCount = 0;
-    let starters = [];
-    
-    document.querySelectorAll('.slot').forEach(slot => {
-        const val = slot.querySelector('select').value;
-        const p = playerDB.find(x => x.name === val);
-        if(p) {
-            selectedCount++;
-            totalValue += p.price;
-            if(!slot.classList.contains('is-bench')) {
-                totalXP += p.xp;
-                starters.push(p);
-            }
+    // Draw Starter Rows
+    positions.forEach(pos => {
+        const rowPlayers = starters.filter(p => p.pos === pos);
+        if (rowPlayers.length > 0) {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'row';
+            rowPlayers.forEach(p => rowDiv.appendChild(createSlotUI(p)));
+            pitch.appendChild(rowDiv);
         }
     });
 
-    // Score Display
-    document.getElementById('score-display').textContent = ((totalXP / 60) * 100).toFixed(1);
-    document.getElementById('v-value').textContent = `£${totalValue.toFixed(1)}m`;
-    document.getElementById('v-xp').textContent = totalXP.toFixed(1);
+    // Draw Bench Row
+    const benchRow = document.createElement('div');
+    benchRow.className = 'row';
+    squad.filter(s => s.isBench).forEach(p => benchRow.appendChild(createSlotUI(p)));
+    bench.appendChild(benchRow);
 
-    // Identify Weakest Link in Starters
-    starters.sort((a, b) => a.xp - b.xp);
-    const weakest = starters[0];
-    document.getElementById('v-weak').textContent = weakest ? weakest.name : "None";
+    updateFormationUI();
+}
 
-    // AI Message Logic
-    let msg = "";
-    if(selectedCount < 15) {
-        msg = "🚨 Squad incomplete! Fill all slots to unlock Smart Scout advice.";
+function createSlotUI(slotData) {
+    const div = document.createElement('div');
+    div.className = `slot ${slotData.isBench ? 'is-bench' : ''} ${selectedSlotId === slotData.id ? 'selected' : ''}`;
+    div.onclick = () => handleSwap(slotData.id);
+
+    const label = document.createElement('div');
+    label.style.fontSize = '8px'; label.textContent = slotData.pos;
+    div.appendChild(label);
+
+    const select = document.createElement('select');
+    select.onclick = (e) => e.stopPropagation();
+    select.innerHTML = `<option value="">--</option>`;
+    playerDB.filter(p => p.pos === slotData.pos).slice(0, 40).forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.name;
+        opt.selected = slotData.name === p.name;
+        opt.textContent = `${p.name} (£${p.price})`;
+        select.appendChild(opt);
+    });
+
+    select.onchange = (e) => {
+        slotData.name = e.target.value;
+        updateStats();
+    };
+
+    div.appendChild(select);
+    return div;
+}
+
+function handleSwap(id) {
+    if (selectedSlotId === null) {
+        selectedSlotId = id;
     } else {
-        // Find an upgrade within budget + 0.5m
-        const upgrade = playerDB.find(x => x.pos === weakest.pos && x.xp > weakest.xp && x.price <= (weakest.price + 0.5));
-        msg = upgrade 
-            ? `💡 <b>SMART SCOUT:</b> Your weakest link is <b>${weakest.name}</b>. Upgrade to <b>${upgrade.name}</b> for an immediate xP boost!`
-            : "✅ <b>AI VERDICT:</b> Your team is perfectly balanced for your current budget.";
+        const p1 = squad.find(s => s.id === selectedSlotId);
+        const p2 = squad.find(s => s.id === id);
+
+        if (p1.isBench !== p2.isBench && validateFormation(p1, p2)) {
+            const tempStatus = p1.isBench;
+            p1.isBench = p2.isBench;
+            p2.isBench = tempStatus;
+        }
+        selectedSlotId = null;
     }
-    document.getElementById('ai-msg').innerHTML = msg;
+    renderPitch();
+    updateStats();
 }
 
-// UI - Planner Modal
-function openPlanner(slot) {
-    const val = slot.querySelector('select').value;
-    const p = playerDB.find(x => x.name === val);
-    if(!p) return;
-
-    document.getElementById('planner').style.display = 'block';
-    document.getElementById('planner-title').textContent = `Scout: ${p.name}`;
+function validateFormation(p1, p2) {
+    const starters = squad.filter(s => !s.isBench);
+    const testStarters = starters.map(s => s.id === p1.id ? p2 : (s.id === p2.id ? p1 : s));
     
-    const recs = playerDB.filter(x => x.pos === p.pos && x.name !== p.name && x.price <= (p.price + 0.5)).slice(0, 3);
-    let html = '';
-    recs.forEach(r => { 
-        html += `<div class="rec-item"><span>${r.name} (${r.team})</span><span style="color:var(--accent-green)">${r.xp} xP</span></div>`; 
-    });
-    document.getElementById('planner-recs').innerHTML = html || "No budget options found.";
+    const d = testStarters.filter(s => s.pos === 'DEF').length;
+    const m = testStarters.filter(s => s.pos === 'MID').length;
+    const f = testStarters.filter(s => s.pos === 'FWD').length;
+    const g = testStarters.filter(s => s.pos === 'GKP').length;
+
+    return (g === 1 && d >= 3 && d <= 5 && m >= 2 && m <= 5 && f >= 1 && f <= 3);
 }
 
-function closePlanner() { 
-    document.getElementById('planner').style.display = 'none'; 
+function updateStats() {
+    let totalValue = 0, totalXP = 0;
+    squad.forEach(s => {
+        const p = playerDB.find(x => x.name === s.name);
+        if (p) {
+            totalValue += p.price;
+            if (!s.isBench) totalXP += p.xp;
+        }
+    });
+
+    document.getElementById('budget-val').textContent = `£${(100 - totalValue).toFixed(1)}m`;
+    document.getElementById('budget-val').style.color = (100 - totalValue) < 0 ? 'var(--fall-color)' : 'var(--rise-color)';
+    return { totalValue, totalXP };
+}
+
+function updateFormationUI() {
+    const starters = squad.filter(s => !s.isBench);
+    const d = starters.filter(s => s.pos === 'DEF').length;
+    const m = starters.filter(s => s.pos === 'MID').length;
+    const f = starters.filter(s => s.pos === 'FWD').length;
+    document.getElementById('formation-ticker').textContent = `FORMATION: ${d}-${m}-${f}`;
+}
+
+function runAnalysis() {
+    document.getElementById('results').style.display = 'block';
+    const stats = updateStats();
+    
+    document.getElementById('score-display').textContent = (stats.totalXP * 2).toFixed(1);
+    document.getElementById('v-value').textContent = `£${stats.totalValue.toFixed(1)}m`;
+    document.getElementById('v-xp').textContent = stats.totalXP.toFixed(1);
+    
+    const filled = squad.filter(s => s.name !== '').length;
+    document.getElementById('ai-msg').innerHTML = filled < 15 
+        ? "🚨 Complete your 15-man squad for a deep scout report." 
+        : "🔥 <b>AI VERDICT:</b> Formation is balanced. Captain your highest xP player for maximum gains.";
 }
 
 function autoOptimize() {
-    const selects = document.querySelectorAll('select');
-    selects.forEach((s) => {
-        const pos = s.parentElement.dataset.pos;
-        const choice = playerDB.find(p => p.pos === pos && !Array.from(selects).some(sel => sel.value === p.name));
-        if(choice) s.value = choice.name;
+    squad.forEach(slot => {
+        const choice = playerDB.find(p => p.pos === slot.pos && !squad.some(s => s.name === p.name));
+        if (choice) slot.name = choice.name;
     });
-    handleSelection();
-    runAnalysis();
+    renderPitch();
+    updateStats();
 }
 
-// Start app
 syncData();
