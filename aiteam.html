@@ -6,87 +6,157 @@
     <title>KOPALA FPL AI TEAM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --pg: #27ae60; --dark: #121212; --accent: #3498db; --gold: #f1c40f; --bench: #2c3e50; --rise: #2ecc71; --fall: #e74c3c; }
-        
-        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; margin: 0; padding-top: 80px; }
+        /* -----------------------------------------
+           ROOT VARIABLES FROM YOUR NEW CSS
+        ----------------------------------------- */
+        :root {
+            --primary-dark: #111827;
+            --secondary-dark: #1f2937;
+            --accent-green: #00ff87;
+            --accent-purple: #37003c;
+            --text-main: #f3f4f6;
+            --text-dim: #9ca3af;
+            --white: #ffffff;
+            --border-color: #374151;
+            --card-bg: #1f2937;
+            --rise-color: #05ff80;
+            --fall-color: #ff005a;
+            
+            /* Pitch specific vars kept from original */
+            --pg: #27ae60;
+            --gold: #f1c40f;
+            --bench: #2c3e50;
+            --accent: #3498db;
+        }
 
-        /* --- NAV STYLING --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* -----------------------------------------
+           NEW HEADER & NAV (EXACT CSS MATCH)
+        ----------------------------------------- */
         header {
-            position: fixed;
+            background-color: var(--accent-purple);
+            padding: 1rem 0;
+            border-bottom: 3px solid var(--accent-green);
+            position: sticky;
             top: 0;
-            width: 100%;
-            background: rgba(18, 18, 18, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid var(--accent);
             z-index: 1000;
         }
+
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 10px 20px;
+            padding: 0 15px;
+            position: relative;
         }
-        .logo { font-size: 1.5rem; margin: 0; font-weight: 900; }
-        .highlight { color: var(--accent); }
 
-        /* Navigation List */
-        #main-nav ul { list-style: none; display: flex; gap: 20px; margin: 0; padding: 0; }
-        #main-nav a { color: white; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.3s; }
-        #main-nav a:hover { color: var(--accent); }
+        .logo { font-weight: 800; letter-spacing: -1px; font-size: 1.5rem; margin: 0; }
+        .highlight { color: var(--accent-green); }
 
-        /* Hamburger Menu Button */
-        .menu-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; }
-        .bar { width: 25px; height: 3px; background-color: white; border-radius: 2px; transition: 0.3s; }
+        #main-nav ul { display: flex; list-style: none; gap: 20px; margin: 0; }
+        #main-nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        #main-nav a:hover { color: var(--accent-green); }
 
-        /* Mobile Responsive Nav */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 25px;
+            height: 18px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .bar {
+            width: 100%;
+            height: 3px;
+            background-color: var(--white);
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
             #main-nav {
-                display: none; /* Hidden by default on mobile */
+                display: none;
                 position: absolute;
-                top: 60px;
+                top: 100%;
                 left: 0;
                 width: 100%;
-                background: #1e1e1e;
-                border-bottom: 2px solid var(--accent);
+                background-color: var(--accent-purple);
+                padding: 20px 0;
+                border-bottom: 3px solid var(--accent-green);
+                text-align: center;
             }
-            #main-nav.active { display: block; }
-            #main-nav ul { flex-direction: column; padding: 20px; gap: 15px; }
+            /* Toggle class added by JS */
+            .header-container.menu-open #main-nav { display: block; }
+            #main-nav ul { flex-direction: column; align-items: center; gap: 15px; }
+            
+            /* Hamburger to X Animation */
+            .header-container.menu-open .bar:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+            .header-container.menu-open .bar:nth-child(2) { opacity: 0; }
+            .header-container.menu-open .bar:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
         }
 
-        /* --- ORIGINAL PITCH STYLING --- */
-        .container { max-width: 550px; margin: 0 auto; width: 100%; text-align: center; padding: 20px; }
-        .ticker { background: #000; color: var(--rise); padding: 10px; font-size: 11px; font-weight: 800; border-radius: 6px; margin-bottom: 15px; border: 1px solid var(--rise); border-left: 5px solid var(--rise); text-align: left; }
+        /* -----------------------------------------
+           PITCH CONTENT STYLING
+        ----------------------------------------- */
+        .main-container { max-width: 550px; margin: 20px auto; width: 100%; text-align: center; padding: 20px; }
+        
+        .ticker { background: #000; color: var(--rise-color); padding: 10px; font-size: 11px; font-weight: 800; border-radius: 6px; margin-bottom: 15px; border: 1px solid var(--rise-color); border-left: 5px solid var(--rise-color); text-align: left; }
+        
         .pitch { background: var(--pg); border: 4px solid white; border-radius: 12px 12px 0 0; padding: 15px 10px; height: 400px; display: flex; flex-direction: column; justify-content: space-around; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
         .bench-area { background: var(--bench); border: 4px solid white; border-top: none; border-radius: 0 0 12px 12px; padding: 15px 10px; display: flex; flex-direction: column; gap: 10px; }
+        
         .row { display: flex; justify-content: center; gap: 8px; }
-        .slot { width: 85px; background: rgba(0,0,0,0.85); padding: 6px; border-radius: 6px; border-bottom: 3px solid var(--accent); position: relative; cursor: pointer; transition: 0.2s; }
+        .slot { width: 85px; background: rgba(0,0,0,0.85); padding: 6px; border-radius: 6px; border-bottom: 3px solid var(--accent-green); position: relative; cursor: pointer; transition: 0.2s; }
         .slot:hover { transform: scale(1.05); background: rgba(255,255,255,0.1); }
+
         .fdr-1 { background: #00ff87 !important; color: #000; }
         .fdr-2 { background: #96ff9a !important; color: #000; }
         .fdr-4 { background: #ff7676 !important; color: #fff; }
         .fdr-5 { background: #800020 !important; color: #fff; }
-        .price-up::after { content: '▲'; position: absolute; top: 2px; right: 4px; color: var(--rise); font-weight: 900; font-size: 14px; text-shadow: 1px 1px 2px #000; }
+
+        .price-up::after { content: '▲'; position: absolute; top: 2px; right: 4px; color: var(--rise-color); font-weight: 900; font-size: 14px; text-shadow: 1px 1px 2px #000; }
         .captain-badge { position: absolute; top: -10px; left: -10px; background: var(--gold); color: black; width: 22px; height: 22px; border-radius: 50%; font-weight: 900; font-size: 12px; line-height: 22px; display: none; border: 2px solid white; box-shadow: 0 0 10px var(--gold); z-index: 10; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
         select { width: 100%; font-size: 10px; background: transparent; color: inherit; border: none; font-weight: bold; cursor: pointer; outline: none; }
-        .planner-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #222; border: 2px solid var(--accent); padding: 20px; border-radius: 12px; z-index: 100; width: 300px; box-shadow: 0 0 50px rgba(0,0,0,0.9); }
-        .planner-modal h4 { margin: 0 0 10px 0; color: var(--accent); font-size: 14px; }
-        .rec-item { background: #333; margin: 5px 0; padding: 8px; border-radius: 6px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--rise); }
+        
+        .planner-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #222; border: 2px solid var(--accent-green); padding: 20px; border-radius: 12px; z-index: 1100; width: 300px; box-shadow: 0 0 50px rgba(0,0,0,0.9); }
+        .planner-modal h4 { margin: 0 0 10px 0; color: var(--accent-green); font-size: 14px; }
+        .rec-item { background: #333; margin: 5px 0; padding: 8px; border-radius: 6px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--rise-color); }
+
         .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
         button { padding: 12px; border-radius: 6px; border: none; font-weight: 800; cursor: pointer; font-size: 11px; text-transform: uppercase; }
-        .btn-main { grid-column: span 2; background: var(--accent); color: white; }
+        .btn-main { grid-column: span 2; background: var(--accent-green); color: var(--accent-purple); }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="container header-container">
+    <div class="header-container" id="header-container">
         <h1 class="logo">KOPALA <span class="highlight">FPL</span></h1>
 
-        <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="main-nav">
+        <button class="menu-toggle" id="menu-btn">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
@@ -105,25 +175,28 @@
     </div>
 </header>
 
-<div class="container">
+<div class="main-container">
     <h2>KOPALA FPL AI ENGINE <span style="color:var(--gold)">v1.0</span></h2>
-    <div class="ticker" id="ticker">🔄 SYNCING GW18 LIVE MARKET DATA...</div>
-    <div style="margin-bottom: 10px; font-weight: bold;">BANK: <span id="budget-val" style="color:var(--rise)">£100.0m</span></div>
+    <div class="ticker" id="ticker">🔄 SYNCING LIVE MARKET DATA...</div>
+    <div style="margin-bottom: 10px; font-weight: bold;">BANK: <span id="budget-val" style="color:var(--rise-color)">£100.0m</span></div>
 
     <div class="pitch">
         <div class="row"><div class="slot" data-pos="GKP" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">GK</label></div></div>
+        
         <div class="row">
             <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
             <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
             <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
             <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
         </div>
+        
         <div class="row">
             <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
             <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
             <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
             <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
         </div>
+        
         <div class="row">
             <div class="slot" data-pos="FWD" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">FWD</label></div>
             <div class="slot" data-pos="FWD" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">FWD</label></div>
@@ -152,23 +225,21 @@
     </div>
 
     <div id="results" style="display:none; margin-top:20px; background:#1e1e1e; padding:15px; border-radius:12px; border:1px solid #333;">
-        <h1 id="score-display" style="font-size:45px; margin:0; color:var(--accent)">0.0</h1>
+        <h1 id="score-display" style="font-size:45px; margin:0; color:var(--accent-green)">0.0</h1>
         <div id="analysis-text" style="font-size:12px; margin-top:10px;"></div>
     </div>
 </div>
 
 <script>
-    // --- NAV LOGIC ---
-    const menuToggle = document.getElementById('menu-toggle');
-    const mainNav = document.getElementById('main-nav');
+    // --- NAV TOGGLE LOGIC ---
+    const menuBtn = document.getElementById('menu-btn');
+    const headerCont = document.getElementById('header-container');
 
-    menuToggle.addEventListener('click', () => {
-        const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
-        menuToggle.setAttribute('aria-expanded', !expanded);
-        mainNav.classList.toggle('active');
+    menuBtn.addEventListener('click', () => {
+        headerCont.classList.toggle('menu-open');
     });
 
-    // --- ORIGINAL AI ENGINE LOGIC ---
+    // --- ORIGINAL ENGINE LOGIC ---
     let playerDB = [];
 
     async function syncData() {
@@ -186,7 +257,7 @@
                 isRising: ["Palmer", "Semenyo", "Wilson", "Nunes", "Ekitike"].includes(p.web_name)
             })).sort((a,b) => b.xp - a.xp);
 
-            document.getElementById('ticker').innerHTML = `⚠️ ALERT: <b>Mbeumo</b> & <b>Ndiaye</b> leaving for AFCON. Buy <b>Wilson</b> (£5.6m) or <b>Semenyo</b> (£7.6m) before price rise!`;
+            document.getElementById('ticker').innerHTML = `⚠️ ALERT: Market prices moving soon. Buy <b>Wilson</b> or <b>Semenyo</b> before price rise!`;
         } catch (e) {
             document.getElementById('ticker').textContent = "ERROR: RUNNING ON CACHED DATA";
         }
@@ -236,7 +307,7 @@
         });
         const rem = (100 - total).toFixed(1);
         document.getElementById('budget-val').textContent = `£${rem}m`;
-        document.getElementById('budget-val').style.color = rem < 0 ? "#e74c3c" : "#2ecc71";
+        document.getElementById('budget-val').style.color = rem < 0 ? "#ff005a" : "#05ff80";
     }
 
     function openPlanner(slot) {
@@ -263,7 +334,7 @@
         document.getElementById('results').style.display = 'block';
         const cost = 100 - parseFloat(document.getElementById('budget-val').textContent.replace('£',''));
         document.getElementById('score-display').textContent = (Math.random() * 20 + 75).toFixed(1);
-        document.getElementById('analysis-text').innerHTML = `<b>AI Verdict:</b> Your team value of £${cost.toFixed(1)}m is solid. <br><br>🚨 <b>Transfer Advice:</b> Click players on the pitch to see AI-optimized replacements for GW18!`;
+        document.getElementById('analysis-text').innerHTML = `<b>AI Verdict:</b> Your team value of £${cost.toFixed(1)}m is solid. <br><br>🚨 <b>Transfer Advice:</b> Click players on the pitch to see AI-optimized replacements!`;
     }
 
     function autoOptimize() {
