@@ -430,3 +430,64 @@ th, td {
         font-size: 0.8rem;
     }
 }
+
+
+
+/* --- Professional Footer Fix --- */
+.main-footer a {
+    text-decoration: none !important; /* Removes underlines from ALL footer links */
+    outline: none;
+}
+
+.footer-col ul {
+    list-style: none; 
+    padding: 0;      
+    margin: 0;
+}
+
+.footer-col ul li a {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.footer-col ul li a:hover {
+    color: var(--accent-green);
+    text-decoration: none; /* Double insurance against underlines */
+    transform: translateX(5px);
+}
+
+/* Social Icons Styling */
+.social-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.social-links a {
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.05);
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+/* Ensure icons themselves aren't affected by text styles */
+.social-links a i {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.social-links a:hover {
+    background: var(--accent-purple);
+    color: var(--accent-green);
+    border-color: var(--accent-green);
+    transform: translateY(-3px);
+    text-decoration: none; 
+}
