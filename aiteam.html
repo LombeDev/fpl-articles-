@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* -----------------------------------------
-           ROOT VARIABLES
+            ROOT VARIABLES
         ----------------------------------------- */
         :root {
             --primary-dark: #111827;
@@ -30,7 +30,7 @@
         body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--primary-dark); color: var(--text-main); line-height: 1.6; }
 
         /* -----------------------------------------
-           HEADER & NAV
+            HEADER & NAV
         ----------------------------------------- */
         header {
             background-color: var(--accent-purple);
@@ -56,18 +56,29 @@
         #main-nav a { color: var(--white); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
         #main-nav a:hover { color: var(--accent-green); }
 
+        /* HAMBURGER MENU STYLING */
         .menu-toggle {
             display: none;
             flex-direction: column;
             justify-content: space-between;
-            width: 25px;
-            height: 18px;
+            width: 30px;
+            height: 21px;
             background: none;
             border: none;
+            padding: 0;
             cursor: pointer;
             z-index: 1001;
         }
-        .bar { width: 100%; height: 3px; background-color: #ffffff; transition: 0.3s; border-radius: 2px; }
+        
+        /* Forces the bars to be pure white */
+        .bar { 
+            width: 100%; 
+            height: 3px; 
+            background-color: #ffffff !important; 
+            transition: 0.3s; 
+            border-radius: 2px;
+            display: block;
+        }
 
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
@@ -83,13 +94,15 @@
             }
             .header-container.menu-open #main-nav { display: block; }
             #main-nav ul { flex-direction: column; align-items: center; gap: 15px; }
-            .header-container.menu-open .bar:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+            
+            /* Animation for X-shape when open */
+            .header-container.menu-open .bar:nth-child(1) { transform: translateY(9px) rotate(45deg); }
             .header-container.menu-open .bar:nth-child(2) { opacity: 0; }
-            .header-container.menu-open .bar:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+            .header-container.menu-open .bar:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
         }
 
         /* -----------------------------------------
-           AI ENGINE & PITCH
+            AI ENGINE & PITCH
         ----------------------------------------- */
         .main-container { max-width: 550px; margin: 20px auto; width: 100%; text-align: center; padding: 20px; }
         .ticker { background: #000; color: var(--rise-color); padding: 10px; font-size: 11px; font-weight: 800; border-radius: 6px; margin-bottom: 15px; border: 1px solid var(--rise-color); border-left: 5px solid var(--rise-color); text-align: left; }
@@ -119,9 +132,6 @@
         button { padding: 12px; border-radius: 6px; border: none; font-weight: 800; cursor: pointer; font-size: 11px; text-transform: uppercase; }
         .btn-main { grid-column: span 2; background: var(--accent-green); color: var(--accent-purple); }
 
-        /* -----------------------------------------
-           NEW VERDICT STYLING
-        ----------------------------------------- */
         #results { display: none; margin-top: 20px; background: var(--secondary-dark); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); text-align: left; }
         .verdict-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; }
         .verdict-score { font-size: 2.5rem; font-weight: 900; color: var(--accent-green); }
@@ -137,8 +147,10 @@
 <header>
     <div class="header-container" id="header-container">
         <a href="#" class="logo">KOPALA <span class="highlight">FPL</span></a>
-        <button class="menu-toggle" id="menu-btn">
-            <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        <button class="menu-toggle" id="menu-btn" aria-label="Toggle Menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
         </button>
         <nav id="main-nav">
             <ul>
