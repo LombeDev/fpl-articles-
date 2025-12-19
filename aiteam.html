@@ -5,101 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FPL Ultra-Engine 2025</title>
     <style>
-        :root { --pg: #27ae60; --dark: #121212; --accent: #3498db; --gold: #f1c40f; --bench: #2c3e50; --rise: #2ecc71; --fall: #e74c3c; }
+        :root { --pg: #27ae60; --dark: #121212; --accent: #3498db; --gold: #f1c40f; --bench: #2c3e50; --rise: #2ecc71; --error: #ff4757; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: white; display: flex; justify-content: center; padding: 20px; margin: 0; }
         .container { max-width: 550px; width: 100%; text-align: center; }
         
-        /* Market Ticker */
         .ticker { background: #000; color: var(--rise); padding: 10px; font-size: 11px; font-weight: 800; border-radius: 6px; margin-bottom: 15px; border: 1px solid var(--rise); border-left: 5px solid var(--rise); text-align: left; }
         
-        /* The Pitch */
-        .pitch { background: var(--pg); border: 4px solid white; border-radius: 12px 12px 0 0; padding: 15px 10px; height: 400px; display: flex; flex-direction: column; justify-content: space-around; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
-        .bench-area { background: var(--bench); border: 4px solid white; border-top: none; border-radius: 0 0 12px 12px; padding: 15px 10px; display: flex; flex-direction: column; gap: 10px; }
+        .pitch { background: var(--pg); border: 4px solid white; border-radius: 12px 12px 0 0; padding: 15px 10px; height: 380px; display: flex; flex-direction: column; justify-content: space-around; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+        .bench-area { background: var(--bench); border: 4px solid white; border-top: none; border-radius: 0 0 12px 12px; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
         
         .row { display: flex; justify-content: center; gap: 8px; }
         .slot { width: 85px; background: rgba(0,0,0,0.85); padding: 6px; border-radius: 6px; border-bottom: 3px solid var(--accent); position: relative; cursor: pointer; transition: 0.2s; }
-        .slot:hover { transform: scale(1.05); background: rgba(255,255,255,0.1); }
-
-        /* Status Indicators */
-        .fdr-1 { background: #00ff87 !important; color: #000; }
-        .fdr-2 { background: #96ff9a !important; color: #000; }
-        .fdr-4 { background: #ff7676 !important; color: #fff; }
-        .fdr-5 { background: #800020 !important; color: #fff; }
-
-        .price-up::after { content: '▲'; position: absolute; top: 2px; right: 4px; color: var(--rise); font-weight: 900; font-size: 14px; text-shadow: 1px 1px 2px #000; }
-        .captain-badge { position: absolute; top: -10px; left: -10px; background: var(--gold); color: black; width: 22px; height: 22px; border-radius: 50%; font-weight: 900; font-size: 12px; line-height: 22px; display: none; border: 2px solid white; box-shadow: 0 0 10px var(--gold); z-index: 10; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
-
-        select { width: 100%; font-size: 10px; background: transparent; color: inherit; border: none; font-weight: bold; cursor: pointer; outline: none; }
         
-        /* Modal for Transfer Planner */
-        .planner-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #222; border: 2px solid var(--accent); padding: 20px; border-radius: 12px; z-index: 100; width: 300px; box-shadow: 0 0 50px rgba(0,0,0,0.9); }
-        .planner-modal h4 { margin: 0 0 10px 0; color: var(--accent); font-size: 14px; }
-        .rec-item { background: #333; margin: 5px 0; padding: 8px; border-radius: 6px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--rise); }
+        /* Price Rise Triangles */
+        .price-up::after { content: '▲'; position: absolute; top: 2px; right: 4px; color: var(--rise); font-size: 12px; text-shadow: 1px 1px 2px #000; }
+        
+        .budget-card { margin-bottom: 15px; background: #1a1a1a; padding: 10px; border-radius: 8px; border: 1px solid #333; }
+        .budget-over { color: var(--error) !important; animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+        select { width: 100%; font-size: 10px; background: transparent; color: inherit; border: none; font-weight: bold; outline: none; }
+        
+        /* Planner Modal */
+        .planner-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #222; border: 2px solid var(--accent); padding: 20px; border-radius: 12px; z-index: 100; width: 280px; box-shadow: 0 0 50px rgba(0,0,0,0.9); }
+        .rec-item { background: #333; margin: 5px 0; padding: 8px; border-radius: 6px; font-size: 11px; display: flex; justify-content: space-between; border-left: 3px solid var(--rise); }
 
         .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
         button { padding: 12px; border-radius: 6px; border: none; font-weight: 800; cursor: pointer; font-size: 11px; text-transform: uppercase; }
         .btn-main { grid-column: span 2; background: var(--accent); color: white; }
+        .btn-disabled { background: #444 !important; cursor: not-allowed; opacity: 0.5; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>KOPALA FPL AI ENGINE <span style="color:var(--gold)">v1.0</span></h2>
-    <div class="ticker" id="ticker">🔄 SYNCING GW18 LIVE MARKET DATA...</div>
-    <div style="margin-bottom: 10px; font-weight: bold;">BANK: <span id="budget-val" style="color:var(--rise)">£100.0m</span></div>
+    <h2>FPL ULTRA <span style="color:var(--gold)">STRICT-BUDGET</span></h2>
+    <div class="ticker" id="ticker">MARKET: Dec 19 Rise - Palmer £10.4m, Semenyo £7.6m</div>
+    
+    <div class="budget-card">
+        <div style="font-size: 10px; color: #888;">REMAINING BANK</div>
+        <div id="budget-val" style="font-size: 24px; font-weight: 900; color: var(--rise);">£100.0m</div>
+    </div>
 
     <div class="pitch">
-        <div class="row"><div class="slot" data-pos="GKP" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">GK</label></div></div>
-        <div class="row">
-            <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
-            <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
-            <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
-            <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
-        </div>
-        <div class="row">
-            <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
-            <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
-            <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
-            <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
-        </div>
-        <div class="row">
-            <div class="slot" data-pos="FWD" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">FWD</label></div>
-            <div class="slot" data-pos="FWD" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">FWD</label></div>
-        </div>
+        <div class="row" id="row-GKP"></div>
+        <div class="row" id="row-DEF"></div>
+        <div class="row" id="row-MID"></div>
+        <div class="row" id="row-FWD"></div>
     </div>
 
     <div class="bench-area">
-        <div class="row">
-            <div class="slot is-bench" data-pos="GKP" onclick="openPlanner(this)"><label style="font-size:8px">SUB GK</label></div>
-            <div class="slot is-bench" data-pos="DEF" onclick="openPlanner(this)"><label style="font-size:8px">SUB DEF</label></div>
-            <div class="slot is-bench" data-pos="MID" onclick="openPlanner(this)"><label style="font-size:8px">SUB MID</label></div>
-            <div class="slot is-bench" data-pos="FWD" onclick="openPlanner(this)"><label style="font-size:8px">SUB FWD</label></div>
-        </div>
+        <div class="row" id="row-BENCH"></div>
     </div>
 
     <div id="planner" class="planner-modal">
-        <h4 id="planner-title">Transfer Planner</h4>
+        <h4 id="planner-title" style="margin:0 0 10px 0; font-size:14px; color:var(--accent)">Transfer Planner</h4>
         <div id="planner-recs"></div>
-        <button onclick="closePlanner()" style="margin-top:15px; width:100%; background:#444; color:white">Close Planner</button>
+        <button onclick="closePlanner()" style="margin-top:15px; width:100%; background:#444; color:white">Back to Pitch</button>
     </div>
 
     <div class="controls">
-        <button class="btn-main" onclick="runAnalysis()">Run Deep AI Analysis</button>
-        <button style="background:var(--gold); color:black" onclick="autoOptimize()">Auto-Optimize</button>
-        <button style="background:#444; color:white" onclick="location.reload()">Reset Team</button>
-    </div>
-
-    <div id="results" style="display:none; margin-top:20px; background:#1e1e1e; padding:15px; border-radius:12px; border:1px solid #333;">
-        <h1 id="score-display" style="font-size:45px; margin:0; color:var(--accent)">0.0</h1>
-        <div id="analysis-text" style="font-size:12px; margin-top:10px;"></div>
+        <button id="analyze-btn" class="btn-main" onclick="runAnalysis()">Analyze Squad</button>
+        <button style="background:var(--gold); color:black" onclick="autoOptimize()">Budget Auto-Fill</button>
+        <button style="background:#444; color:white" onclick="location.reload()">Clear All</button>
     </div>
 </div>
 
 <script>
+    const layout = { GKP: 1, DEF: 4, MID: 4, FWD: 2, BENCH: 4 };
     let playerDB = [];
 
-    async function syncData() {
+    async function init() {
         const proxy = 'https://corsproxy.io/?url=';
         const api = 'https://fantasy.premierleague.com/api/bootstrap-static/';
         try {
@@ -110,104 +86,116 @@
                 pos: ["", "GKP", "DEF", "MID", "FWD"][p.element_type],
                 price: p.now_cost / 10,
                 xp: parseFloat(p.ep_next) || 0,
-                fdr: Math.floor(Math.random() * 5) + 1,
-                // Price Riser logic from GW18 search results
-                isRising: ["Palmer", "Semenyo", "Wilson", "Nunes", "Ekitike"].includes(p.web_name)
+                // 2025 Market Trends
+                isRising: ["Semenyo", "Palmer", "Wilson", "Nunes", "Rogers"].includes(p.web_name)
             })).sort((a,b) => b.xp - a.xp);
-
-            document.getElementById('ticker').innerHTML = `⚠️ ALERT: <b>Mbeumo</b> & <b>Ndiaye</b> leaving for AFCON. Buy <b>Wilson</b> (£5.6m) or <b>Semenyo</b> (£7.6m) before price rise!`;
-        } catch (e) {
-            document.getElementById('ticker').textContent = "ERROR: RUNNING ON CACHED DATA";
-        }
-        renderSlots();
+        } catch (e) { console.error("Data fail"); }
+        
+        buildPitch();
     }
 
-    function renderSlots() {
-        document.querySelectorAll('.slot').forEach(slot => {
-            const pos = slot.dataset.pos;
-            let sel = slot.querySelector('select') || document.createElement('select');
-            sel.onchange = (e) => { e.stopPropagation(); handleSelection(); };
-            slot.appendChild(sel);
-            sel.innerHTML = `<option value="">--</option>`;
-            playerDB.filter(p => p.pos === pos).slice(0, 60).forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.name;
-                opt.textContent = `${p.name} (£${p.price})`;
-                sel.appendChild(opt);
-            });
+    function buildPitch() {
+        Object.keys(layout).forEach(key => {
+            const container = document.getElementById(`row-${key}`);
+            const count = layout[key];
+            const benchPos = ["GKP", "DEF", "MID", "FWD"];
+            
+            for(let i=0; i<count; i++) {
+                const pos = key === "BENCH" ? benchPos[i] : key;
+                const slot = document.createElement('div');
+                slot.className = key === "BENCH" ? 'slot is-bench' : 'slot';
+                slot.dataset.pos = pos;
+                slot.onclick = () => openPlanner(slot);
+                
+                const sel = document.createElement('select');
+                sel.onchange = (e) => { e.stopPropagation(); handleSelection(); };
+                sel.innerHTML = `<option value="">-- ${pos} --</option>`;
+                
+                playerDB.filter(p => p.pos === pos).slice(0, 50).forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p.name;
+                    opt.textContent = `${p.name} (£${p.price})`;
+                    sel.appendChild(opt);
+                });
+
+                slot.appendChild(sel);
+                container.appendChild(slot);
+            }
         });
     }
 
     function handleSelection() {
-        let maxXP = -1;
-        let capSlot = null;
-        document.querySelectorAll('.slot').forEach(slot => {
-            const val = slot.querySelector('select').value;
-            const p = playerDB.find(x => x.name === val);
-            const badge = slot.querySelector('.captain-badge');
-            if(badge) badge.style.display = 'none';
-            slot.className = slot.classList.contains('is-bench') ? 'slot is-bench' : 'slot';
-            if(p) {
-                slot.classList.add(`fdr-${p.fdr}`);
-                if(p.isRising) slot.classList.add('price-up');
-                if(!slot.classList.contains('is-bench') && p.xp > maxXP) { maxXP = p.xp; capSlot = slot; }
-            }
-        });
-        if(capSlot) capSlot.querySelector('.captain-badge').style.display = 'block';
-        updateBudget();
-    }
-
-    function updateBudget() {
         let total = 0;
         document.querySelectorAll('select').forEach(s => {
             const p = playerDB.find(x => x.name === s.value);
-            if(p) total += p.price;
+            if(p) {
+                total += p.price;
+                s.parentElement.classList.toggle('price-up', p.isRising);
+            } else {
+                s.parentElement.classList.remove('price-up');
+            }
         });
+
         const rem = (100 - total).toFixed(1);
-        document.getElementById('budget-val').textContent = `£${rem}m`;
-        document.getElementById('budget-val').style.color = rem < 0 ? "#e74c3c" : "#2ecc71";
+        const display = document.getElementById('budget-val');
+        const btn = document.getElementById('analyze-btn');
+
+        display.textContent = `£${rem}m`;
+        
+        if (total > 100.01) { // Floating point buffer
+            display.classList.add('budget-over');
+            btn.classList.add('btn-disabled');
+            btn.innerText = "OVER BUDGET";
+        } else {
+            display.classList.remove('budget-over');
+            btn.classList.remove('btn-disabled');
+            btn.innerText = "Analyze Squad";
+        }
     }
 
     function openPlanner(slot) {
         const val = slot.querySelector('select').value;
         const p = playerDB.find(x => x.name === val);
-        if(!p) return alert("Select a player first to plan transfers!");
+        const bank = parseFloat(document.getElementById('budget-val').textContent.replace('£',''));
+        
+        if(!p) return alert("Select a player first!");
 
         document.getElementById('planner').style.display = 'block';
         document.getElementById('planner-title').textContent = `Replacements for ${p.name}`;
         
-        // AI Logic: Find players in same position, within budget + £0.5m, with higher XP
-        const recs = playerDB.filter(x => x.pos === p.pos && x.name !== p.name && x.price <= (p.price + 0.5))
+        // Planner logic: Can afford p.price + current bank
+        const affordable = p.price + bank;
+        const recs = playerDB.filter(x => x.pos === p.pos && x.name !== p.name && x.price <= affordable)
                             .sort((a,b) => b.xp - a.xp).slice(0, 3);
         
         let html = '';
         recs.forEach(r => {
             html += `<div class="rec-item"><span>${r.name} (£${r.price})</span><span style="color:var(--gold)">${r.xp} xP</span></div>`;
         });
-        document.getElementById('planner-recs').innerHTML = html || "No better options found in budget.";
+        document.getElementById('planner-recs').innerHTML = html || "No budget-friendly upgrades found.";
     }
 
     function closePlanner() { document.getElementById('planner').style.display = 'none'; }
 
-    function runAnalysis() {
-        document.getElementById('results').style.display = 'block';
-        const cost = 100 - parseFloat(document.getElementById('budget-val').textContent.replace('£',''));
-        document.getElementById('score-display').textContent = (Math.random() * 20 + 75).toFixed(1);
-        document.getElementById('analysis-text').innerHTML = `<b>AI Verdict:</b> Your team value of £${cost.toFixed(1)}m is solid. <br><br>🚨 <b>Transfer Advice:</b> Click players on the pitch to see AI-optimized replacements for GW18!`;
-    }
-
     function autoOptimize() {
+        alert("Auto-filling best value within £100m budget...");
         const selects = document.querySelectorAll('select');
+        let currentTotal = 0;
         selects.forEach((s, i) => {
             const pos = s.parentElement.dataset.pos;
-            const choice = playerDB.find(p => p.pos === pos && !Array.from(selects).some(sel => sel.value === p.name));
-            if(choice) s.value = choice.name;
+            const remainingSlots = 15 - i;
+            const maxForThis = (100 - currentTotal) - (remainingSlots * 4.0); // Reserve 4.0 for others
+            
+            const choice = playerDB.find(p => p.pos === pos && p.price <= maxForThis && !Array.from(selects).some(sel => sel.value === p.name));
+            if(choice) {
+                s.value = choice.name;
+                currentTotal += choice.price;
+            }
         });
         handleSelection();
-        runAnalysis();
     }
 
-    syncData();
+    init();
 </script>
 </body>
 </html>
