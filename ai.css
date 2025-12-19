@@ -1,157 +1,55 @@
-/* --- GLOBAL THEME --- */
 :root {
-    --field-light: #43a047;
-    --field-dark: #388e3c;
-    --line-color: rgba(255, 255, 255, 0.7);
-    --gold: #ffcc00;
-    --card-bg: #ffffff;
-    --accent-purple: #37003c;
+    --primary-dark: #111827;
+    --secondary-dark: #1f2937;
     --accent-green: #00ff87;
+    --accent-purple: #37003c;
+    --text-main: #f3f4f6;
+    --text-dim: #9ca3af;
+    --rise-color: #05ff80;
+    --fall-color: #ff005a;
+    --pg: #27ae60;
+    --gold: #f1c40f;
+    --bench: #2c3e50;
 }
 
-body {
-    background-color: #121212; /* Darker background to make the pitch pop */
-    margin: 0;
-    font-family: 'Inter', sans-serif;
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: var(--primary-dark); color: var(--text-main); }
+
+header { background: var(--accent-purple); padding: 1rem; border-bottom: 3px solid var(--accent-green); position: sticky; top: 0; z-index: 1000; }
+.header-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.logo { font-weight: 800; color: white; text-decoration: none; font-size: 1.2rem; }
+.highlight { color: var(--accent-green); }
+
+#main-nav ul { display: flex; list-style: none; gap: 15px; }
+#main-nav a { color: white; text-decoration: none; font-size: 0.8rem; font-weight: 600; }
+
+.main-container { max-width: 500px; margin: 10px auto; padding: 10px; }
+.status-bar { display: flex; justify-content: space-between; padding: 10px; font-weight: bold; font-size: 12px; background: #000; border-radius: 4px; margin-bottom: 5px; }
+
+.pitch { background: var(--pg); border: 3px solid white; border-radius: 8px 8px 0 0; padding: 20px 10px; min-height: 380px; display: flex; flex-direction: column; justify-content: space-around; }
+.bench-area { background: var(--bench); border: 3px solid white; border-top: none; border-radius: 0 0 8px 8px; padding: 10px; }
+
+.row { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; width: 100%; }
+.slot { 
+    flex: 0 1 85px; background: rgba(0,0,0,0.8); padding: 5px; border-radius: 4px; 
+    border-bottom: 3px solid var(--accent-green); text-align: center; cursor: pointer;
+    transition: all 0.2s ease; position: relative;
 }
 
-/* --- THE 3D PITCH --- */
-.pitch {
-    position: relative;
-    width: 100%;
-    max-width: 550px;
-    height: 600px;
-    margin: 20px auto;
-    
-    /* Mown grass pattern using gradients */
-    background: repeating-linear-gradient(
-        to bottom,
-        var(--field-light),
-        var(--field-light) 40px,
-        var(--field-dark) 40px,
-        var(--field-dark) 80px
-    );
-    
-    border: 5px solid #fff;
-    border-radius: 8px;
-    overflow: hidden;
+.slot.selected { border: 2px solid var(--gold); transform: scale(1.1); background: rgba(255, 215, 0, 0.2); z-index: 10; box-shadow: 0 0 15px var(--gold); }
+.slot.is-bench { opacity: 0.9; }
 
-    /* 3D Perspective Tilt */
-    perspective: 1000px;
-    transform: rotateX(8deg);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 40px 10px;
-}
+select { width: 100%; background: transparent; color: white; border: none; font-size: 10px; font-weight: bold; outline: none; cursor: pointer; }
 
-/* --- PITCH MARKINGS (The Authentic Look) --- */
-.pitch::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    pointer-events: none;
-    background-image: 
-        /* Center Line */
-        linear-gradient(to bottom, transparent 49.5%, var(--line-color) 49.5%, var(--line-color) 50.5%, transparent 50.5%),
-        /* Penalty Box Top */
-        linear-gradient(to right, transparent 20%, var(--line-color) 20%, var(--line-color) 80%, transparent 80%),
-        /* Penalty Box Bottom */
-        linear-gradient(to bottom, transparent 85%, var(--line-color) 85.5%, var(--line-color) 86%, transparent 86.5%);
-    z-index: 1;
-}
+.controls { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 15px; }
+button { padding: 12px; border-radius: 4px; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; font-size: 10px; }
+.btn-main { grid-column: span 2; background: var(--accent-green); color: var(--accent-purple); }
 
-/* Center Circle */
-.pitch::after {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    width: 100px; height: 100px;
-    border: 2px solid var(--line-color);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-}
-
-/* --- DYNAMIC FORMATION ROWS --- */
-.row {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    z-index: 2;
-    position: relative;
-}
-
-/* --- THE PLAYER CARDS (FPL Style) --- */
-.slot {
-    width: 85px;
-    background: var(--card-bg);
-    border-radius: 6px;
-    padding-bottom: 5px;
-    text-align: center;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
-    border: 1px solid transparent;
-}
-
-/* Selected for Swap effect */
-.slot.selected {
-    border: 3px solid var(--gold);
-    transform: scale(1.15) translateY(-10px);
-    box-shadow: 0 15px 30px rgba(255, 204, 0, 0.5);
-    z-index: 10;
-}
-
-/* Position Header on Card */
-.slot label {
-    display: block;
-    background: var(--accent-purple);
-    color: var(--accent-green);
-    font-size: 8px;
-    font-weight: 900;
-    padding: 2px 0;
-    border-radius: 4px 4px 0 0;
-    text-transform: uppercase;
-}
-
-/* Dropdown inside card */
-select {
-    width: 90%;
-    border: none;
-    font-size: 10px;
-    font-weight: 700;
-    color: #333;
-    background: transparent;
-    text-align: center;
-    padding: 5px 0;
-    outline: none;
-}
-
-/* --- BENCH AREA --- */
-.bench-area {
-    background: #1e1e1e;
-    border: 3px solid #333;
-    border-radius: 0 0 12px 12px;
-    padding: 15px;
-    margin: -10px auto 20px;
-    max-width: 550px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-
-.slot.is-bench {
-    background: #e0e0e0;
-    opacity: 0.85;
-}
-
-/* --- ANIMATIONS --- */
-@keyframes grassFade {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.row { animation: grassFade 0.6s ease-out forwards; }
+#results { display: none; margin-top: 15px; background: var(--secondary-dark); padding: 15px; border-radius: 8px; border: 1px solid #374151; }
+.verdict-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.verdict-score { font-size: 2rem; font-weight: 900; color: var(--accent-green); }
+.verdict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.verdict-box { background: rgba(0,0,0,0.3); padding: 8px; border-radius: 4px; }
+.verdict-label { font-size: 9px; color: var(--text-dim); text-transform: uppercase; display: block; }
+.verdict-val { font-size: 13px; font-weight: bold; }
+.ai-recommendation { margin-top: 10px; font-size: 12px; padding: 10px; background: var(--accent-purple); border-left: 4px solid var(--accent-green); border-radius: 4px; }
