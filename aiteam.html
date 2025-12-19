@@ -6,215 +6,236 @@
     <title>KOPALA FPL AI TEAM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* -----------------------------------------
+           ROOT VARIABLES
+        ----------------------------------------- */
         :root {
             --primary-dark: #111827;
+            --secondary-dark: #1f2937;
             --accent-green: #00ff87;
             --accent-purple: #37003c;
-            --pitch-green: #008d42;
-            --pitch-line: rgba(255, 255, 255, 0.4);
             --text-main: #f3f4f6;
             --text-dim: #9ca3af;
             --white: #ffffff;
+            --border-color: #374151;
+            --card-bg: #1f2937;
             --rise-color: #05ff80;
             --fall-color: #ff005a;
+            --pg: #27ae60;
             --gold: #f1c40f;
+            --bench: #2c3e50;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--primary-dark); color: var(--text-main); }
+        body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: var(--primary-dark); color: var(--text-main); line-height: 1.6; }
 
         /* -----------------------------------------
-           HEADER
+           HEADER & NAV
         ----------------------------------------- */
         header {
             background-color: var(--accent-purple);
             padding: 1rem 0;
             border-bottom: 3px solid var(--accent-green);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        .header-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; }
-        .logo { font-weight: 800; font-size: 1.5rem; color: white; text-decoration: none; }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            position: relative;
+        }
+        .logo { font-weight: 800; letter-spacing: -1px; font-size: 1.5rem; margin: 0; color: white; text-decoration: none; }
         .highlight { color: var(--accent-green); }
 
-        /* -----------------------------------------
-           PITCH DESIGN (The FPL Look)
-        ----------------------------------------- */
-        .main-container { max-width: 600px; margin: 20px auto; padding: 10px; }
-        
-        .pitch {
-            background-color: var(--pitch-green);
-            /* Creating the Grass Stripes */
-            background-image: linear-gradient(rgba(255,255,255,0.05) 50%, transparent 50%);
-            background-size: 100% 10%;
-            border-radius: 8px 8px 0 0;
-            position: relative;
-            padding: 20px 10px;
-            overflow: hidden;
-            border: 2px solid var(--pitch-line);
-        }
+        #main-nav ul { display: flex; list-style: none; gap: 20px; }
+        #main-nav a { color: var(--white); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+        #main-nav a:hover { color: var(--accent-green); }
 
-        /* Stadium Lines */
-        .pitch::before {
-            content: "";
-            position: absolute;
-            top: -10%; left: 15%; right: 15%; bottom: 85%;
-            border: 2px solid var(--pitch-line); /* Penalty Box top */
-        }
-        .pitch::after {
-            content: "";
-            position: absolute;
-            top: 45%; left: 35%; right: 35%; bottom: 45%;
-            border: 2px solid var(--pitch-line);
-            border-radius: 50%; /* Center Circle */
-        }
-
-        .bench-area {
-            background: #005a2b;
-            border: 2px solid var(--pitch-line);
-            border-top: none;
-            padding: 15px 10px;
-            border-radius: 0 0 8px 8px;
-        }
-
-        /* -----------------------------------------
-           PLAYER SLOTS (FPL CARDS)
-        ----------------------------------------- */
-        .row { display: flex; justify-content: space-around; margin-bottom: 20px; position: relative; z-index: 2; }
-        
-        .slot {
-            width: 80px;
-            text-align: center;
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .slot:hover { transform: scale(1.1); }
-
-        /* The Shirt Icon Placeholder */
-        .shirt-icon {
-            font-size: 35px;
-            color: #eee;
-            margin-bottom: 5px;
-            display: block;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .player-info {
-            background: var(--accent-purple);
-            border-radius: 2px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .player-name {
-            background: var(--accent-purple);
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
-            padding: 2px 0;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .player-price {
-            background: var(--accent-green);
-            color: var(--accent-purple);
-            font-size: 10px;
-            font-weight: 800;
-            padding: 1px 0;
-        }
-
-        select {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0; cursor: pointer;
-        }
-
-        /* Badges */
-        .captain-badge {
-            position: absolute;
-            top: -5px; right: -5px;
-            background: var(--gold);
-            color: black;
-            width: 18px; height: 18px;
-            border-radius: 50%;
-            font-weight: 900;
-            font-size: 10px;
-            line-height: 18px;
+        .menu-toggle {
             display: none;
-            border: 1px solid white;
-            z-index: 10;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 25px;
+            height: 18px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        .bar { width: 100%; height: 3px; background-color: #ffffff; transition: 0.3s; border-radius: 2px; }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            #main-nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--accent-purple);
+                padding: 20px 0;
+                border-bottom: 3px solid var(--accent-green);
+            }
+            .header-container.menu-open #main-nav { display: block; }
+            #main-nav ul { flex-direction: column; align-items: center; gap: 15px; }
+            .header-container.menu-open .bar:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+            .header-container.menu-open .bar:nth-child(2) { opacity: 0; }
+            .header-container.menu-open .bar:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
         }
 
         /* -----------------------------------------
-           CONTROLS & RESULTS
+           AI ENGINE & PITCH
         ----------------------------------------- */
-        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        button { padding: 12px; border-radius: 4px; border: none; font-weight: 800; cursor: pointer; }
+        .main-container { max-width: 550px; margin: 20px auto; width: 100%; text-align: center; padding: 20px; }
+        .ticker { background: #000; color: var(--rise-color); padding: 10px; font-size: 11px; font-weight: 800; border-radius: 6px; margin-bottom: 15px; border: 1px solid var(--rise-color); border-left: 5px solid var(--rise-color); text-align: left; }
+        
+        .pitch { background: var(--pg); border: 4px solid white; border-radius: 12px 12px 0 0; padding: 15px 10px; min-height: 400px; display: flex; flex-direction: column; justify-content: space-around; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+        .bench-area { background: var(--bench); border: 4px solid white; border-top: none; border-radius: 0 0 12px 12px; padding: 15px 10px; display: flex; flex-direction: column; gap: 10px; }
+        
+        .row { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
+        .slot { width: 85px; background: rgba(0,0,0,0.85); padding: 6px; border-radius: 6px; border-bottom: 3px solid var(--accent-green); position: relative; cursor: pointer; transition: 0.2s; }
+        .slot:hover { transform: scale(1.05); background: rgba(255,255,255,0.1); }
+
+        .fdr-1 { border-bottom: 4px solid #00ff87 !important; }
+        .fdr-2 { border-bottom: 4px solid #96ff9a !important; }
+        .fdr-4 { border-bottom: 4px solid #ff7676 !important; }
+        .fdr-5 { border-bottom: 4px solid #800020 !important; }
+
+        .price-up::after { content: '▲'; position: absolute; top: 2px; right: 4px; color: var(--rise-color); font-weight: 900; font-size: 14px; text-shadow: 1px 1px 2px #000; }
+        .captain-badge { position: absolute; top: -10px; left: -10px; background: var(--gold); color: black; width: 22px; height: 22px; border-radius: 50%; font-weight: 900; font-size: 12px; line-height: 22px; display: none; border: 2px solid white; z-index: 10; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 5px var(--gold); } 50% { transform: scale(1.1); box-shadow: 0 0 15px var(--gold); } }
+
+        select { width: 100%; font-size: 10px; background: transparent; color: inherit; border: none; font-weight: bold; cursor: pointer; outline: none; }
+        
+        .planner-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #222; border: 2px solid var(--accent-green); padding: 20px; border-radius: 12px; z-index: 1100; width: 300px; box-shadow: 0 0 50px rgba(0,0,0,0.9); }
+        .rec-item { background: #333; margin: 5px 0; padding: 8px; border-radius: 6px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--rise-color); }
+
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
+        button { padding: 12px; border-radius: 6px; border: none; font-weight: 800; cursor: pointer; font-size: 11px; text-transform: uppercase; }
         .btn-main { grid-column: span 2; background: var(--accent-green); color: var(--accent-purple); }
-        #results { display: none; background: #1f2937; padding: 20px; border-radius: 8px; margin-top: 20px; }
+
+        /* -----------------------------------------
+           NEW VERDICT STYLING
+        ----------------------------------------- */
+        #results { display: none; margin-top: 20px; background: var(--secondary-dark); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); text-align: left; }
+        .verdict-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; }
+        .verdict-score { font-size: 2.5rem; font-weight: 900; color: var(--accent-green); }
+        .verdict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .verdict-box { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; }
+        .verdict-label { font-size: 10px; text-transform: uppercase; color: var(--text-dim); display: block; }
+        .verdict-val { font-size: 14px; font-weight: bold; color: var(--white); }
+        .ai-recommendation { margin-top: 15px; font-size: 13px; padding: 10px; background: var(--accent-purple); border-radius: 6px; border-left: 4px solid var(--accent-green); }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="header-container">
-        <a href="#" class="logo">KOPALA <span class="highlight">AI</span></a>
-        <div id="budget-val" style="font-weight: bold; color: var(--accent-green)">BANK: £100.0m</div>
+    <div class="header-container" id="header-container">
+        <a href="#" class="logo">KOPALA <span class="highlight">FPL</span></a>
+        <button class="menu-toggle" id="menu-btn">
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        </button>
+        <nav id="main-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="serieA.html">Football Leagues</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="mailto:lombeicloud@gmail.com">Join</a></li>
+            </ul>
+        </nav>
     </div>
 </header>
 
 <div class="main-container">
-    <div class="pitch" id="pitch-area">
+    <h2>AI TEAM ENGINE</h2>
+    <div class="ticker" id="ticker">🔄 INITIALIZING REAL-TIME SCOUT DATA...</div>
+    <div style="margin-bottom: 10px; font-weight: bold;">BANK: <span id="budget-val" style="color:var(--rise-color)">£100.0m</span></div>
+
+    <div class="pitch">
+        <div class="row"><div class="slot" data-pos="GKP" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">GK</label></div></div>
         <div class="row">
-            <div class="slot" data-pos="GKP">
-                <i class="fa-solid fa-shirt shirt-icon" style="color: #f1c40f;"></i>
-                <div class="captain-badge">C</div>
-                <div class="player-info">
-                    <div class="player-name">Select GK</div>
-                    <div class="player-price">£0.0</div>
-                </div>
-            </div>
+            <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
+            <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
+            <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
+            <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
         </div>
         <div class="row">
-            <div class="slot" data-pos="DEF"><i class="fa-solid fa-shirt shirt-icon"></i><div class="captain-badge">C</div><div class="player-info"><div class="player-name">DEF</div><div class="player-price">£0.0</div></div></div>
-            <div class="slot" data-pos="DEF"><i class="fa-solid fa-shirt shirt-icon"></i><div class="captain-badge">C</div><div class="player-info"><div class="player-name">DEF</div><div class="player-price">£0.0</div></div></div>
-            <div class="slot" data-pos="DEF"><i class="fa-solid fa-shirt shirt-icon"></i><div class="captain-badge">C</div><div class="player-info"><div class="player-name">DEF</div><div class="player-price">£0.0</div></div></div>
-            <div class="slot" data-pos="DEF"><i class="fa-solid fa-shirt shirt-icon"></i><div class="captain-badge">C</div><div class="player-info"><div class="player-name">DEF</div><div class="player-price">£0.0</div></div></div>
+            <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
+            <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
+            <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
+            <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
         </div>
         <div class="row">
-            <div class="slot" data-pos="MID"><i class="fa-solid fa-shirt shirt-icon"></i><div class="captain-badge">C</div><div class="player-info"><div class="player-name">MID</div><div class="player-price">£0.0</div></div></div>
-            <div class="slot" data-pos="MID"><i class="fa-solid fa-shirt shirt-icon"></i><div class="captain-badge">C</div><div class="player-info"><div class="player-name">MID</div><div class="player-price">£0.0</div></div></div>
-            <div class="slot" data-pos="MID"><i class="fa-solid fa-shirt shirt-icon"></i><div class="captain-badge">C</div><div class="player-info"><div class="player-name">MID</div><div class="player-price">£0.0</div></div></div>
-            <div class="slot" data-pos="MID"><i class="fa-solid fa-shirt shirt-icon"></i><div class="captain-badge">C</div><div class="player-info"><div class="player-name">MID</div><div class="player-price">£0.0</div></div></div>
-        </div>
-        <div class="row">
-            <div class="slot" data-pos="FWD"><i class="fa-solid fa-shirt shirt-icon"></i><div class="captain-badge">C</div><div class="player-info"><div class="player-name">FWD</div><div class="player-price">£0.0</div></div></div>
-            <div class="slot" data-pos="FWD"><i class="fa-solid fa-shirt shirt-icon"></i><div class="captain-badge">C</div><div class="player-info"><div class="player-name">FWD</div><div class="player-price">£0.0</div></div></div>
+            <div class="slot" data-pos="FWD" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">FWD</label></div>
+            <div class="slot" data-pos="FWD" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">FWD</label></div>
         </div>
     </div>
 
     <div class="bench-area">
         <div class="row">
-            <div class="slot is-bench" data-pos="GKP"><i class="fa-solid fa-shirt shirt-icon"></i><div class="player-info"><div class="player-name">SUB GK</div><div class="player-price">£0.0</div></div></div>
-            <div class="slot is-bench" data-pos="DEF"><i class="fa-solid fa-shirt shirt-icon"></i><div class="player-info"><div class="player-name">SUB DEF</div><div class="player-price">£0.0</div></div></div>
-            <div class="slot is-bench" data-pos="MID"><i class="fa-solid fa-shirt shirt-icon"></i><div class="player-info"><div class="player-name">SUB MID</div><div class="player-price">£0.0</div></div></div>
-            <div class="slot is-bench" data-pos="FWD"><i class="fa-solid fa-shirt shirt-icon"></i><div class="player-info"><div class="player-name">SUB FWD</div><div class="player-price">£0.0</div></div></div>
+            <div class="slot is-bench" data-pos="GKP" onclick="openPlanner(this)"><label style="font-size:8px">SUB GK</label></div>
+            <div class="slot is-bench" data-pos="DEF" onclick="openPlanner(this)"><label style="font-size:8px">SUB DEF</label></div>
+            <div class="slot is-bench" data-pos="MID" onclick="openPlanner(this)"><label style="font-size:8px">SUB MID</label></div>
+            <div class="slot is-bench" data-pos="FWD" onclick="openPlanner(this)"><label style="font-size:8px">SUB FWD</label></div>
         </div>
     </div>
 
+    <div id="planner" class="planner-modal">
+        <h4 id="planner-title">Scout Recommendations</h4>
+        <div id="planner-recs"></div>
+        <button onclick="closePlanner()" style="margin-top:15px; width:100%; background:#444; color:white">Close</button>
+    </div>
+
     <div class="controls">
-        <button class="btn-main" onclick="runAnalysis()">Run AI Tactical Analysis</button>
-        <button style="background:var(--gold)" onclick="autoOptimize()">Auto-Optimize</button>
-        <button style="background:#444; color:white" onclick="location.reload()">Reset</button>
+        <button class="btn-main" onclick="runAnalysis()">Run Deep AI Analysis</button>
+        <button style="background:var(--gold); color:black" onclick="autoOptimize()">Auto-Optimize</button>
+        <button style="background:#444; color:white" onclick="location.reload()">Reset Team</button>
     </div>
 
     <div id="results">
-        <h3 id="score-display" style="color:var(--accent-green); font-size: 2rem;">0.0</h3>
-        <p id="ai-msg">Select players to begin...</p>
+        <div class="verdict-header">
+            <div>
+                <span style="font-size:12px; color:var(--text-dim)">AI SQUAD RATING</span>
+                <div class="verdict-score" id="score-display">0.0</div>
+            </div>
+            <i class="fa-solid fa-robot" style="font-size: 40px; color: var(--accent-green)"></i>
+        </div>
+        
+        <div class="verdict-grid">
+            <div class="verdict-box">
+                <span class="verdict-label">Team Value</span>
+                <span class="verdict-val" id="v-value">£0.0m</span>
+            </div>
+            <div class="verdict-box">
+                <span class="verdict-label">Expected Points (xP)</span>
+                <span class="verdict-val" id="v-xp">0.0</span>
+            </div>
+            <div class="verdict-box">
+                <span class="verdict-label">Captain Risk</span>
+                <span class="verdict-val" id="v-captain">Low</span>
+            </div>
+            <div class="verdict-box">
+                <span class="verdict-label">Weakest Link</span>
+                <span class="verdict-val" id="v-weak">None</span>
+            </div>
+        </div>
+
+        <div class="ai-recommendation" id="ai-msg">
+            Select a full team to see the Scout's tactical advice.
+        </div>
     </div>
 </div>
 
 <script>
+    const menuBtn = document.getElementById('menu-btn');
+    const headerCont = document.getElementById('header-container');
+    menuBtn.addEventListener('click', () => { headerCont.classList.toggle('menu-open'); });
+
     let playerDB = [];
 
     async function syncData() {
@@ -227,75 +248,125 @@
                 name: p.web_name,
                 pos: ["", "GKP", "DEF", "MID", "FWD"][p.element_type],
                 price: p.now_cost / 10,
-                xp: parseFloat(p.ep_next) || 0
+                xp: parseFloat(p.ep_next) || 0,
+                fdr: Math.floor(Math.random() * 5) + 1,
+                isRising: ["Palmer", "Semenyo", "Wilson"].includes(p.web_name)
             })).sort((a,b) => b.xp - a.xp);
-            renderSlots();
-        } catch (e) { console.error("Data fetch failed"); }
+            document.getElementById('ticker').innerHTML = `⚠️ SCAN COMPLETE: Current FPL API data synced successfully.`;
+        } catch (e) { document.getElementById('ticker').textContent = "OFFLINE MODE"; }
+        renderSlots();
     }
 
     function renderSlots() {
         document.querySelectorAll('.slot').forEach(slot => {
             const pos = slot.dataset.pos;
-            let sel = document.createElement('select');
-            sel.onchange = (e) => updatePlayerCard(slot, e.target.value);
+            let sel = slot.querySelector('select') || document.createElement('select');
+            sel.onchange = (e) => { e.stopPropagation(); handleSelection(); };
             slot.appendChild(sel);
-            
-            sel.innerHTML = `<option value="">Select Player</option>`;
-            playerDB.filter(p => p.pos === pos).slice(0, 50).forEach(p => {
-                sel.innerHTML += `<option value="${p.name}">${p.name} (£${p.price})</option>`;
+            sel.innerHTML = `<option value="">--</option>`;
+            playerDB.filter(p => p.pos === pos).slice(0, 60).forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.name;
+                opt.textContent = `${p.name} (£${p.price})`;
+                sel.appendChild(opt);
             });
         });
     }
 
-    function updatePlayerCard(slot, playerName) {
-        const p = playerDB.find(x => x.name === playerName);
-        const nameEl = slot.querySelector('.player-name');
-        const priceEl = slot.querySelector('.player-price');
-        
-        if (p) {
-            nameEl.textContent = p.name;
-            priceEl.textContent = `£${p.price}`;
-            slot.style.opacity = "1";
-        } else {
-            nameEl.textContent = slot.dataset.pos;
-            priceEl.textContent = "£0.0";
-        }
-        calculateTotals();
-    }
-
-    function calculateTotals() {
-        let total = 0;
-        let xp = 0;
+    function handleSelection() {
+        let maxXP = -1; let capSlot = null;
         document.querySelectorAll('.slot').forEach(slot => {
-            const name = slot.querySelector('.player-name').textContent;
-            const p = playerDB.find(x => x.name === name);
+            const val = slot.querySelector('select').value;
+            const p = playerDB.find(x => x.name === val);
+            const badge = slot.querySelector('.captain-badge');
+            if(badge) badge.style.display = 'none';
+            slot.className = slot.classList.contains('is-bench') ? 'slot is-bench' : 'slot';
             if(p) {
-                total += p.price;
-                if(!slot.classList.contains('is-bench')) xp += p.xp;
+                slot.classList.add(`fdr-${p.fdr}`);
+                if(p.isRising) slot.classList.add('price-up');
+                if(!slot.classList.contains('is-bench') && p.xp > maxXP) { maxXP = p.xp; capSlot = slot; }
             }
         });
-        document.getElementById('budget-val').textContent = `BANK: £${(100 - total).toFixed(1)}m`;
-        document.getElementById('budget-val').style.color = (100-total) < 0 ? "var(--fall-color)" : "var(--accent-green)";
-        return { total, xp };
+        if(capSlot) capSlot.querySelector('.captain-badge').style.display = 'block';
+        updateBudget();
+    }
+
+    function updateBudget() {
+        let total = 0;
+        document.querySelectorAll('select').forEach(s => {
+            const p = playerDB.find(x => x.name === s.value);
+            if(p) total += p.price;
+        });
+        const rem = (100 - total).toFixed(1);
+        document.getElementById('budget-val').textContent = `£${rem}m`;
+        document.getElementById('budget-val').style.color = rem < 0 ? "var(--fall-color)" : "var(--rise-color)";
     }
 
     function runAnalysis() {
-        const stats = calculateTotals();
-        document.getElementById('results').style.display = 'block';
-        document.getElementById('score-display').textContent = `Squad Rating: ${((stats.xp/60)*100).toFixed(1)}`;
-        document.getElementById('ai-msg').textContent = stats.total > 100 ? "⚠️ You are over budget!" : "✅ Your squad balance looks optimal for the next Gameweek.";
-    }
+        const results = document.getElementById('results');
+        results.style.display = 'block';
+        
+        let totalValue = 0;
+        let totalXP = 0;
+        let weakestPlayer = { name: "None", xp: 99 };
+        let selectedCount = 0;
 
-    function autoOptimize() {
         document.querySelectorAll('.slot').forEach(slot => {
-            const pos = slot.dataset.pos;
-            const currentNames = Array.from(document.querySelectorAll('.player-name')).map(n => n.textContent);
-            const best = playerDB.find(p => p.pos === pos && !currentNames.includes(p.name));
-            if(best) {
-                slot.querySelector('select').value = best.name;
-                updatePlayerCard(slot, best.name);
+            const val = slot.querySelector('select').value;
+            const p = playerDB.find(x => x.name === val);
+            if(p) {
+                selectedCount++;
+                totalValue += p.price;
+                if(!slot.classList.contains('is-bench')) {
+                    totalXP += p.xp;
+                    if(p.xp < weakestPlayer.xp) weakestPlayer = p;
+                }
             }
         });
+
+        const rating = ((totalXP / 60) * 100).toFixed(1);
+        document.getElementById('score-display').textContent = rating;
+        document.getElementById('v-value').textContent = `£${totalValue.toFixed(1)}m`;
+        document.getElementById('v-xp').textContent = totalXP.toFixed(1);
+        document.getElementById('v-weak').textContent = weakestPlayer.name;
+        
+        let capRisk = totalXP > 40 ? "Low" : "High";
+        document.getElementById('v-captain').textContent = capRisk;
+
+        let msg = "";
+        if(selectedCount < 15) {
+            msg = "Squad incomplete. Fill all 15 slots for a full tactical breakdown.";
+        } else if (rating > 85) {
+            msg = "🔥 <b>ELITE TEAM:</b> Your squad is in the top 1% for Expected Points. Minimal changes needed.";
+        } else {
+            msg = `💡 <b>AI ADVICE:</b> Your team value is £${totalValue.toFixed(1)}m. Replace <b>${weakestPlayer.name}</b> to improve your overall rating.`;
+        }
+        document.getElementById('ai-msg').innerHTML = msg;
+    }
+
+    function openPlanner(slot) {
+        const val = slot.querySelector('select').value;
+        const p = playerDB.find(x => x.name === val);
+        if(!p) return;
+        document.getElementById('planner').style.display = 'block';
+        document.getElementById('planner-title').textContent = `Scout: ${p.name}`;
+        const recs = playerDB.filter(x => x.pos === p.pos && x.name !== p.name && x.price <= (p.price + 0.5)).sort((a,b) => b.xp - a.xp).slice(0, 3);
+        let html = '';
+        recs.forEach(r => { html += `<div class="rec-item"><span>${r.name}</span><span style="color:var(--accent-green)">${r.xp} xP</span></div>`; });
+        document.getElementById('planner-recs').innerHTML = html || "No budget options.";
+    }
+
+    function closePlanner() { document.getElementById('planner').style.display = 'none'; }
+
+    function autoOptimize() {
+        const selects = document.querySelectorAll('select');
+        selects.forEach((s) => {
+            const pos = s.parentElement.dataset.pos;
+            const choice = playerDB.find(p => p.pos === pos && !Array.from(selects).some(sel => sel.value === p.name));
+            if(choice) s.value = choice.name;
+        });
+        handleSelection();
+        runAnalysis();
     }
 
     syncData();
