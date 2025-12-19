@@ -3,111 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KOPALA FPL AI TEAM</title>
+    <title>KOPALA FPL AI - Dynamic Formation</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="ai.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
     <div class="header-container" id="header-container">
         <a href="#" class="logo">KOPALA <span class="highlight">FPL</span></a>
-        <button class="menu-toggle" id="menu-btn" aria-label="Toggle Menu">
+        <button class="menu-toggle" id="menu-btn">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
         </button>
         <nav id="main-nav">
             <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="serieA.html">Football Leagues</a></li>
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="mailto:lombeicloud@gmail.com">Join</a></li>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Scout Reports</a></li>
+                <li><a href="mailto:lombeicloud@gmail.com">Contact</a></li>
             </ul>
         </nav>
     </div>
 </header>
 
 <div class="main-container">
-    <h2>AI TEAM ENGINE</h2>
-    <div class="ticker" id="ticker">🔄 INITIALIZING REAL-TIME SCOUT DATA...</div>
-    <div style="margin-bottom: 10px; font-weight: bold;">BANK: <span id="budget-val" style="color:var(--rise-color)">£100.0m</span></div>
-
-    <div class="pitch">
-        <div class="row"><div class="slot" data-pos="GKP" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">GK</label></div></div>
-        <div class="row">
-            <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
-            <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
-            <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
-            <div class="slot" data-pos="DEF" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">DEF</label></div>
-        </div>
-        <div class="row">
-            <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
-            <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
-            <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
-            <div class="slot" data-pos="MID" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">MID</label></div>
-        </div>
-        <div class="row">
-            <div class="slot" data-pos="FWD" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">FWD</label></div>
-            <div class="slot" data-pos="FWD" onclick="openPlanner(this)"><div class="captain-badge">C</div><label style="font-size:8px; opacity:0.7">FWD</label></div>
-        </div>
+    <div class="ticker" id="ticker">🔄 SYNCING LIVE PREMIER LEAGUE DATA...</div>
+    
+    <div class="status-bar">
+        <span>BANK: <b id="budget-val">£100.0m</b></span>
+        <span id="formation-ticker">FORMATION: 4-4-2</span>
     </div>
 
-    <div class="bench-area">
-        <div class="row">
-            <div class="slot is-bench" data-pos="GKP" onclick="openPlanner(this)"><label style="font-size:8px">SUB GK</label></div>
-            <div class="slot is-bench" data-pos="DEF" onclick="openPlanner(this)"><label style="font-size:8px">SUB DEF</label></div>
-            <div class="slot is-bench" data-pos="MID" onclick="openPlanner(this)"><label style="font-size:8px">SUB MID</label></div>
-            <div class="slot is-bench" data-pos="FWD" onclick="openPlanner(this)"><label style="font-size:8px">SUB FWD</label></div>
+    <div class="pitch" id="pitch-container">
         </div>
-    </div>
 
-    <div id="planner" class="planner-modal">
-        <h4 id="planner-title">Scout Recommendations</h4>
-        <div id="planner-recs"></div>
-        <button onclick="closePlanner()" style="margin-top:15px; width:100%; background:#444; color:white">Close</button>
-    </div>
+    <div class="bench-area" id="bench-container">
+        </div>
 
     <div class="controls">
         <button class="btn-main" onclick="runAnalysis()">Run Deep AI Analysis</button>
         <button style="background:var(--gold); color:black" onclick="autoOptimize()">Auto-Optimize</button>
-        <button style="background:#444; color:white" onclick="location.reload()">Reset Team</button>
+        <button style="background:#444; color:white" onclick="location.reload()">Reset</button>
     </div>
 
     <div id="results">
         <div class="verdict-header">
             <div>
-                <span style="font-size:12px; color:var(--text-dim)">AI SQUAD RATING</span>
+                <span class="verdict-label">AI SQUAD RATING</span>
                 <div class="verdict-score" id="score-display">0.0</div>
             </div>
-            <i class="fa-solid fa-robot" style="font-size: 40px; color: var(--accent-green)"></i>
+            <i class="fa-solid fa-microchip" style="font-size: 40px; color: var(--accent-green)"></i>
         </div>
-        
         <div class="verdict-grid">
-            <div class="verdict-box">
-                <span class="verdict-label">Team Value</span>
-                <span class="verdict-val" id="v-value">£0.0m</span>
-            </div>
-            <div class="verdict-box">
-                <span class="verdict-label">Expected Points (xP)</span>
-                <span class="verdict-val" id="v-xp">0.0</span>
-            </div>
-            <div class="verdict-box">
-                <span class="verdict-label">Captain Risk</span>
-                <span class="verdict-val" id="v-captain">Low</span>
-            </div>
-            <div class="verdict-box">
-                <span class="verdict-label">Weakest Link</span>
-                <span class="verdict-val" id="v-weak">None</span>
-            </div>
+            <div class="verdict-box"><span class="verdict-label">Value</span><span class="verdict-val" id="v-value">£0m</span></div>
+            <div class="verdict-box"><span class="verdict-label">Est. Points</span><span class="verdict-val" id="v-xp">0</span></div>
+            <div class="verdict-box"><span class="verdict-label">Weakest</span><span class="verdict-val" id="v-weak">None</span></div>
+            <div class="verdict-box"><span class="verdict-label">Status</span><span class="verdict-val" id="v-status">Pending</span></div>
         </div>
-
-        <div class="ai-recommendation" id="ai-msg">
-            Select a full team to see the Scout's tactical advice.
-        </div>
+        <div class="ai-recommendation" id="ai-msg">Build your team to see tactical advice.</div>
     </div>
 </div>
 
-<script src="ai.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
