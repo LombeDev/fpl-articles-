@@ -117,43 +117,27 @@
 
     <aside id="sidebar">
 
-        <div class="sidebar-widget deadline-widget">
-    <div class="deadline-header">
-        <h3 id="gw-title">Gameweek <span id="current-gw">--</span> Deadline</h3>
-    </div>
+       <div class="sidebar-widget deadline-widget">
+    <h3>GW <span id="current-gw">--</span> DEADLINE</h3>
     
-    <div id="countdown-timer" class="timer-display">
-        <div class="timer-segment">
-            <span id="days" class="timer-value">00</span>
-            <span class="timer-label">DAYS</span>
-        </div>
-        <div class="timer-separator">:</div>
-        <div class="timer-segment">
-            <span id="hours" class="timer-value">00</span>
-            <span class="timer-label">HOURS</span>
-        </div>
-        <div class="timer-separator">:</div>
-        <div class="timer-segment">
-            <span id="minutes" class="timer-value">00</span>
-            <span class="timer-label">MINS</span>
-        </div>
-        <div class="timer-separator">:</div>
-        <div class="timer-segment">
-            <span id="seconds" class="timer-value">00</span>
-            <span class="timer-label">SECS</span>
-        </div>
+    <div id="countdown-timer" class="fpl-timer">
+        <div class="time-block"><span id="days">00</span><small>DAYS</small></div>
+        <div class="time-sep">:</div>
+        <div class="time-block"><span id="hours">00</span><small>HOURS</small></div>
+        <div class="time-sep">:</div>
+        <div class="time-block"><span id="minutes">00</span><small>MINS</small></div>
+        <div class="time-sep">:</div>
+        <div class="time-block"><span id="seconds">00</span><small>SECS</small></div>
     </div>
 
-    <div class="top-captain-bar">
-        <span>TOP CAPTAIN:</span>
-        <span id="most-captained" class="highlight">Haaland</span>
-    </div>
+    <p class="captain-status">
+        TOP CAPTAIN: <span id="most-captained" class="highlight">--</span>
+    </p>
 
-    <div class="upcoming-deadlines">
-        <h4>UPCOMING DEADLINES</h4>
+    <div class="upcoming-section">
+        <p class="section-title">UPCOMING DEADLINES</p>
         <table id="upcoming-deadlines-table">
-            <tbody id="upcoming-deadlines-body">
-                </tbody>
+            <tbody id="upcoming-deadlines-body"></tbody>
         </table>
     </div>
 </div>
