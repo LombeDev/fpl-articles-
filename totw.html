@@ -41,7 +41,6 @@
             gap: 25px;
         }
 
-        /* Card Styles */
         .card {
             background: white;
             border-radius: 8px;
@@ -58,7 +57,6 @@
             color: var(--fpl-purple);
         }
 
-        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -84,6 +82,9 @@
             padding: 2px 6px;
             border-radius: 4px;
             background: #eee;
+            display: inline-block;
+            min-width: 30px;
+            text-align: center;
         }
 
         .player-row {
@@ -104,7 +105,6 @@
             color: var(--fpl-pink);
         }
 
-        /* Loading State */
         #loading {
             text-align: center;
             padding: 50px;
@@ -119,9 +119,11 @@
 <body>
 
 <div class="container">
-    
+    <header>
+        <h1>FPL Insights Dashboard</h1>
+    </header>
 
-    <div id="loading">Fetching latest FPL data...</div>
+    <div id="loading">Fetching latest FPL data via Netlify Proxy...</div>
 
     <div class="main-grid" id="dashboard" style="display: none;">
         <div class="content-area">
@@ -140,15 +142,38 @@
             </section>
         </div>
 
-        
+        <div class="sidebar">
+            <section class="card">
+                <h2>Top Ranked Teams</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Team</th>
+                            <th>Strength</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teams-list"></tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+</div>
+
 <script>
-    // FPL API Endpoint via CORS Proxy
-    const API_URL = "https://cors-anywhere.herokuapp.com/https://fantasy.premierleague.com/api/bootstrap-static/";
+    /**
+     * Netlify Redirect Path: 
+     * This path is caught by Netlify and forwarded to the FPL API
+     * to bypass CORS issues.
+     */
+    const API_URL = "/fpl-api/bootstrap-static/";
 
     async function fetchData() {
         try {
             const response = await fetch(API_URL);
-            if (!response.ok) throw new Error("Proxy access required");
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             
             const data = await response.json();
             
@@ -158,20 +183,21 @@
             document.getElementById('loading').style.display = 'none';
             document.getElementById('dashboard').style.display = 'grid';
         } catch (error) {
+            console.error("Fetch error:", error);
             document.getElementById('loading').innerHTML = `
-                <div style="color: red;">
-                    <h3>CORS Access Required</h3>
-                    <p>FPL blocks direct browser requests. Please visit 
-                    <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank">CORS Anywhere</a> 
-                    and click "Request temporary access", then refresh this page.</p>
+                <div style="color: #ff005a; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
+                    <h3>Unable to load FPL Data</h3>
+                    <p>Make sure your <b>_redirects</b> file is present in your Netlify deploy.</p>
+                    <small>${error.message}</small>
                 </div>`;
         }
     }
 
     function renderTOTW(players) {
         const list = document.getElementById('totw-list');
+        list.innerHTML = ""; // Clear existing
         
-        // Sorting players to find the dream team (4-4-2 format)
+        // Filter and Sort by position
         const gk = players.filter(p => p.element_type === 1).sort((a,b) => b.event_points - a.event_points).slice(0, 1);
         const def = players.filter(p => p.element_type === 2).sort((a,b) => b.event_points - a.event_points).slice(0, 4);
         const mid = players.filter(p => p.element_type === 3).sort((a,b) => b.event_points - a.event_points).slice(0, 4);
@@ -199,8 +225,10 @@
 
     function renderValuableTeams(teams) {
         const list = document.getElementById('teams-list');
-        // Sorting teams by strength/value
-        const topTeams = [...teams].sort((a,b) => b.strength - a.strength).slice(0, 5);
+        list.innerHTML = ""; // Clear existing
+        
+        // Sorting teams by overall strength
+        const topTeams = [...teams].sort((a,b) => b.strength - a.strength).slice(0, 10);
 
         topTeams.forEach(team => {
             list.innerHTML += `
@@ -212,7 +240,7 @@
         });
     }
 
-    // Initialize
+    // Initialize the fetch process
     fetchData();
 </script>
 
