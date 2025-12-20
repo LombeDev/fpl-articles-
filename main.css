@@ -1,5 +1,5 @@
 /* -----------------------------------------
-   ROOT VARIABLES & GLOBAL RESET
+    ROOT VARIABLES & GLOBAL RESET
 ----------------------------------------- */
 :root {
     --primary-dark: #111827;
@@ -26,7 +26,7 @@ body {
     background-color: var(--primary-dark);
     color: var(--text-main);
     line-height: 1.6;
-    overflow-x: hidden; /* Prevents tiny layout shifts */
+    overflow-x: hidden;
 }
 
 .container {
@@ -37,7 +37,7 @@ body {
 }
 
 /* -----------------------------------------
-   HEADER & MOBILE NAVIGATION
+    HEADER & MOBILE NAVIGATION
 ----------------------------------------- */
 header {
     background-color: var(--accent-purple);
@@ -112,14 +112,13 @@ header {
     .header-container.menu-open #main-nav { display: block; }
     #main-nav ul { flex-direction: column; align-items: center; gap: 15px; }
     
-    /* Hamburger to X Animation */
     .header-container.menu-open .bar:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
     .header-container.menu-open .bar:nth-child(2) { opacity: 0; }
     .header-container.menu-open .bar:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 }
 
 /* -----------------------------------------
-   MAIN LAYOUT
+    MAIN LAYOUT
 ----------------------------------------- */
 .site-content-wrapper {
     display: grid;
@@ -133,12 +132,34 @@ header {
 }
 
 /* -----------------------------------------
-   COMPACT TABLES (Mobile Fit)
+    TABLES & SCROLLING LOGIC
 ----------------------------------------- */
-.stats-table-container {
-    width: 100%;
-    overflow-x: hidden; /* Fits without scroll due to tiny text */
+
+/* Use this wrapper for "Kopala FPL Mini League" and "Advanced Player Stats" */
+.scrollable-stats-container {
+    max-height: 450px; /* Limits the vertical height */
+    overflow-y: auto;  /* Vertical scrollbar */
+    overflow-x: auto;  /* Horizontal scrollbar for mobile */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
     background: var(--card-bg);
+    margin-bottom: 25px;
+}
+
+/* Custom Scrollbar for the Containers */
+.scrollable-stats-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+.scrollable-stats-container::-webkit-scrollbar-track {
+    background: var(--primary-dark);
+}
+.scrollable-stats-container::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+.scrollable-stats-container::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-green);
 }
 
 table {
@@ -147,17 +168,25 @@ table {
     font-size: 0.85rem;
 }
 
+/* Sticky Headers: Keeps the titles visible while scrolling down */
+thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--accent-purple);
+    border-bottom: 2px solid var(--accent-green);
+}
+
 th, td {
-    padding: 10px 8px;
+    padding: 12px 10px;
     border-bottom: 1px solid var(--border-color);
     text-align: left;
 }
 
 @media (max-width: 600px) {
-    table { font-size: 0.65rem; } /* Aggressive shrink */
-    th, td { padding: 6px 3px; }
+    table { font-size: 0.75rem; }
+    th, td { padding: 8px 5px; }
     
-    /* Hide non-essential columns on mobile */
     th[data-sort="orank"], td:nth-child(8),
     th[data-sort="tv"], td:nth-child(7) { display: none; }
 
@@ -170,7 +199,7 @@ th, td {
 }
 
 /* -----------------------------------------
-   LIVE SCORES (Compact Row View)
+    LIVE SCORES & SIDEBAR
 ----------------------------------------- */
 .score-card {
     display: flex;
@@ -208,9 +237,6 @@ th, td {
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 90, 0); }
 }
 
-/* -----------------------------------------
-   SIDEBAR WIDGETS
------------------------------------------ */
 .sidebar-widget {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
@@ -234,7 +260,7 @@ th, td {
 }
 
 /* -----------------------------------------
-   LOADING & GLOBAL UTILS
+    LOADING & BADGES
 ----------------------------------------- */
 #loading-overlay {
     position: fixed;
@@ -261,38 +287,21 @@ th, td {
 .pos-FWD { background: #ff005a; color: #fff; }
 
 /* -----------------------------------------
-   FOOTER
+    PROFESSIONAL FOOTER
 ----------------------------------------- */
 .main-footer {
-    background: #000;
-    padding: 40px 0 20px;
-    margin-top: 40px;
-}
-
-.footer-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 30px;
-}
-
-
-
-
-
-
-
-/* --- Professional Footer Styling --- */
-.main-footer {
-    background-color: var(--secondary-dark); /* Slightly lighter than body for depth */
+    background-color: var(--secondary-dark);
     border-top: 1px solid var(--border-color);
-    padding: 60px 0 20px; /* More breathing room at the top */
+    padding: 60px 0 20px;
     color: var(--text-dim);
     margin-top: 50px;
 }
 
+.main-footer a { text-decoration: none !important; outline: none; }
+
 .footer-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr; /* Main info gets more space */
+    grid-template-columns: 2fr 1fr 1fr;
     gap: 40px;
     margin-bottom: 40px;
 }
@@ -305,7 +314,6 @@ th, td {
     padding-bottom: 10px;
 }
 
-/* Accent line under headings */
 .footer-col h3::after {
     content: '';
     position: absolute;
@@ -316,134 +324,7 @@ th, td {
     background-color: var(--accent-green);
 }
 
-.footer-col p {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    max-width: 300px;
-}
-
-.footer-col ul li {
-    margin-bottom: 12px;
-}
-
-.footer-col ul li a {
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.3s ease;
-}
-
-.footer-col ul li a:hover {
-    color: var(--accent-green);
-    padding-left: 5px; /* Subtle slide effect */
-}
-
-/* Social Icons Styling */
-.social-links a {
-    color: var(--white);
-    background: rgba(255, 255, 255, 0.05);
-    width: 36px;
-    height: 36px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-    border: 1px solid var(--border-color);
-}
-
-.social-links a:hover {
-    background: var(--accent-purple);
-    color: var(--accent-green);
-    transform: translateY(-3px);
-    border-color: var(--accent-green);
-}
-
-/* Footer Bottom Bar */
-.footer-bottom {
-    border-top: 1px solid var(--border-color);
-    padding-top: 20px;
-    text-align: center;
-    font-size: 0.8rem;
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-    .footer-grid {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 30px;
-    }
-
-    .footer-col h3::after {
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .footer-col p {
-        margin: 0 auto;
-    }
-    
-    .footer-col ul li a:hover {
-        padding-left: 0;
-    }
-}
-
-
-
-
-/* --- Back to Top Button --- */
-#backToTop {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    display: none; /* Hidden by default */
-    background-color: #1a1a1a; /* Dark background from screenshot */
-    color: var(--white);
-    border: 1px solid var(--border-color);
-    padding: 10px 20px;
-    border-radius: 8px; /* Rounded corners */
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9rem;
-    z-index: 2000;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-#backToTop:hover {
-    background-color: #333;
-    transform: translateY(-3px);
-}
-
-#backToTop i {
-    font-size: 1rem;
-}
-
-@media (max-width: 600px) {
-    #backToTop {
-        bottom: 20px;
-        right: 20px;
-        padding: 8px 15px;
-        font-size: 0.8rem;
-    }
-}
-
-
-
-/* --- Professional Footer Fix --- */
-.main-footer a {
-    text-decoration: none !important; /* Removes underlines from ALL footer links */
-    outline: none;
-}
-
-.footer-col ul {
-    list-style: none; 
-    padding: 0;      
-    margin: 0;
-}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
 
 .footer-col ul li a {
     color: var(--text-dim);
@@ -454,16 +335,10 @@ th, td {
 
 .footer-col ul li a:hover {
     color: var(--accent-green);
-    text-decoration: none; /* Double insurance against underlines */
     transform: translateX(5px);
 }
 
-/* Social Icons Styling */
-.social-links {
-    display: flex;
-    gap: 15px;
-    margin-top: 15px;
-}
+.social-links { display: flex; gap: 15px; margin-top: 15px; }
 
 .social-links a {
     color: var(--white);
@@ -478,24 +353,42 @@ th, td {
     transition: all 0.3s ease;
 }
 
-/* Ensure icons themselves aren't affected by text styles */
-.social-links a i {
-    font-size: 1.1rem;
-    line-height: 1;
-}
-
 .social-links a:hover {
     background: var(--accent-purple);
     color: var(--accent-green);
     border-color: var(--accent-green);
     transform: translateY(-3px);
-    text-decoration: none; 
 }
 
+.footer-bottom {
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
+    text-align: center;
+    font-size: 0.8rem;
+}
 
+/* -----------------------------------------
+    BACK TO TOP & ABOUT PAGE
+----------------------------------------- */
+#backToTop {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: none;
+    background-color: #1a1a1a;
+    color: var(--white);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    z-index: 2000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
 
+#backToTop:hover { background-color: #333; transform: translateY(-3px); }
 
-/* --- About Page Styling --- */
 .about-section {
     display: flex;
     justify-content: center;
@@ -510,25 +403,7 @@ th, td {
     padding: 40px;
 }
 
-.about-card h2 {
-    color: var(--accent-green);
-    margin: 20px 0;
-    font-size: 1.5rem;
-}
-
-.about-card p {
-    color: var(--text-dim);
-    line-height: 1.8;
-    margin-bottom: 20px;
-}
-
-.divider {
-    border: 0;
-    height: 1px;
-    background: var(--border-color);
-    margin: 20px auto;
-    width: 50%;
-}
+.about-card h2 { color: var(--accent-green); margin: 20px 0; }
 
 .affiliate-notice {
     background: rgba(0, 0, 0, 0.2);
@@ -539,22 +414,7 @@ th, td {
     margin: 30px 0;
 }
 
-.back-link {
-    display: inline-block;
-    color: var(--white);
-    text-decoration: none;
-    font-weight: 600;
-    margin-top: 20px;
-    transition: color 0.3s;
-}
-
-.back-link:hover {
-    color: var(--accent-green);
-}
-
-/* Mobile Adjustments */
-@media (max-width: 600px) {
-    .about-card {
-        padding: 20px;
-    }
+@media (max-width: 768px) {
+    .footer-grid { grid-template-columns: 1fr; text-align: center; }
+    .footer-col h3::after { left: 50%; transform: translateX(-50%); }
 }
