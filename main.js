@@ -174,8 +174,13 @@ function processDeadlineDisplay(data) {
 }
 
 
+/* -----------------------------------------
+    UPDATED DEADLINE COUNTDOWN LOGIC
+----------------------------------------- */
+
 /**
  * Updates the countdown timer display every second.
+ * Ensures a consistent 00d 00h 00m 00s format.
  * @param {HTMLElement} countdownEl - The element to display the countdown in.
  */
 function updateCountdown(countdownEl) {
@@ -187,6 +192,7 @@ function updateCountdown(countdownEl) {
     const now = new Date().getTime();
     const distance = nextDeadlineDate.getTime() - now;
 
+    // If the deadline has passed
     if (distance < 0) {
         clearInterval(countdownInterval);
         countdownEl.textContent = "Deadline Passed! 🛑";
@@ -200,15 +206,19 @@ function updateCountdown(countdownEl) {
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    // Format the output
+    // Helper to add leading zeros (e.g., 5 becomes 05)
+    const pad = (num) => String(num).padStart(2, '0');
+
+    // Format the output: "00d 00h 00m 00s"
+    // We show Days only if there is at least 1 day remaining
     if (days > 0) {
-         countdownEl.textContent = `${days}d ${hours}h ${minutes}m`;
+        countdownEl.textContent = `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
     } else {
-         countdownEl.textContent = `${hours}h ${minutes}m ${seconds}s`;
+        // If less than a day, show just hours, mins, and secs
+        countdownEl.textContent = `${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
     }
 }
-
-
+ 
 /**
  * Fetches FPL bootstrap data, creates maps, and initializes dependent loads.
  * @returns {Promise<object>} The raw bootstrap data.
