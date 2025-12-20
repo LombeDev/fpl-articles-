@@ -43,7 +43,7 @@ async function syncData() {
             form: parseFloat(p.form) || 0
         })).sort((a,b) => b.xp - a.xp);
         
-        ticker.textContent = "✅ LIVE FPL DATA CONNECTED (TEAM LIMITS ACTIVE)";
+        ticker.textContent = "✅ Get your team rated by our AI";
     } catch (e) {
         ticker.textContent = "⚠️ OFFLINE MODE: Using Mock Data";
         playerDB = [
