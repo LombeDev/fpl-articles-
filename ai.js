@@ -250,7 +250,7 @@ function runAnalysis() {
     if (upgrade) {
         msg += `💡 <b>SCOUT:</b> Replace <b>${weakest.name}</b> with <b>${upgrade.name}</b> for a +${(upgrade.xp - weakest.xp).toFixed(1)} boost.`;
     } else {
-        msg += `✅ <b>COMMENT BY MWAMBA:</b> Your XI is highly optimized for this budget range.`;
+        msg += `✅ <b>COMMENT BY MWAMBA:</b> Your team is highly optimized, select a team which will be under your budget and team value.`;
     }
     const aiMsgEl = document.getElementById('ai-msg');
     if (aiMsgEl) aiMsgEl.innerHTML = msg;
