@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KOPALA FPL DASHBOARD</title>
     <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="ai.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
@@ -43,44 +42,19 @@
 <div class="site-content-wrapper container">
 
     <main id="main-content">
-
- <div class="main-container">
-    <div class="ticker" id="ticker">🔄 SYNCING LIVE PREMIER LEAGUE DATA...</div>
-    
-    <div class="status-bar">
-        <span>In the bank: <b id="budget-val">£100.0m</b></span>
-        <span id="formation-ticker">Formation: 4-4-2</span>
-    </div>
-
-    <div class="pitch" id="pitch-container">
-        </div>
-
-    <div class="bench-area" id="bench-container">
-        </div>
-
-    <div class="controls">
-        <button class="btn-main" onclick="runAnalysis()">Run AI analysis</button>
-        <button style="background:var(--gold); color:black" onclick="autoOptimize()">Select template team</button>
-        <button style="background:#444; color:white" onclick="location.reload()">Reset</button>
-    </div>
-
-    <div id="results">
-        <div class="verdict-header">
-            <div>
-                <span class="verdict-label">AI team rating</span>
-                <div class="verdict-score" id="score-display">0.0</div>
-            </div>
-            <i class="fa-solid fa-microchip" style="font-size: 40px; color: var(--accent-green)"></i>
-        </div>
-        <div class="verdict-grid">
-            <div class="verdict-box"><span class="verdict-label">Value</span><span class="verdict-val" id="v-value">£0m</span></div>
-            <div class="verdict-box"><span class="verdict-label">Est. Points</span><span class="verdict-val" id="v-xp">0</span></div>
-            <div class="verdict-box"><span class="verdict-label">Weakest</span><span class="verdict-val" id="v-weak">None</span></div>
-            <div class="verdict-box"><span class="verdict-label">Status</span><span class="verdict-val" id="v-status">Pending</span></div>
-        </div>
-        <div class="ai-recommendation" id="ai-msg">Build your team to see tactical advice.</div>
-    </div>
-</div>
+        
+        <section id="live-scores" class="card">
+            <div class="card-header">
+                <h2 style="color: var(--accent-green);">
+                    <i class="fa-solid fa-circle-dot"></i> Live EPL Scores
+                </h2>
+            </div>
+            <div class="scores-grid" id="scores-container">
+                <p style="text-align: center; color: var(--text-dim); padding: 20px;">
+                    Checking for live matches...
+                </p>
+            </div>
+        </section>
 
         <section id="mini-league-analyzer" class="data-section">
             <h2>🏆 Kopala FPL Mini League - GW <span id="analyzer-gw">--</span></h2>
@@ -184,7 +158,12 @@
             </div>
         </div>
 
-       
+        <div class="sidebar-widget transfer-summary-widget">
+            <h3><i class="fa-solid fa-right-left"></i> Transfers View</h3>
+            <ul id="sidebar-transfers-list" style="list-style: none; font-size: 0.8rem; color: var(--text-dim);">
+                </ul>
+        </div>
+        
     </aside>
 </div> 
 
@@ -229,6 +208,5 @@
 </button>
 
 <script src="main.js"></script>
-<script src="ai.js"></script>
 </body>
 </html>
