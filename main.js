@@ -141,15 +141,41 @@ function getChangeIconHtml(changeValue, isPriceChange) {
 }
 
 
+// 📅 GAMRWEEK DEADLINE COUNTDOWN IMPLEMENTATION
+// -------------------------------------------------------------
 
+/**
+ * Parses the FPL data to find the next deadline and initiates the countdown.
+ * @param {object} data - The full data object from FPL bootstrap-static.
+ */
+function processDeadlineDisplay(data) {
+    const countdownEl = document.getElementById("countdown-timer");
+    const gwNumEl = document.getElementById("current-gw");
 
-/* -----------------------------------------
-    UPDATED DEADLINE COUNTDOWN LOGIC
------------------------------------------ */
+    if (!countdownEl || !gwNumEl) return;
+
+    // Find the next active Gameweek (is_next will be true, or is_current if none is next)
+    const nextEvent = data.events.find(e => e.is_next || e.is_current);
+
+    if (!nextEvent) {
+        countdownEl.textContent = "Season ended or schedule unavailable.";
+        return;
+    }
+
+    // Set global variables
+    currentGameweekId = nextEvent.id;
+    nextDeadlineDate = new Date(nextEvent.deadline_time);
+    
+    gwNumEl.textContent = currentGameweekId;
+    
+    // Start the countdown logic
+    updateCountdown(countdownEl);
+    countdownInterval = setInterval(() => updateCountdown(countdownEl), 1000);
+}
+
 
 /**
  * Updates the countdown timer display every second.
- * Ensures a consistent 00d 00h 00m 00s format.
  * @param {HTMLElement} countdownEl - The element to display the countdown in.
  */
 function updateCountdown(countdownEl) {
@@ -161,7 +187,6 @@ function updateCountdown(countdownEl) {
     const now = new Date().getTime();
     const distance = nextDeadlineDate.getTime() - now;
 
-    // If the deadline has passed
     if (distance < 0) {
         clearInterval(countdownInterval);
         countdownEl.textContent = "Deadline Passed! 🛑";
@@ -175,19 +200,15 @@ function updateCountdown(countdownEl) {
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    // Helper to add leading zeros (e.g., 5 becomes 05)
-    const pad = (num) => String(num).padStart(2, '0');
-
-    // Format the output: "00d 00h 00m 00s"
-    // We show Days only if there is at least 1 day remaining
+    // Format the output
     if (days > 0) {
-        countdownEl.textContent = `${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
+         countdownEl.textContent = `${days}d ${hours}h ${minutes}m`;
     } else {
-        // If less than a day, show just hours, mins, and secs
-        countdownEl.textContent = `${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
+         countdownEl.textContent = `${hours}h ${minutes}m ${seconds}s`;
     }
 }
- 
+
+
 /**
  * Fetches FPL bootstrap data, creates maps, and initializes dependent loads.
  * @returns {Promise<object>} The raw bootstrap data.
