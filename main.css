@@ -1,5 +1,5 @@
 /* -----------------------------------------
-   ROOT VARIABLES & GLOBAL RESET
+    ROOT VARIABLES & GLOBAL RESET
 ----------------------------------------- */
 :root {
     --primary-dark: #111827;
@@ -38,7 +38,7 @@ body {
 }
 
 /* -----------------------------------------
-   HEADER & NAVIGATION
+    HEADER & NAVIGATION
 ----------------------------------------- */
 header {
     background-color: var(--accent-purple);
@@ -53,6 +53,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 .logo {
@@ -74,10 +75,11 @@ header {
     text-decoration: none;
     font-weight: 600;
     font-size: 0.9rem;
+    transition: color 0.3s;
 }
 
 /* -----------------------------------------
-   MAIN LAYOUT & CARDS
+    SITE LAYOUT
 ----------------------------------------- */
 .site-content-wrapper {
     display: grid;
@@ -90,39 +92,47 @@ header {
     .site-content-wrapper { grid-template-columns: 1fr 320px; }
 }
 
-.card, .data-section {
+/* -----------------------------------------
+    COMPACT TABLES
+----------------------------------------- */
+.stats-table-container {
+    width: 100%;
+    overflow-x: hidden;
     background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+th, td {
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
 }
 
 /* -----------------------------------------
-   LIVE SCORES (Scrollable 5-Match Limit)
+    LIVE SCORES (Scrolled - Limit 5)
 ----------------------------------------- */
 #scores-container {
-    max-height: 385px; /* Fits roughly 5 cards + a hint of the 6th */
+    max-height: 380px; /* Limits view to ~5 matches */
     overflow-y: auto;
     padding-right: 5px;
     scrollbar-width: thin;
     scrollbar-color: var(--accent-green) var(--primary-dark);
 }
 
-/* Custom Scrollbar for Chrome/Safari */
 #scores-container::-webkit-scrollbar { width: 6px; }
-#scores-container::-webkit-scrollbar-track { background: var(--primary-dark); }
-#scores-container::-webkit-scrollbar-thumb { 
-    background-color: var(--accent-green); 
-    border-radius: 10px; 
-}
+#scores-container::-webkit-scrollbar-thumb { background: var(--accent-green); border-radius: 10px; }
 
 .score-card {
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: rgba(0,0,0,0.2);
-    padding: 12px;
+    padding: 10px;
     margin-bottom: 8px;
     border-radius: 6px;
     border: 1px solid var(--border-color);
@@ -139,7 +149,7 @@ header {
 }
 
 /* -----------------------------------------
-   SIDEBAR WIDGETS & AI ANALYZER
+    AI ANALYZER & VERTICAL PITCH
 ----------------------------------------- */
 .sidebar-widget {
     background: var(--card-bg);
@@ -149,7 +159,6 @@ header {
     margin-bottom: 20px;
 }
 
-/* AI Pitch Container */
 .mini-pitch-wrapper {
     width: 100%;
     aspect-ratio: 3 / 4;
@@ -176,65 +185,35 @@ header {
     display: flex;
     justify-content: center;
     gap: 5px;
-    min-height: 45px;
-}
-
-/* AI Verdict Display */
-.verdict-header-mini {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: rgba(0,0,0,0.3);
-    padding: 10px;
-    border-radius: 6px;
-    margin: 10px 0;
-}
-
-.verdict-score {
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--accent-green);
-}
-
-.verdict-label {
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    letter-spacing: 1px;
 }
 
 /* -----------------------------------------
-   BUTTONS & UTILS
+    BADGES & BUTTONS
 ----------------------------------------- */
+.pos-badge { padding: 2px 4px; border-radius: 3px; font-size: 0.6rem; font-weight: bold; }
+.pos-GKP { background: #ebff00; color: #000; }
+.pos-DEF { background: #00ff87; color: #000; }
+.pos-MID { background: #05f0ff; color: #000; }
+.pos-FWD { background: #ff005a; color: #fff; }
+
 .btn-main {
     background: var(--accent-green);
     color: var(--accent-purple);
-    border: none;
-    padding: 10px;
-    font-weight: bold;
-    border-radius: 4px;
-    cursor: pointer;
     width: 100%;
-    transition: 0.3s;
+    padding: 10px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
 }
-
-.btn-main:hover { filter: brightness(1.1); }
-
-.controls-vertical {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.rise { color: var(--rise-color); }
-.fall { color: var(--fall-color); }
 
 /* -----------------------------------------
-   FOOTER
+    PROFESSIONAL FOOTER & BACK TO TOP
 ----------------------------------------- */
 .main-footer {
     background-color: var(--secondary-dark);
     border-top: 1px solid var(--border-color);
-    padding: 40px 0 20px;
+    padding: 60px 0 20px;
     color: var(--text-dim);
     margin-top: 50px;
 }
@@ -245,10 +224,16 @@ header {
     gap: 40px;
 }
 
-.footer-bottom {
-    border-top: 1px solid var(--border-color);
-    padding-top: 20px;
-    text-align: center;
-    margin-top: 30px;
-    font-size: 0.8rem;
+#backToTop {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: none;
+    background-color: #1a1a1a;
+    color: var(--white);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 2000;
 }
