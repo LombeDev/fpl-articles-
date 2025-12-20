@@ -43,6 +43,45 @@
 <div class="site-content-wrapper container">
 
     <main id="main-content">
+
+i want to add this feature or section on this side which i will send after this : <div class="main-container">
+    <div class="ticker" id="ticker">🔄 SYNCING LIVE PREMIER LEAGUE DATA...</div>
+    
+    <div class="status-bar">
+        <span>In the bank: <b id="budget-val">£100.0m</b></span>
+        <span id="formation-ticker">Formation: 4-4-2</span>
+    </div>
+
+    <div class="pitch" id="pitch-container">
+        </div>
+
+    <div class="bench-area" id="bench-container">
+        </div>
+
+    <div class="controls">
+        <button class="btn-main" onclick="runAnalysis()">Run AI analysis</button>
+        <button style="background:var(--gold); color:black" onclick="autoOptimize()">Select template team</button>
+        <button style="background:#444; color:white" onclick="location.reload()">Reset</button>
+    </div>
+
+    <div id="results">
+        <div class="verdict-header">
+            <div>
+                <span class="verdict-label">AI team rating</span>
+                <div class="verdict-score" id="score-display">0.0</div>
+            </div>
+            <i class="fa-solid fa-microchip" style="font-size: 40px; color: var(--accent-green)"></i>
+        </div>
+        <div class="verdict-grid">
+            <div class="verdict-box"><span class="verdict-label">Value</span><span class="verdict-val" id="v-value">£0m</span></div>
+            <div class="verdict-box"><span class="verdict-label">Est. Points</span><span class="verdict-val" id="v-xp">0</span></div>
+            <div class="verdict-box"><span class="verdict-label">Weakest</span><span class="verdict-val" id="v-weak">None</span></div>
+            <div class="verdict-box"><span class="verdict-label">Status</span><span class="verdict-val" id="v-status">Pending</span></div>
+        </div>
+        <div class="ai-recommendation" id="ai-msg">Build your team to see tactical advice.</div>
+    </div>
+</div>
+
         
         <section id="live-scores" class="card">
             <div class="card-header">
@@ -159,51 +198,7 @@
             </div>
         </div>
 
-        <div class="sidebar-widget transfer-summary-widget">
-            <h3><i class="fa-solid fa-right-left"></i> Transfers View</h3>
-            <ul id="sidebar-transfers-list" style="list-style: none; font-size: 0.8rem; color: var(--text-dim);">
-                </ul>
-        </div>
-
-<div class="sidebar-widget ai-analyzer-widget">
-    <h3><i class="fa-solid fa-microchip"></i> AI Team Analyzer</h3>
-    
-    <div class="ticker" id="ticker" style="font-size: 0.7rem; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 4px; margin-bottom: 10px; color: var(--accent-green);">
-        🔄 SYNCING LIVE DATA...
-    </div>
-
-    <div class="ai-status-mini" style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 10px;">
-        <span>Bank: <b id="budget-val" style="color: var(--highlight);">£100.0m</b></span>
-        <span id="formation-ticker">4-4-2</span>
-    </div>
-
-    <div class="verdict-header" style="background: var(--card-bg); padding: 10px; border-radius: 8px; border: 1px solid #333; text-align: center; margin-bottom: 10px;">
-        <span class="verdict-label" style="font-size: 0.7rem; text-transform: uppercase; display: block;">AI Rating</span>
-        <div class="verdict-score" id="score-display" style="font-size: 1.8rem; font-weight: bold; color: var(--accent-green);">0.0</div>
-    </div>
-
-    <div class="verdict-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
-        <div class="verdict-box" style="background: #252525; padding: 5px; border-radius: 4px; text-align: center;">
-            <span style="font-size: 0.6rem; display: block; color: #888;">Est. Pts</span>
-            <span id="v-xp" style="font-weight: bold; font-size: 0.9rem;">0</span>
-        </div>
-        <div class="verdict-box" style="background: #252525; padding: 5px; border-radius: 4px; text-align: center;">
-            <span style="font-size: 0.6rem; display: block; color: #888;">Weakest</span>
-            <span id="v-weak" style="font-weight: bold; font-size: 0.8rem;">None</span>
-        </div>
-    </div>
-
-    <div class="ai-recommendation" id="ai-msg" style="font-size: 0.75rem; line-height: 1.4; color: var(--text-dim); background: rgba(255,255,255,0.05); padding: 8px; border-radius: 4px; margin-bottom: 10px;">
-        Build your team to see tactical advice.
-    </div>
-
-    <div class="controls" style="display: flex; flex-direction: column; gap: 8px;">
-        <button class="btn-main" onclick="runAnalysis()" style="width: 100%; padding: 8px; font-size: 0.8rem; cursor: pointer;">Run AI analysis</button>
-        <button onclick="autoOptimize()" style="background:var(--gold); color:black; border:none; padding: 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; cursor: pointer;">Select template team</button>
-    </div>
-</div>
-
-        
+       
     </aside>
 </div> 
 
