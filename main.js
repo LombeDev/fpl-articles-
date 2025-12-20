@@ -141,37 +141,6 @@ function getChangeIconHtml(changeValue, isPriceChange) {
 }
 
 
-// 📅 GAMRWEEK DEADLINE COUNTDOWN IMPLEMENTATION
-// -------------------------------------------------------------
-
-/**
- * Parses the FPL data to find the next deadline and initiates the countdown.
- * @param {object} data - The full data object from FPL bootstrap-static.
- */
-function processDeadlineDisplay(data) {
-    const countdownEl = document.getElementById("countdown-timer");
-    const gwNumEl = document.getElementById("current-gw");
-
-    if (!countdownEl || !gwNumEl) return;
-
-    // Find the next active Gameweek (is_next will be true, or is_current if none is next)
-    const nextEvent = data.events.find(e => e.is_next || e.is_current);
-
-    if (!nextEvent) {
-        countdownEl.textContent = "Season ended or schedule unavailable.";
-        return;
-    }
-
-    // Set global variables
-    currentGameweekId = nextEvent.id;
-    nextDeadlineDate = new Date(nextEvent.deadline_time);
-    
-    gwNumEl.textContent = currentGameweekId;
-    
-    // Start the countdown logic
-    updateCountdown(countdownEl);
-    countdownInterval = setInterval(() => updateCountdown(countdownEl), 1000);
-}
 
 
 /* -----------------------------------------
