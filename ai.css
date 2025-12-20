@@ -241,3 +241,25 @@ button {
 @media (max-width: 768px) {
     #main-nav { display: none; } /* Standard behavior: hide nav and show hamburger */
 }
+
+
+/* Specific Team Jersey Styles */
+.jersey.arsenal { --team-color: #EF0107; --stripe-color: #fff; }
+.jersey.man-city { --team-color: #6CABDD; }
+.jersey.liverpool { --team-color: #C8102E; }
+.jersey.chelsea { --team-color: #034694; }
+.jersey.man-utd { --team-color: #DA291C; --stripe-color: #000; }
+.jersey.spurs { --team-color: #fff; --stripe-color: #132257; }
+.jersey.aston-villa { --team-color: #95BFE5; --stripe-color: #670E36; }
+.jersey.newcastle { 
+    background: linear-gradient(90deg, #000 0% 33%, #fff 33% 66%, #000 66% 100%); 
+}
+.jersey.default { --team-color: var(--accent-green); opacity: 0.5; }
+
+/* Slot label adjustment for clarity */
+.slot select {
+    background: rgba(0,0,0,0.5);
+    border-radius: 2px;
+    margin-top: 3px;
+    padding: 2px;
+}
