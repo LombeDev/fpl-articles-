@@ -1,4 +1,4 @@
-update the js for me: /* -----------------------------------------
+/* -----------------------------------------
     GLOBAL SETUP
 ----------------------------------------- */
 // Using the more reliable proxy for cross-origin requests
